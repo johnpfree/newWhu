@@ -1,0 +1,15 @@
+
+  <div class="row_01">
+    <div class="col read_color">
+			<div class="primary col big_button">
+        <h1 class="center">Read Stories</h1>
+			</div><!--/.primary-->
+  </div>
+
+	<div class="row_02">		
+		<div class="primary col">
+		</div><!--/.primary-->
+		<div class="secondary col">
+		</div><!--/.secondary-->
+	</div>
+

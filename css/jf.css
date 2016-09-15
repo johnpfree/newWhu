@@ -1,0 +1,15 @@
+/* ================================= 
+	My general stuff
+
+	Also undoing stuff set for the intro pages
+==================================== */
+
+.spot_page h2 {
+	text-align: center;
+}
+
+/* Undo */
+.spot_page p {
+	font-size: 1em;
+  margin: 1em 0;
+}

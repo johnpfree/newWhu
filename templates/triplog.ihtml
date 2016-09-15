@@ -1,0 +1,7 @@
+<table border="0" cellspacing="5" cellpadding="5">
+	<tr><th colspan=20>{TRIP_NAME}</th></tr>
+	<tr><td>date</td><td>stop</td><td>desc</td><td>day</td><td>desc</td><td>lat,lon</td>
+	<!-- BEGIN rows -->
+	<tr><td>{STOP_DATE}</td><td>{STOP_NAME}</td><td>{STOP_DESC}</td><td>{DAY_NAME}</td><td>{DAY_DESC}</td><td>{STOP_LAT_LON}</td>
+	<!-- END rows -->
+</table>

@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Pictures, Stories, Custom Maps" />
+	<meta name="keywords" content="travel" />
+	<title>W H U F U - {CAPTION}</title>
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/flexbox.css">
+	<link rel="stylesheet" href="css/media.css">
+	<link rel="stylesheet" href="css/jf.css">
+	<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Roboto" rel="stylesheet">
+
+	<script src="../include/jquery.js" type="text/javascript"></script>
+	<script type="text/javascript" charset="utf-8">
+	</script>
+	<style type="text/css" media="screen">
+/*	<!-- BEGIN color_rows -->
+	.{NAME_COLOR} {	background-color: {SET_COLOR}; }
+	<!-- END color_rows -->
+*/
+		.search_color {	background-color: #AE19FF; }
+		.look_color 	{	background-color: #A44124; }
+		.read_color 	{	background-color: #59463A; }
+		.browse_color {	background-color: #12ADB2; }
+		.spot_color 	{	background-color: #1B2AD2; }	
+		.day_color 		{	background-color: #B07520; }
+	</style>
+</head>
+<body>
+	<div class="row_01 ">
+		<div class="main-header">   
+			<h1 class="name"><a href="#"><img src="resources/JohnFreeman_logo_sm_02.png" /></a></h1>
+			<ul class="main-nav">
+				<li><a href="?page=home&type=home">Home</a></li>
+				<li class="even-nav"><a href="?page=trips&type=home">Trips</a></li>
+				<li><a href="http://jfmac.local/~jf/wptest/">Blog</a></li>
+				<li class="even-nav"><a href="?page=home&type=about">About</a></li>
+			</ul>
+		</div>
+	</div>
+
+{THE_PAGE}
+
+	<div class="row_01">
+		<div id="foot" class="col">
+			<foot>&copy; 2010-2016 John P Freeman &mdash; <a href="http://www.cloudyhands.com/">cloudyhands.com</a> &mdash; 
+	design Elton de Leon Arteaga</foot>
+		</div>
+	</div>
+</body>
+</html>

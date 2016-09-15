@@ -1,0 +1,44 @@
+<div class="day_page">
+	<div class="row_01">
+	  <div class="col day_color">
+			<div class="primary col">
+				<h2>Monday October 20, 2014</h2>
+			</div><!--/.primary-->
+	</div>
+
+	<div class="row_02">		
+		<div class="primary col day_color">
+			<p>Today I went from <a href"?page=spot&type=id&key=118">Tecopa Hot Springs</a> to <a href"?page=spot&type=id&key=202">Las Vegas Bay Campground</a></p>
+			<p>Day 6 of the trip called <a href="">October 2014 - Aspens and Desert</a>, I drove 136 miles.</p>
+		</div><!--/.primary-->
+		<div class="secondary col day_color">
+some kind of map
+		</div><!--/.secondary-->
+	</div>
+
+	<div class="row_01">
+	  <div class="col day_color">
+			<div class="primary col">
+row of photos
+			</div>
+		</div>
+	</div>
+
+	<div class="row_01">
+		<div class="primary col day_color">
+<p>I arrive and nail a pretty nice spot on the edge of the canyon. Nice except that two of my neighbors are running their generators. Generator noise is one of the constant features of this otherwise very pleasant campground. I am annoyed at having arrived so late. There’s just time to drink a beer and watch the end of sunset. I am too late to do the fun little canyon rim hike that starts from right outside this campsite. Oh well.<br />
+I’m kinda wired up, switching ...
+</p>
+		</div>
+	</div>
+</div>
+
+<style type="text/css" media="screen">
+.day_page {
+	color: #000;
+	height: initial;
+	}
+.day_page a,h2 {
+	color: #00d;
+}
+</style>
