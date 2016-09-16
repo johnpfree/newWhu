@@ -1,7 +1,4 @@
 <style type="text/css" media="screen">
-biglet {
-	font-size: 20pt;
-}
 #bigtable {
 	margin: 0 auto;
 }
