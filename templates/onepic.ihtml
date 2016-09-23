@@ -1,16 +1,21 @@
 
-	<div class="look_color">
-	  <div class="row_01">
-	    <div class="col look_color">
-				<div class="primary col big_button">
-					the image
-				</div><!--/.primary-->
-	  </div>
+<div id="the_pic">
+	the image fits in an 800x800 box<br />
+	I hope we can find a usable responsive gallery for this.<br />
+	We have a lot of pictures and making them manageable will be an issue.
+</div>
 
-		<div class="row_02">		
-			<div class="primary col">
-			</div><!--/.primary-->
-			<div class="secondary col">
-			</div><!--/.secondary-->
-		</div>
-	</div>
+<div class=wirenotes>{WIRENOTES}</div>
+
+<style type="text/css" media="screen">
+#the_pic {
+	padding-top: 100px;
+	margin: 0 auto;
+	width: 800px;
+	height: 300px;
+	border: 1px solid #999;
+	text-align: center;
+	vertical-align: middle;
+	
+}
+</style>

@@ -1,0 +1,32 @@
+
+<div id="the_pic">
+	<p>Advance Search Page</p>
+	Are you looking for a specific type thing - posts, or stops, or days, or pic labels?<br />
+	We should have a fancy spot search. All campgrounds in this park, free campgrounds. Do I get phone reception, is it noisy? Is there water?<br />
+	</div>
+<ul>
+	Ideas:
+	<li>Browse place - Campgrounds in Idaho</li>
+	<li>Browse park - Campgrounds in Inyo Nat Forest</li>
+</ul>
+<div class=wirenotes>{WIRENOTES}</div>
+
+<style type="text/css" media="screen">
+#the_pic {
+	padding: 0px 30px 20px;
+	margin: 0 auto;
+	width: 800px;
+	border: 1px solid #999;
+	text-align: center;
+}
+#the_pic p {
+	font-weight: bold;
+	font-size: 140%;
+}
+#the_content ul {
+	padding: 0px 30px 20px;
+	margin: 0 auto;
+	width: 800px;
+	border: 1px solid #999;
+}
+</style>

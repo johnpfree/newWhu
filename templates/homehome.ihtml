@@ -1,66 +1,42 @@
-	<div class="row_01">
-		<div class="col">
-       <h1 class="center">banner image</h1>
-		</div>
-	</div>
 
-  <div class="row_01">
-    <div class="col">
-      <h1 class="center bigger">What do you want to do?</h1>
-      <h3 class="center bigger">Do you want to look at trip <a>Pictures</a>, read trip <a>Stories</a>, look at trip <a>Maps</a>, <a>Search</a> for stuff, or just <a>Browse</a> everything.</h3>
-			<div class="page_explain">
-				<h3>How do you want to start?</h3>
-			</div><!--/.primary-->
-    </div>
-  </div>
+<div id="the_pic">
+	<p>H O M E</p>
+	What do you want to do? 
+	<br />
+	If you want to read, we got stories.
+	<br />
+	If you want ideas on where to go camping, we got that.
+	<br />
+	Pictures, movies ...
+	<br />
+</div>
+<ul>
+	Either on this page or pointed to from this page:
+	<li>How to find the campground or hot springs you want.</li>
+	<li>How to find stories you might like.</li>
+	<li>How to browse the thousands of pictures.</li>
+	<li>Maps.</li>
+	<li>Describe the Stories/Map/Pics/Log connection.</li>
+</ul>
 
-	<div id=heighthack class="row_02">		
-		<div class="primary col search_color">
-			<h3 class="bigger"><a href="?page=home&type=search">Search for spots!</a></h3>
-			<a href="?page=home&type=search">
-				<div class="primary col big_button">
-					<h1>Search <smaller> - 8/25</smaller></h1>
-				</div>
-			</a>
-		</div>
-		
-		<div class="secondary col look_color">
-			<div class="primary col big_button">
-				<h1><a href="?page=home&type=look">Look</a></h1>
-			</div>
-		</div>
-	</div>  <!-- row_02-->
+<div class=wirenotes>{WIRENOTES}</div>
 
-	<div class="row_02">		
-		<div class="primary col read_color">
-			<h3 class="bigger"><a href="?page=home&type=read">I wanna read stories</a></h3>
-			<div class="primary col big_button">
-				<h1><a href="?page=home&type=read">Read</a></h1>
-			</div><!--/.primary-->
-		</div><!--/.primary-->
-
-		<div class="secondary col orient_color">
-			<div class="primary col big_button">
-				<h1><a href="?page=home&type=orient">Orient</a></h1>
-			</div>
-			
-		</div>
-	</div>  <!-- row_02-->
-
-
-  <div class="row_01">
-    <div class="col browse_color">
-      <h3 class="center bigger">Go to the landing page where you can go directly to avery map/picture/story, trip log</h3>
-			<div class="primary col big_button">
-				<h1><a href="?page=home&type=browse">Browse</a></h1>
-			</div><!--/.primary-->
-  </div>
-	
 <style type="text/css" media="screen">
-#heighthack {
-	height: 120px;
+#the_pic {
+	padding: 0px 30px 20px;
+	margin: 0 auto;
+	width: 800px;
+	border: 1px solid #999;
+	text-align: center;
 }
-smaller {
-	font-size: 60%;
+#the_pic p {
+	font-weight: bold;
+	font-size: 140%;
+}
+#the_content ul {
+	padding: 0px 30px 20px;
+	margin: 0 auto;
+	width: 800px;
+	border: 1px solid #999;
 }
 </style>

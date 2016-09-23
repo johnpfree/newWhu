@@ -1,0 +1,25 @@
+<table id="linkbar" border="0">
+	<tr>
+		<td class=wirenotes colspan=11>{WIRENOTES}</td>
+	</tr>
+	<tr>
+		<td><a href="?page={PAGE1}&type={TYPE1}&key={KEY1}">{LABEL1}</a></td>
+		<td><a href="?page={PAGE2}&type={TYPE2}&key={KEY2}">{LABEL2}</a></td>
+		<td><a href="?page={PAGE3}&type={TYPE3}&key={KEY3}">{LABEL3}</a></td>
+	</tr>
+</table>
+
+<style type="text/css" media="screen">
+	#linkbar {
+		width: 100%;
+	}
+	#linkbar td {
+		width: 33%;
+		margin: 0px 20px;
+		padding: 20px 0px;
+		font-size: 140%;
+		text-align: center;
+		border: 1px solid #999;
+	}
+</style>
+

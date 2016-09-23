@@ -1,0 +1,37 @@
+<div id="thegal">
+	<!-- BEGIN rows -->
+	<p>
+		<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
+				{PIC_NAME} &bull; {PIC_ID}<br />{PIC_CAPTION}
+		</a>		
+	</p>
+	<!-- END rows -->
+</div>
+<hr class="clear_all" />
+{LINK_BAR}
+
+
+<style type="text/css" media="screen">
+#thegal {
+	margin: 0 auto;
+}
+
+#thegal>p {
+	float: left;
+	width: 170px; 
+	height: 190px; 
+	text-align: center;
+	margin: 6px;
+	margin-bottom: 20px;
+	border: 3px solid #44f855;		
+}
+img {
+	border: 3px solid #e6f8cc;		
+}
+.squareme {
+	width: 160px;
+	height: 160px;
+	object-fit: cover;
+}
+	
+</style>

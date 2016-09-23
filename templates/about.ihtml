@@ -1,12 +1,12 @@
 
 <div id="the_pic">
-	<p>{SPOT_NAME}</p>
-	What is it?<br />
-	Where is it? Show me a map.<br />
-	When did I stay here? What trips were I on?<br />
-	What blog posts is it in?<br />
-	Other details - cost, gps<br />
-	description of my visits	<br />
+	<p>About Page</p>
+	Me, cloudyhands, email, twitter!<br />
+	Shout out to Elton, email, twitter!<br />	
+  About the site. What is this anyway?<br />
+	Tools used - find us on github, Mapbox, Wordpress, Fonts?, Bootstrap? ...
+	<br />
+	<br />
 	<br />
 </div>
 
@@ -14,7 +14,7 @@
 
 <style type="text/css" media="screen">
 #the_pic {
-	padding-top: 30px;
+	padding: 20px 30px 10px;
 	margin: 0 auto;
 	width: 800px;
 	border: 1px solid #999;
