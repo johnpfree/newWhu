@@ -1,30 +1,5 @@
 <?php
 
-// class Foo {	function gimme()		{		return 42;	}  }
-// $fooo = (new Foo)->gimme();
-// dumpVar($fooo, "fooo");
-//
-// $fname = 'foo';
-// $fc = new $fname();
-// $fooo = $fc->gimme();
-// dumpVar($fooo, "fcooo");
-// function argue() {
-// 	$numargs = func_num_args();
-//   echo "<hr>Number of arguments: $numargs<br />\n";
-// 	foreach (func_get_args() as $k => $v)
-// 	{
-//     echo "Argument $k is: $v<br />\n";
-// 	}
-// }
-// argue(123);
-// argue('hi', 123);
-// argue(123, 'new Properties(array())');
-// function getArgs() {
-//   if (($numargs = func_num_args()) < 2)
-// 		throw new Exception("WhuThing must have at least two args");
-// 	$props = func_get_arg(0);
-// }
-
 	// var $prefix = 'wf_categories';
 	// var $prefix = 'wf_favepics';
 	// var $prefix = 'wf_geocoords';
@@ -36,7 +11,8 @@
 	// var $prefix = 'wf_routes';
 	// var $prefix = 'wf_segmentmap';
 	// var $prefix = 'wf_segments';
-
+	define('WP_USE_THEMES', false);
+	require(WP_PATH . 'wp-load.php');											// Include WordPress	
 
 	class WhuThing extends DbWhufu
 	{
@@ -45,10 +21,18 @@
 		var $isCollection = false;
 		var $verbose = false;
 		var $hasData = true;
-		function __construct($p, $key)
+		function __construct($p, $key = NULL)
 		{
+			// new hack!  Single parameter means am casting to a child class
+			if (is_null($key))
+			{
+				parent::__construct($p->props);
+				$this->data = $p->data;
+				return;
+			}
 			parent::__construct($p);
 			$this->data = $this->getRecord($key);
+			// dumpVar(boolStr(is_array($this->data)), "$key");
 			if (!is_array($this->data))
 				$this->hasData = false;
 		}
@@ -74,10 +58,18 @@
 			return $this->data[$key];  
 		}
 
+		// --------- getRecord() should come here to die
+		function getRecord($key) 
+		{ 
+			dumpVar($key, "key");
+			jfdie(get_Class($this) . "::getRecord parameter not recognized"); 
+		}
+		
 		// --------- getRecord() overloading utilities
 		function isSpotDayRecord($key)	{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
 		function isSpotDayParmsArray($key)	{	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
 		function isTripRecord($key)			{	return (is_array($key) && isset($key['wf_trips_id']));	}
+		function isPicRecord($key)			{	return (is_array($key) && isset($key['wf_images_id']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
@@ -102,7 +94,7 @@
 		}
 	
 		// --------- collections
-		function one($i)
+		function one($i)		// one() creates an object from the collection daya and returns it
 		{
 			$this->assertIsCollection();
 			$this->assert(isset($this->data[$i]), "this->data[$i] is NOT set!");
@@ -138,6 +130,7 @@
 	class WhuDbTrip extends WhuThing 
 	{
 		var $prefix = 'wf_trips';
+		var $lazyWpCat = 0;
 		function getRecord($key)
 		{
 			if ($this->isTripRecord($key))
@@ -149,15 +142,52 @@
 		function id()					{ return $this->dbValue('wf_trips_id'); }
 		function name()				{ return $this->dbValue('wf_trips_text'); }
 		function desc()				{ return $this->dbValue('wf_trips_desc'); }
+		function folder()			{ return $this->dbValue('wf_trips_picfolder'); }
 		function startDate()	{ return $this->dbValue('wf_trips_start'); }
 		function endDate()		{ return $this->dbValue('wf_trips_end'); }
 
-		// function name()				{ return $this->dbValue('wf_trips_picfolder'); }
 		// function name()				{ return $this->dbValue('wf_trips_odometer'); }
 		// function name()				{ return $this->dbValue('wf_trips_map_lat'); }
 		// function name()				{ return $this->dbValue('wf_trips_map_lon'); }
+
+		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
+		function isNewMap()		{ return (strlen($this->fid()) > 1); }
+
+		function wpCatId()		
+		{ 
+			if ($this->lazyWpCat)
+				return $this->lazyWpCat;
+			
+			$day = $this->build('DbDay', $this->startDate());
+			if ($day->hasData) {
+				$cat = wp_get_post_categories($day->wpId());
+				return $this->lazyWpCat = $cat[0];
+			}
+			// NOTE! Our convention is that if the first day has no post, the whole thing hsa no posts
+			return $this->lazyWpCat = 0;
+		}
 	}
-	class WhuDbTrips extends WhuDbTrip 
+	class WhuTrip extends WhuDbTrip 
+	{
+		function makeStoriesLink()
+		{}
+		function hasPics()
+		{
+			$pics = $this->build('Pics', array('tripid' => $this->id())); 
+			return $pics->size() > 0;
+		}
+		function hasStories()	{	return $this->wpCatId() > 0;	}
+		function hasMap()
+		{
+			if ($this->isNewMap())			// cheapest test
+				return true;
+			return false;
+
+			// not a new map, look for routes for old map
+			return $this->getAll("select * from wf_routes where wf_trips_map=" . $this->id());				
+		}
+	}
+	class WhuTrips extends WhuTrip 
 	{
 		var $isCollection = true;
 		function getRecord($parms)
@@ -166,7 +196,7 @@
 			$qProps = new Properties($defaults, $parms);
 			// $qProps->dump('$qProps->');
 			$q = sprintf("select * from wf_trips ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));	
-			dumpVar($q, "q");
+			// dumpVar($q, "q");
 			return $this->getAll($q);	
 			// return $this->getOne(sprintf("select * from wf_trips ORDER BY %s %s"), $qProps->get('field'), $qProps->get('order'));
 		}
@@ -178,9 +208,15 @@
 		var $prefix = 'wf_days';
 		function getRecord($key)
 		{
-			if (is_array($key))		// $key == the record?
+			// dumpVar($key, "key");
+			// dumpBool(is_array($key), "arr");
+			if (is_array($key))					// $key == the record?
 				return $key;
-			return $this->getOne("select * from wf_trips where wf_trips_id=$key");	
+
+			if ($this->isDate($key))		// $key == date?
+				return $this->getOne("select * from wf_days where wf_days_date='$key'");	
+
+			WhuThing::getRecord($key);		// FAIL
 		}
 		function date()				{ return $this->dbValue('wf_days_date'); }
 		function spotId()			{ return $this->dbValue('wf_spots_id'); }
@@ -189,15 +225,18 @@
 		function dayDesc()		{ return $this->dbValue('wf_route_desc'); }
 		function nightName()	{ return $this->dbValue('wf_stop_name'); }
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
+		function wpId()				{ return $this->dbValue('wp_id'); }
 		
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
-		function lon()				{ return $this->dbValue('wf_days_lon'); }
-		
+		function lon()				{ return $this->dbValue('wf_days_lon'); }		
+
+		function prettyDate()	{ return Properties::prettyDate($this->date()); }
 	}
 	class WhuDbDays extends WhuDbDay {
 		var $isCollection = true;
 		function getRecord($key)
 		{
+			$this->assert($key > 0);
 			return $this->getAll("select * from wf_days where wf_trips_id=$key order by wf_days_date");
 		}
 	}
@@ -207,6 +246,7 @@
 		{
 			if (get_class($key) == 'WhuDbDay')
 				return $key->data;
+
 			return parent::getRecord($key);
 		}
 		function nightName()	{	return $this->getSpotandDaysArranged('nightName');	}
@@ -256,6 +296,7 @@
 		}
 	}
 
+
 	class WhuDbSpot extends WhuThing 
 	{
 		var $prefix = 'wf_spots';
@@ -279,12 +320,11 @@
 			if ($this->isSpotDayParmsArray($key))
 				return $this->getOne($q = sprintf("select * from wf_spot_days where wf_spots_id=%s AND wf_spot_days_date='%s'", $key['spotId'], $key['date']));
 			
-			dumpVar($key, "key");
-			jfdie("WhuDbSpotDay::getRecord($key) not recognized");
+			WhuThing::getRecord($key);
 		}
-		function spotId()		{ return $this->dbValue('wf_spots_id'); }
-		function date()			{ return $this->dbValue('wf_spot_days_date'); }
-		function desc()			{ return $this->dbValue('wf_spot_days_desc'); }
+		function id()			{ return $this->dbValue('wf_spots_id'); }
+		function date()		{ return $this->dbValue('wf_spot_days_date'); }
+		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
 	}
 	//  So far this can be a collection of days for a date, or of days for a Spot
 	class WhuDbSpotDays extends WhuDbSpotDay
@@ -297,6 +337,8 @@
 
 			if ($key > 0)
 				return $this->getAll("select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date");
+			
+			WhuThing::getRecord($key);
 		}
 		
 		function closestDay($date)		// no know use for this functino, but I don't want to toss the code :)
@@ -325,4 +367,73 @@
 			return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");// order by wf_days_date");
 		}
 	}
+	
+	class WhuPost extends WhuThing 
+	{
+		function getRecord($key)
+		{
+			
+		}
+	}
+	class WhuPosts extends WhuPost 
+	{
+		var $isCollection = true;
+		function getRecord($parm)
+		{
+			WhuThing::getRecord($key);		// FAIL
+		}
+	}
+
+	class WhuPic extends WhuThing 
+	{
+		function getRecord($key)
+		{
+			if ($this->isPicRecord($key))
+				return $key;
+
+			return $this->getOne("select * from wf_images_id where wf_trips_id=$key");	
+		}
+		function id()				{ return $this->dbValue('wf_images_id'); }
+		function caption()	{ return $this->dbValue('wf_images_text'); }
+		function datetime()	{ return $this->dbValue('wf_images_create'); }
+		function filename()	{ return $this->dbValue('wf_images_filename'); }
+		function path()			{ return $this->dbValue('wf_images_path'); }
+	}
+	class WhuPics extends WhuPic 
+	{
+		var $isCollection = true;
+		function getRecord($parm)
+		{
+			if (isset($parm['folder'])) 
+				$folder = $parm;
+			else if (isset($parm['tripid']))
+			{
+				$trip = $this->build('DbTrip', $parm['tripid']);
+				$folder = $trip->folder();
+			}
+			
+			return $this->getAll($q = "select * from wf_images where wf_images_path='$folder' order by wf_images_localtime");
+
+			// else if (isset($parm['folder']))
+			// switch ($parm) {
+			// 	case 'tripid':
+			// 		break;
+			// 	case 'folder':
+			// 	case 'date':
+			// 		break;
+			// 	case 'catid':
+			// 		break;
+			// 	case 'search':
+			// 		break;
+			// }
+			WhuThing::getRecord($parm);		// FAIL
+		}
+	}
+
+	
+	// class WhuMap extends WhuThing
+	// {
+	// 	function getRecord($key)
+	// 	{}
+	// }
 ?>

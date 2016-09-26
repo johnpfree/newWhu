@@ -1,25 +1,15 @@
 <?php
-if (file_exists("include/host.php"))
-{                                   		// i'm running on the server, where WHUFU has its own include directory
-	include_once("include/host.php");
-	define('INCPATH0', "include/");
-}
-else 																		// i'm running locally, using the shared include directory
-{
-	include_once("../include/host.php");
-	define('INCPATH0', "../include/");
-}
-include_once(INCPATH0 . "host.php");
-include_once(INCPATH0 . "template.inc");
-include_once(INCPATH0 . "class.Properties.php");
-include_once(INCPATH0 . "class.ViewBase.php");
-include_once(INCPATH0 . "class.DBBase.php");
+include_once("host.php");
+include_once(INCPATH . "template.inc");
+include_once(INCPATH . "class.Properties.php");
+include_once(INCPATH . "class.ViewBase.php");
+include_once(INCPATH . "class.DBBase.php");
 
 include_once("class.Things.php");
 include_once("class.Pages.php");
-include_once("class.Geo.php");				// after Pages
+// include_once("class.Geo.php");				// after Pages
 
-include_once(INCPATH0 . "jfdbg.php");
+include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
@@ -73,7 +63,7 @@ class WhuTemplate extends VwTemplate
 
 // ---------------- Start Code ---------------------------------------------
 
-session_start();			// always make this the first thing!
+// session_start();			// always make this the first thing!
 
 $defaults = array(
 	'page' => 'home', 
@@ -95,16 +85,22 @@ switch ("$curpage$curtype")
 	case 'homelook':		$page = new HomeLook($props);				break;
 	case 'homeread':		$page = new HomeRead($props);				break;
 	case 'homeorient':	$page = new HomeOrient($props);			break;
-	case 'homebrowse':	$page = new HomeBrowse($props);			break;
+	case 'homebrowse':	$page = new HomeBrowse($props);			break;	
 	
-	case 'homeabout':		$page = new HomeAbout($props);			break;	
-	
-	case 'picid':				$page = new OnePic($props);			break;	
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
+
+	case 'picsid':			$page = new TripGallery($props);			break;	
+	case 'pictrip':			$page = new OnePic($props);			break;	
 	
-	case 'logid':				$page = new OneTripLog($props);			break;	
+	case 'mapid':				$page = new OneMap($props);			break;	
+	case 'logid':				$page = new OneTripLog($props);		break;	
+	
+	case 'txtsid':			$page = new TripStories($props);		break;	
+	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
+	case 'searchhome':	$page = new Search($props);			break;
+	case 'abouthome':		$page = new About($props);			break;	
 	
 	default: 
 		dumpVar("$curpage$curtype", "Unknown page/type:");
@@ -112,8 +108,8 @@ switch ("$curpage$curtype")
 		exit;
 }
 
-$templates = array("main" => 'container.ihtml', "the_page" => $page->file);
-$page->startPage($templates, true);
+$templates = array("main" => 'container.ihtml', "the_content" => $page->file);
+$page->startPage($templates);
 $page->setStyle();
 $page->showPage();
 $page->endPage();
