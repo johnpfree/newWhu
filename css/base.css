@@ -28,11 +28,13 @@ body {
 	line-height: 1.6;
 	margin: 0;
 }
-ul {
+
+.main-nav {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+/*
 p {
 	font-size: .95em;
 	margin-bottom: 1.8em;
@@ -49,7 +51,7 @@ a {
 img {
 	max-width: 100%;
 }
-
+*/
 /* ================================= 
   Base Layout Styles
 ==================================== */
