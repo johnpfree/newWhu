@@ -17,7 +17,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 		'daydate' 	=> "Core data: everything about that day- including Date, where tonight's stop, last night's stop, some pictures, a locator map, an excerpt fo the post for that day.  Metadata: links to tomorrow/yesterday", 
 		'spotid'	 	=> "Core data: everything about that spot - all the spot information, a list of the day descriptions for when I was there, some pictures, locator map, link to the stories where it appears", 
 		'searchhome' 	=> "Find stuff. Core data: UI to specify your search. A term can be found in blog posts, spot names, stop names and descriptions, picture labels, map labels, category names", 
-		'abouthome' 	=> "Core data: Contact info, tell about the project, tell about us. Metadata: none unless more than one page is required.", 
+		'abouthome' 	=> "Core data: Contact info. Other data: tell about the project, tell about us. Metadata: none unless more than one page is required.", 
 		'homehome' 	=> "Core data: Where to start. Make the rest of the site inviting and accessible.", 
 		
 		'homesearch' 	=> "Core data: show a ", 
