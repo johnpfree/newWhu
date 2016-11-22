@@ -4,9 +4,9 @@
 </head>
 
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if lt IE 7]>			 <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>				 <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>				 <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
@@ -30,48 +30,48 @@
 <!--[if lt IE 8]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-    <div class="header-container">
-        <header class="wrapper clearfix">
-            <div class="logo"><a href="#"><img src="./resources/JohnFreeman_logo_sm_02.png" /></a></div>
-            <nav>
-                <ul>
-                    <li><a href="?page=home&type=home">Home</a></li>
-                    <li class="even-nav"><a href="?page=trips&type=home">Trips</a></li>
+		<div class="header-container">
+				<header class="wrapper clearfix">
+						<div class="logo"><a href="#"><img src="./resources/JohnFreeman_logo_sm_02.png" /></a></div>
+						<nav>
+								<ul>
+										<li><a href="?page=home&type=home">Home</a></li>
+										<li class="even-nav"><a href="?page=trips&type=home">Trips</a></li>
 										<li><a href="?page=txts&type=home">Blog</a></li>
 										<!-- <li><a href="http://jfmac.local/~jf/wptest/">Blog</a></li> -->
 										<li class="even-nav"><a href="?page=about&type=home">About</a></li>
 										<li><a href="?page=search&type=home">Search</a></li>
-                </ul>
-            </nav>
+								</ul>
+						</nav>
 						<i id="mysize">size: </i>
-        </header>
-    </div>
+				</header>
+		</div>
 
-    <div id="the_content">
-        <main class="main wrapper clearfix">
+		<div id="the_content">
+				<main class="main wrapper clearfix">
 					{THE_CONTENT}
-        </main> <!-- .main -->
-    </div> <!-- #the_content -->
+				</main> <!-- .main -->
+		</div> <!-- #the_content -->
 
-    <div class="footer-container">
-        <footer class="wrapper clearfix">
+		<div class="footer-container">
+				<footer class="wrapper clearfix">
 					<div>&copy; 2010-2016 John P Freeman &mdash; <a href="http://www.cloudyhands.com/">cloudyhands.com</a> &mdash; design with Elton de Leon Arteaga</div>
-        </footer>
-    </div>
+				</footer>
+		</div>
 
-  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
-  <script src="js/main.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+	<script src="js/main.js"></script>
 
-  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-  <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='https://www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-75084745-1','auto');ga('send','pageview');
-  </script>
+	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+	<script>
+			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+			e.src='https://www.google-analytics.com/analytics.js';
+			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+			ga('create','UA-75084745-1','auto');ga('send','pageview');
+	</script>
 	
 </body>
 </html>
