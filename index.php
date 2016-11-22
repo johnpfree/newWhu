@@ -90,13 +90,15 @@ switch ("$curpage$curtype")
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
 
-	case 'picsid':			$page = new TripGallery($props);			break;	
-	case 'pictrip':			$page = new OnePic($props);			break;	
+	case 'picsid':			$page = new TripGallery($props);		break;	
+	case 'picsdate':		$page = new DateGallery($props);		break;	
+	case 'pictrip':			$page = new OnePic($props);					break;	
 	
 	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'logid':				$page = new OneTripLog($props);		break;	
 	
 	case 'txtsid':			$page = new TripStories($props);		break;	
+	case 'txtwpid':			$page = new TripStory($props);		break;
 	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
 	case 'searchhome':	$page = new Search($props);			break;
@@ -111,6 +113,13 @@ switch ("$curpage$curtype")
 $templates = array("main" => 'container.ihtml', "the_content" => $page->file);
 $page->startPage($templates);
 $page->setStyle();
+$savepage = $page;
 $page->showPage();
+if (!is_object($page))
+{
+	$page = $savepage;
+	dumpVar("NOTICE that \$page got f---d up by calling Wordpress.");
+}
+$page->setCaption();
 $page->endPage();
 ?>

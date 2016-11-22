@@ -2,6 +2,7 @@
 <div id="the_map">
 	<p id=xx>the map of<br /> <b>{TRIP_NAME}</b></p>
 	<p>Full page, probably a Mapbox map, with routes brought in as Mapbox JSON and places taken from the Spots and Days records.</p>
+					<img src="../whuDev/colors/stuff/sampmap.png" width="100%" alt="Sampmap">
 </div>
 
 {LINK_BAR}

@@ -1,3 +1,6 @@
+
+<h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2>
+
 <div id="thegal">
 	<!-- BEGIN rows -->
 	<p>
@@ -18,7 +21,8 @@
 
 #thegal>p {
 	float: left;
-	width: 170px; 
+	width: 146px; 
+/*	width: 170px;*/
 	height: 190px; 
 	text-align: center;
 	margin: 6px;

@@ -11,15 +11,12 @@
 	// var $prefix = 'wf_routes';
 	// var $prefix = 'wf_segmentmap';
 	// var $prefix = 'wf_segments';
-	define('WP_USE_THEMES', false);
-	require(WP_PATH . 'wp-load.php');											// Include WordPress	
 
 	class WhuThing extends DbWhufu
 	{
 		var $data = NULL;
 		var $prefix = NULL;
 		var $isCollection = false;
-		var $verbose = false;
 		var $hasData = true;
 		function __construct($p, $key = NULL)
 		{
@@ -109,10 +106,10 @@
 		// --------- factory
 		function build ($type = '', $key) 
 		{
-			if ($this->verbose)	dumpVar($type, "THING Build: type");
-			
+			// dumpVar($type, "THING Build: type key=$key");
 			if ($type == '') {
-				throw new Exception("Invalid Thing Type = $type.");
+				throw new Exception("THING Build is blank.");
+				// throw new Exception("Invalid Thing Type = $type.");
 			} 
 			else 
 			{ 
@@ -153,19 +150,19 @@
 		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
 		function isNewMap()		{ return (strlen($this->fid()) > 1); }
 
-		function wpCatId()		
-		{ 
-			if ($this->lazyWpCat)
-				return $this->lazyWpCat;
-			
-			$day = $this->build('DbDay', $this->startDate());
-			if ($day->hasData) {
-				$cat = wp_get_post_categories($day->wpId());
-				return $this->lazyWpCat = $cat[0];
-			}
-			// NOTE! Our convention is that if the first day has no post, the whole thing hsa no posts
-			return $this->lazyWpCat = 0;
-		}
+		// function wpCatId()
+		// {
+		// 	if ($this->lazyWpCat)
+		// 		return $this->lazyWpCat;
+		//
+		// 	$day = $this->build('DbDay', $this->startDate());
+		// 	if ($day->hasData) {
+		// 		$cat = wp_get_post_categories($day->postId());
+		// 		return $this->lazyWpCat = $cat[0];
+		// 	}
+		// 	// NOTE! Our convention is that if the first day has no post, the whole thing hsa no posts
+		// 	return $this->lazyWpCat = 0;
+		// }
 	}
 	class WhuTrip extends WhuDbTrip 
 	{
@@ -176,9 +173,13 @@
 			$pics = $this->build('Pics', array('tripid' => $this->id())); 
 			return $pics->size() > 0;
 		}
-		function hasStories()	{	return $this->wpCatId() > 0;	}
+		function hasStories()	{
+			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
+			return $count['nposts'] > 0;
+		}
 		function hasMap()
 		{
+		// dumpVar($this->data['wf_trips_map_fid'], "this->data['wf_trips_map_fid']");
 			if ($this->isNewMap())			// cheapest test
 				return true;
 			return false;
@@ -225,13 +226,19 @@
 		function dayDesc()		{ return $this->dbValue('wf_route_desc'); }
 		function nightName()	{ return $this->dbValue('wf_stop_name'); }
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
-		function wpId()				{ return $this->dbValue('wp_id'); }
+		function postId()			{ return $this->dbValue('wp_id'); }
+		
+		function miles()			{ return $this->dbValue('wf_days_miles'); }
+		function cumulative()	{ return $this->dbValue('wf_days_cum_miles'); }
 		
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
 		function prettyDate()	{ return Properties::prettyDate($this->date()); }
+		
+		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 	}
+
 	class WhuDbDays extends WhuDbDay {
 		var $isCollection = true;
 		function getRecord($key)
@@ -295,7 +302,6 @@
 			return sprintf("%s, %s", round($this->lat(), $precision), round($this->lon(), $precision));
 		}
 	}
-
 
 	class WhuDbSpot extends WhuThing 
 	{
@@ -370,11 +376,52 @@
 	
 	class WhuPost extends WhuThing 
 	{
-		function getRecord($key)
+		var $lazyPostRec = 0;
+		function getRecord($parm)	//  , date
 		{
-			
+			dumpVar($parm, "WhuPost parm");
+			if (is_array($parm) && isset($parm['wpid']))
+			{
+				return $this->doWPQuery("p={$parm['wpid']}");			// title, content
+			}
+			jfDie("WhuPost($parm)");
 		}
+		function title()		{ return $this->data[0]['title']; }
+		function content()	{ return $this->data[0]['content']; }
+		
+		function doWPQuery($args)
+		{
+			// invoke the WP loop right here and now!
+			define('WP_USE_THEMES', false);
+			require(WP_PATH . 'wp-load.php');											// Include WordPress			
+			query_posts($args);																	// get collection (of 1) post
+			$posts = array();
+
+			while (have_posts()): the_post();										// The Loop
+				$this->wpTitle = the_title('', '', false);				// the_title can return a string
+				$this->wpContent = $this->the_content();					// the_content does NOT, so copy/modify below to do so
+			
+				$posts[] = array('title' => $this->wpTitle, 'content' => $this->wpContent);
+			endwhile;
+			return $posts;
+		}
+		// straight outta Wordpress:
+		function the_content($more_link_text = null, $stripteaser = false) {
+			$content = get_the_content($more_link_text, $stripteaser);
+			$content = apply_filters('the_content', $content);
+			$content = str_replace(']]>', ']]&gt;', $content);
+			return $content;
+		}
+		// function postCatId() {
+		// 	define('WP_USE_THEMES', false);
+		// 	require(WP_PATH . 'wp-load.php');											// Include WordPress
+		//
+		// 	$cats = get_the_category($this->postId());
+		// 	dumpVar($cats, "cats");
+		// 	exit;
+		// }
 	}
+
 	class WhuPosts extends WhuPost 
 	{
 		var $isCollection = true;
@@ -402,16 +449,21 @@
 	class WhuPics extends WhuPic 
 	{
 		var $isCollection = true;
-		function getRecord($parm)
+		function getRecord($parm)	//  tripid. folder, date
 		{
+			if (isset($parm['date'])) 
+			{				
+				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+				return $this->getAll($q);
+			}
+			
 			if (isset($parm['folder'])) 
 				$folder = $parm;
 			else if (isset($parm['tripid']))
 			{
 				$trip = $this->build('DbTrip', $parm['tripid']);
 				$folder = $trip->folder();
-			}
-			
+			}			
 			return $this->getAll($q = "select * from wf_images where wf_images_path='$folder' order by wf_images_localtime");
 
 			// else if (isset($parm['folder']))

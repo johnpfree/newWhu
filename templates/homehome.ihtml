@@ -1,5 +1,5 @@
 
-<div id="the_pic">
+<div id="main_item">
 	<p>H O M E</p>
 	What do you want to do? 
 	<br />
@@ -22,18 +22,18 @@
 <div class=wirenotes>{WIRENOTES}</div>
 
 <style type="text/css" media="screen">
-#the_pic {
+#main_item {
 	padding: 0px 30px 20px;
 	margin: 0 auto;
 	width: 800px;
 	border: 1px solid #999;
 	text-align: center;
 }
-#the_pic p {
+#main_item p {
 	font-weight: bold;
 	font-size: 140%;
 }
-#the_content ul {
+ul {
 	padding: 0px 30px 20px;
 	margin: 0 auto;
 	width: 800px;

@@ -1,5 +1,5 @@
 /* ================================= 
-	My general stuff
+	My general stuff - delete this when I'm all cleaned up
 */
 
 #the_content {
@@ -17,4 +17,75 @@
 	text-align: center;
 	background-color: #ffa;
 	color: #f44;
+}
+
+/* ================================= 
+	was base.css
+==================================== */
+
+/* ================================= 
+  Base Element Styles
+==================================== */
+
+* {
+	box-sizing: border-box;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+	font-family: 'Roboto', sans-serif;
+	line-height: 1.6;
+	margin: 0;
+}
+
+/* ================================= 
+  Base Layout Styles
+==================================== */
+
+/* ---- Layout Containers ---- */
+
+.col {
+	padding: 1em;
+  border-radius: .35em;
+  margin: 0 .5em .8em;    
+/*  background: #3A5950;*/
+}
+
+.center {
+  text-align: center;
+}
+.container {
+  background-color: #3A5950; 
+  flex: 1;
+}
+
+/* ---- Page Elements ---- */
+
+/* nav link */
+nav a, nav a:visited {
+  color: #fff;
+}
+/* selected nav link */
+nav a.selected, nav a:hover {
+  color: #787777;
+}
+
+
+/* ================================= 
+  Media Queries
+none = all
+769  = ipad, full
+1025 = full
+==================================== */
+
+@media (min-width: 769px) {
+	.row_02 {
+		display: flex;
+    width: 100%;
+		margin: 0 auto;
+	}
+  .row_02 {
+    flex-wrap: 0;
+  }
 }
