@@ -89,6 +89,10 @@
 			$newlen = strrpos(substr($str, 0, $chop), ' ');		// find the last space before limit
 			return substr($str, 0, $newlen) . " ...";
 		}
+		function massageDbText($txt) 
+		{
+			return stripslashes($txt);
+		}
 	
 		// --------- collections
 		function one($i)		// one() creates an object from the collection daya and returns it
@@ -282,7 +286,7 @@
 				$this->spot = $this->build('DbSpot', $this->spotId());	// create the spot
 			
 			switch ($key) {
-				case 'nightName':	return $this->spot->name();
+				case 'nightName':	return $this->massageDbText($this->spot->name());
 				case 'lat':				return $this->spot->lat();
 				case 'lon':				return $this->spot->lon();
 			}
