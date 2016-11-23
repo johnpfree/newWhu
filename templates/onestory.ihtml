@@ -1,0 +1,116 @@
+
+<div class=wirenotes>{WIRENOTES}</div>
+
+<div id="main_div">
+	<h2>{POST_TITLE}</h2>	
+	<div class=entry-content>{POST_CONTENT}</div>
+</div>
+
+<style type="text/css" media="screen">
+#main_div {
+	margin: 0 auto;
+	padding: 0 30px;
+	width: 800px;
+	border: 1px solid #999;
+}
+
+	/* ----------------------- from Wordpress ----------------------------- */
+.entry-content img {
+	max-width: 100%; /* Fluid images for posts, comments, and widgets */
+}
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}
+.entry-content img,
+img.wp-post-image {
+	/* Add fancy borders to all WordPress-added images but not things like badges and icons and the like */
+	border-radius: 3px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.wp-caption {
+	max-width: 100%; /* Keep wide captions from overflowing their container. */
+	padding: 8px 3px 3px 3px;
+	margin: 6px;
+	text-align: center;
+	border: 2px solid #4D804C;
+}
+.wp-caption .wp-caption-text {
+	font-style: italic;
+	font-size: 12px;
+	text-align: center;
+	line-height: 1.5;
+	color: #757575;
+	margin: 6px 0 0;
+}
+p.wp-caption-text {
+	margin: 0;				/* eliminate space under inset photos */
+}
+
+h5 {
+	font-size: 12pt;
+	lxine-height: 28px;
+}
+
+.entry-content {
+	margin: 18px 0 0;
+	line-height: 1.714285714;
+}
+.entry-content h3 {
+	margin: 18px 0 8px;
+	line-height: 1.714285714;
+	clear: both;			/* so heading doesn't float with pic layout */
+}
+.entry-content h3 {
+	font-size: 16px;
+	font-size: 1.142857143rem;
+	line-height: 1.846153846;
+}
+.entry-content p {
+	margin: 0 0 18px; 	/* less space btwn paragraphs */
+	line-height: 1.714285714;
+}
+.entry-content ol {
+	margin: 0 0 24px;
+	margin: 0 0 1.714285714rem;
+	line-height: 1.714285714;
+}
+.entry-content ul ul,
+.entry-content ol ol,
+.entry-content ul ol,
+.entry-content ol ul {
+	margin-bottom: 0;
+}
+.entry-content ul, 
+.entry-content ol {
+	margin: -8px 0 4px;
+}
+.entry-content li {
+	margin: 0 0 0 20px;		/* shorten left margin */
+}
+.entry-content blockquote {
+	margin-bottom: 24px;
+	margin-bottom: 1.714285714rem;
+	padding: 24px;
+	padding: 1.714285714rem;
+	font-style: italic;
+}
+.entry-content blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ remove nl2br() styling 
+	Note here and the filter() in class.Geo, I have removed the nl2br, and instead replace TWO nls with <p></p>.
+	Much better.  Now only paragrah breaks are spaced.
+	*/
+.wfwpparaspace {}
+.entry-content ul, 
+.entry-content ol {
+	margin: .7em 0;
+}
+
+</style>
