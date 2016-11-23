@@ -340,15 +340,15 @@ class OneSpot extends ViewWhu
 
 class TripStories extends ViewWhu
 {
-	var $file = "tripstories.ihtml";   
+	var $file = "storylist.ihtml";   
 	function showPage()	
 	{
 		$tripid = $this->props->get('key');
- 	 	$trip = $this->build('DbTrip', $tripid);		
-
+ 	 	$trip = $this->build('DbTrip', $tripid);	
 		$this->template->set_var('TRIP_NAME', $trip->name());
+		
+ 	 	$trip = $this->build('Posts', $tripid);	
 
-		$this->linkBar('txts', $tripid);		
 		parent::showPage();
 	}
 }

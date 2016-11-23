@@ -429,9 +429,18 @@
 	class WhuPosts extends WhuPost 
 	{
 		var $isCollection = true;
-		function getRecord($parm)
+		function getRecord($key)	// key = trip id
 		{
-			WhuThing::getRecord($key);		// FAIL
+			$days = $this->build('DbDays', $key);
+			for ($i = 0, $wpids = array(); $i < $days->size(); $i++)
+			{
+				$day = $days->one($i);
+				if (in_array($wpid = $day->postId(), $wpids))
+					continue;
+				$wpids[] = $wpid;
+			}
+			dumpVar($wpids, "wpids");
+			exit;
 		}
 	}
 
