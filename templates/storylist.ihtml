@@ -1,0 +1,26 @@
+<h2>Stories for: {TRIP_NAME}</h2>
+
+<!-- BEGIN rows -->
+<hr />
+<a href="?page=txt&type=id&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
+<p class="storydates">{STORY_DATES}</p>
+<p class="storypart clearfix">{STORY_EXCERPT}</p>
+<!-- END rows -->
+
+<style type="text/css" media="screen">
+#the_content hr {
+	margin: 4px 0 18px;
+	height: 2px;
+	background-color: #3A5950;
+}	
+#the_content h3 {
+	margin: -6px 0 0;
+}
+.storydates {
+	xfloat: right;
+	margin: 6px 0 0px;
+}
+.storypart {
+	margin: 0px 0 22px;
+}
+</style>
