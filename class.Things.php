@@ -381,13 +381,15 @@
 	class WhuPost extends WhuThing 
 	{
 		var $lazyPostRec = 0;
-		function getRecord($parm)	//  , date
+		function getRecord($parm)	//  parm = array('wpid' => wpid)  OR jsut the wpid
 		{
-			dumpVar($parm, "WhuPost parm");
 			if (is_array($parm) && isset($parm['wpid']))
 			{
-				return $this->doWPQuery("p={$parm['wpid']}");			// title, content
+				return $this->doWPQuery("p={$parm['wpid']}");
 			}
+			else if ($parm > 0)
+				return $this->doWPQuery("p=$parm");
+
 			jfDie("WhuPost($parm)");
 		}
 		function title()		{ return $this->data[0]['title']; }
@@ -403,8 +405,7 @@
 
 			while (have_posts()): the_post();										// The Loop
 				$this->wpTitle = the_title('', '', false);				// the_title can return a string
-				$this->wpContent = $this->the_content();					// the_content does NOT, so copy/modify below to do so
-			
+				$this->wpContent = $this->the_content();					// the_content does NOT, so copy/modify below to do so			
 				$posts[] = array('title' => $this->wpTitle, 'content' => $this->wpContent);
 			endwhile;
 			return $posts;
@@ -431,16 +432,7 @@
 		var $isCollection = true;
 		function getRecord($key)	// key = trip id
 		{
-			$days = $this->build('DbDays', $key);
-			for ($i = 0, $wpids = array(); $i < $days->size(); $i++)
-			{
-				$day = $days->one($i);
-				if (in_array($wpid = $day->postId(), $wpids))
-					continue;
-				$wpids[] = $wpid;
-			}
-			dumpVar($wpids, "wpids");
-			exit;
+			WhuThing::getRecord($key);		// FAIL
 		}
 	}
 

@@ -347,7 +347,42 @@ class TripStories extends ViewWhu
  	 	$trip = $this->build('DbTrip', $tripid);	
 		$this->template->set_var('TRIP_NAME', $trip->name());
 		
- 	 	$trip = $this->build('Posts', $tripid);	
+		// collect unique Post ids
+		$days = $this->build('DbDays', $tripid);
+		for ($i = 0, $wpids = $wpdates = $wpdate = array(); $i < $days->size(); $i++)
+		{
+			$day = $days->one($i);
+			$wpdate[1] = $day->date();
+			
+			if (in_array($wpid = $day->postId(), $wpids))
+				continue;
+			// fall through => this is first date for this post. NOTE ALWAYS happens for first day
+			$wpids[] = $wpid;
+			if (isset($wpdate[0]))
+				$wpdates[] = $wpdate;
+			$wpdate[0] = $day->date();
+		}
+		$wpdates[] = $wpdate;
+
+		// now fill the loop
+		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
+		{ 
+			$post = $this->build('Post', $wpids[$i]);
+			// $post->dump();exit;
+			$row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
+			
+			$str = Properties::prettyDate($wpdates[$i][0]);
+			$str .= " - ";
+			$str .= Properties::prettyDate($wpdates[$i][1]);
+			$row['story_dates'] = $str;
+			
+			$row['story_excerpt'] = $post->baseExcerpt($post->content(), 300);
+			
+			$rows[] = $row;
+		}          
+
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
 
 		parent::showPage();
 	}
