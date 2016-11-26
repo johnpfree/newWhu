@@ -1,0 +1,23 @@
+<table id="tripstable" border="0" cellspacing="5" cellpadding="5">
+		<!-- <tr><td>dates</td><td>stories</td><td>pictures</td><td>map</td></tr> -->
+	<!-- BEGIN rows -->
+	<tr>
+		<td align="right"><a href="?page=log&type=id&key={TRIP_ID}" title="Trip Log">{TRIP_NAME}</a></td>
+		<td> &nbsp; </td>
+		<!-- <td><a {STORY_CLASS} href="{WP_PATH}?cat={WP_CAT_ID}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td> -->
+		<td><a {STORY_CLASS} href="?page=txts&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
+		<td><a {PIC_CLASS} href="?page=pics&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures"></a></td>
+		<td><a {MAP_CLASS} href="?page=map&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
+	</tr>
+	<!-- END rows -->
+</table>
+
+<style type="text/css" media="screen">
+	#tripstable {
+		margin: 0 auto;
+		xmargin-left: 200px;
+	}
+	#tripstable td {
+		padding: 4px 6px;
+	}
+</style>
