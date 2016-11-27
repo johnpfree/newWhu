@@ -228,7 +228,7 @@
 		function hasSpot()		{ return $this->spotId() > 0; }
 		function dayName()		{ return $this->dbValue('wf_route_name'); }
 		function dayDesc()		{ return $this->dbValue('wf_route_desc'); }
-		function nightName()	{ return $this->dbValue('wf_stop_name'); }
+		function nightName()	{ return $this->massageDbText($this->dbValue('wf_stop_name')); }
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
 		
@@ -260,7 +260,7 @@
 
 			return parent::getRecord($key);
 		}
-		function nightName()	{	return addslashes($this->getSpotandDaysArranged('nightName'));	}
+		function nightName()	{	return $this->massageDbText(addslashes($this->getSpotandDaysArranged('nightName')));	}
 		function nightDesc()	{	return addslashes($this->getSpotandDaysArranged('nightDesc'));	}
 
 		function lat()	{	return $this->getSpotandDaysArranged('lat');	}
