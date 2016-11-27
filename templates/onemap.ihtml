@@ -1,25 +1,74 @@
 
-<div id="the_map">
-	<p id=xx>the map of<br /> <b>{TRIP_NAME}</b></p>
-	<p>Full page, probably a Mapbox map, with routes brought in as Mapbox JSON and places taken from the Spots and Days records.</p>
-					<img src="../whuDev/colors/stuff/sampmap.png" width="100%" alt="Sampmap">
+<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+
+<div id="the_content">
+	<h2>{TRIP_NAME}</h2>
+	<div id='map'></div>
 </div>
 
-{LINK_BAR}
-
 <style type="text/css" media="screen">
-#the_map {
+h2 {
+	margin: 0;
+	text-align: center;
+}
+#the_content {
 	width: 100%;
-	height: 400px;
-	border: 1px solid #999;
+/*	height: 800px;*/
+	xborder: 1px solid #999;
 	text-align: center;
 	vertical-align: top;
 }
-p #xx {
-	font-size: 260%;
-}
-#the_map p {
-	padding: 10px 50px 0	;
-	font-size: 120%;
+#map {
+	width: 100%;
+	height: 800px;
 }
 </style>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
+// var map = L.mapbox.map('map', 'mapbox.satellite');
+// var map = L.mapbox.map('map', 'mapbox.streets');
+// var map = L.mapbox .map('map', 'mapbox.emerald');
+// var map = L.mapbox.map('map', 'mapbox.light');
+var map = L.mapbox.map('map', 'mapbox.streets');
+
+var myLayer = L.mapbox.featureLayer().addTo(map);
+var markers = [
+<!-- BEGIN rows -->
+	{
+		type: 'Feature',
+		geometry: {
+				type: 'Point',
+				coordinates: [{POINT_LON}, {POINT_LAT}]
+		},
+		properties: {
+				title: '{POINT_NAME}',
+				description: 'POINT_DESC',
+				'marker-symbol': '12',
+				// 'marker-symbol': 'POINT_IND',
+				'marker-color': '#8c54ba'
+		}
+	},
+<!-- END rows -->
+];
+
+var bounds = L.latLngBounds(L.latLng(markers[0].geometry.coordinates[1], markers[0].geometry.coordinates[0]));
+console.log('11', bounds.toString());
+for (var i = 0; i < markers.length; i++) {
+	var pt = L.latLng(markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]);
+	bounds.extend(pt);
+	// console.log(i, markers[i].properties.title);
+	// console.log(i, pt);
+	// console.log(i, bounds);
+}
+
+// bounds.pad(10);
+map.fitBounds(bounds);	
+myLayer.setGeoJSON(markers);
+
+map.on('click', function(e) {
+    console.log(e.latlng);
+});
+
+</script>
+	

@@ -301,10 +301,22 @@ class OneMap extends ViewWhu
 	{
 		$tripid = $this->props->get('key');
  	 	$trip = $this->build('DbTrip', $tripid);		
-
 		$this->template->set_var('TRIP_NAME', $trip->name());
 
-		$this->linkBar('map', $tripid);		
+ 	 	$days = $this->build('DbDays', $tripid);
+		for ($i = 0, $rows = array(); $i < $days->size(); $i++)
+		{
+			$day = $this->build('DayInfo', $days->one($i));
+		
+			$row = array('point_ind' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), 
+										'point_name' => $day->nightName(), 'point_desc' => $day->date(), );
+			$rows[] = $row;
+		}
+		// dumpVar($rows, "rows");
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
+		
+
 		parent::showPage();
 	}
 }

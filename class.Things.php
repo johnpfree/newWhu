@@ -245,7 +245,7 @@
 
 	class WhuDbDays extends WhuDbDay {
 		var $isCollection = true;
-		function getRecord($key)
+		function getRecord($key)			// trip id
 		{
 			$this->assert($key > 0);
 			return $this->getAll("select * from wf_days where wf_trips_id=$key order by wf_days_date");
@@ -260,12 +260,11 @@
 
 			return parent::getRecord($key);
 		}
-		function nightName()	{	return $this->getSpotandDaysArranged('nightName');	}
-		function nightDesc()	{	return $this->getSpotandDaysArranged('nightDesc');	}
+		function nightName()	{	return addslashes($this->getSpotandDaysArranged('nightName'));	}
+		function nightDesc()	{	return addslashes($this->getSpotandDaysArranged('nightDesc'));	}
 
 		function lat()	{	return $this->getSpotandDaysArranged('lat');	}
 		function lon()	{	return $this->getSpotandDaysArranged('lon');	}
-
 	
 		function getSpotandDaysArranged($key)
 		{
