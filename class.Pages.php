@@ -187,7 +187,7 @@ class OneTripLog extends ViewWhu
 	var $file = "triplog.ihtml";   
 	function showPage()	
 	{
-		$tripid = $this->props->get('key');
+		$tripid = $this->key;
  	 	$trip = $this->build('DbTrip', $tripid);		
 		$days = $this->build('DbDays', $tripid);	
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
@@ -240,6 +240,35 @@ class OneTripLog extends ViewWhu
 	}
 }
 
+class TripPictures extends ViewWhu
+{
+	var $file = "trippics.ihtml";   
+	function showPage()	
+	{
+		parent::showPage();
+		
+		$trip = $this->build('Trip', $this->key);
+		$this->template->set_var('GAL_TITLE', $trip->name());
+		
+		$days = $this->build('DbDays', $this->key);	
+		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
+		{
+			$day = $days->one($i);
+			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $day->pics()->size());
+			$row['nice_date'] = Properties::prettyShortest($date);
+			$rows[] = $row;
+			$count += $dc;
+		}
+		// dumpVar($rows, "rows $count");
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop($rows);
+		
+		$this->template->set_var('NUM_DAYS', $days->size());
+		$this->template->set_var('NUM_PICS', $count);
+		
+ 		$this->linkBar('pics', $this->props->get('key'));
+	}
+}
 class Gallery extends ViewWhu
 {
 	var $file = "gallery.ihtml";   
@@ -258,7 +287,7 @@ class Gallery extends ViewWhu
 			$pic = $pics->one($i);
 			$row = array('PIC_ID' => $pic->id(), 'PIC_name' => $pic->filename(), 'PIC_CAPTION' => $pic->caption());
 			$rows[] = $row;
-			if ($i > 4) break;
+			// if ($i > 4) break;
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content'));
 		// $loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
@@ -268,14 +297,14 @@ class Gallery extends ViewWhu
 	}
 	function galleryTitle($key)				{	return "Undefined!";	}
 }
-class TripGallery extends Gallery
-{
-	var $galtype = "trip";   
 	function showPage()	
 	{
 		parent::showPage();
-		$this->linkBar('pics', $this->props->get('key'));
+		// $this->linkBar('pics', $this->props->get('key'));
 	}
+class TripGallery extends Gallery
+{
+	var $galtype = "trip";   
 	function getPictures($key)	{ return $this->build('Pics', (array('tripid' => $key))); }	
 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
 	function galleryTitle($key)	{	$trip = $this->build('Trip', $key);  return $trip->name(); }

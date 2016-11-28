@@ -90,7 +90,7 @@ switch ("$curpage$curtype")
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
 
-	case 'picsid':			$page = new TripGallery($props);		break;	
+	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'pictrip':			$page = new OnePic($props);					break;	
 	
@@ -114,6 +114,7 @@ $templates = array("main" => 'container.ihtml', "the_content" => $page->file);
 $page->startPage($templates);
 $page->setStyle();
 $savepage = $page;
+$page->key = $props->get('key');		// just for convenience, everyone needs it
 $page->showPage();
 if (!is_object($page))
 {

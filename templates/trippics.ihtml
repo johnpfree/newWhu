@@ -1,0 +1,39 @@
+
+<h2>Pictures for: {GAL_TITLE}</h2>
+<div class="note1">{NUM_DAYS} days, {NUM_PICS} pictures</div>
+<div id="daylist">
+	&bull; 
+	<!-- BEGIN rows -->
+		<a href="?page=pics&type=date&key={GAL_DATE}">{NICE_DATE} ({DATE_COUNT})</a>		
+	&bull; 
+		<!-- END rows -->	
+</div>
+
+{LINK_BAR}
+
+
+<style type="text/css" media="screen">
+#thegal {
+	margin: 0 auto;
+}
+
+#thegal>p {
+	float: left;
+	width: 146px; 
+/*	width: 170px;*/
+	height: 190px; 
+	text-align: center;
+	margin: 6px;
+	margin-bottom: 20px;
+	border: 3px solid #44f855;		
+}
+img {
+	border: 3px solid #e6f8cc;		
+}
+.squareme {
+	width: 160px;
+	height: 160px;
+	object-fit: cover;
+}
+	
+</style>
