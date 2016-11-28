@@ -72,14 +72,25 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		foreach ($allfour as $k => $v) 
 		{
 			if ($k == $page)	continue;
+
+			$trip = $this->build('Trip', $id);
+			switch ($k) {
+				case 'pics':	$gotSome = $trip->hasPics();	break;
+				case 'txts':	$gotSome = $trip->hasStories();	break;
+				default:			$gotSome = TRUE;
+			}
+			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
+
+// dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
 			$this->template->set_var("PAGE$i", $k);
 			$this->template->set_var("LABEL$i", $v);
 			$this->template->set_var("TYPE$i", 'id');
-			$this->template->set_var("KEY$i", $id);
+			$this->template->set_var("KEY$i", $id);			
 			$i++;
 		}		
 	}
 	
+
 	function build ($type = '', $key = '') 
 	{
 		// dumpVar($type, "VIEW Build: type");
@@ -156,7 +167,7 @@ class AllTrips extends ViewWhu
 			$trip = $trips->one($i);
 			$row = array('TRIP_DATE' => $trip->startDate(), 'TRIP_ID' => $trip->id(), 'TRIP_FOLDER' => $trip->folder());
 			$row['TRIP_NAME'] = $trip->name();
-			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='vis_hidden'";
+			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='vis_hidden'";		// everybody gets a map!
 			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='vis_hidden'";
 			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='vis_hidden'";
 			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
@@ -262,8 +273,8 @@ class TripGallery extends Gallery
 	var $galtype = "trip";   
 	function showPage()	
 	{
-		$this->linkBar('pics', $this->props->get('key'));
 		parent::showPage();
+		$this->linkBar('pics', $this->props->get('key'));
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('tripid' => $key))); }	
 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
@@ -274,22 +285,12 @@ class DateGallery extends Gallery
 	var $galtype = "date";   
 	function showPage()	
 	{
-		$this->linkBar('pics', $this->props->get('key'));
 		parent::showPage();
+		$this->template->set_var('LINK_BAR', '');
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }	
 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
 	function galleryTitle($key)	{	return Properties::prettyDate($key); }
-}
-
-
-class OnePic extends ViewWhu
-{
-	var $file = "onepic.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
 }
 
 class OneMap extends ViewWhu
@@ -314,7 +315,16 @@ class OneMap extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
+		$this->linkBar('map', $tripid);		
+		parent::showPage();
+	}
+}
 
+class OnePic extends ViewWhu
+{
+	var $file = "onepic.ihtml";   
+	function showPage()	
+	{
 		parent::showPage();
 	}
 }
@@ -328,8 +338,6 @@ class OneDay extends ViewWhu
  	 	$day = $this->build('DbDay', $dayid);
 
 		$this->template->set_var('PRETTY_DATE', $this->caption = $day->prettyDate());
-
-		$this->linkBar('map', $dayid);
 
 		parent::showPage();
 	}
@@ -393,6 +401,7 @@ class TripStories extends ViewWhu
 
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
+		$this->linkBar('txts', $tripid);		
 
 		parent::showPage();
 	}

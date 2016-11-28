@@ -6,6 +6,7 @@
 <p class="storydates">{STORY_DATES}</p>
 <p class="storypart clearfix">{STORY_EXCERPT}</p>
 <!-- END rows -->
+{LINK_BAR}
 
 <style type="text/css" media="screen">
 #the_content hr {
