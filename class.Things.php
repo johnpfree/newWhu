@@ -260,8 +260,8 @@
 
 			return parent::getRecord($key);
 		}
-		function nightName()	{	return $this->massageDbText(addslashes($this->getSpotandDaysArranged('nightName')));	}
-		function nightDesc()	{	return addslashes($this->getSpotandDaysArranged('nightDesc'));	}
+		function nightName()	{	return $this->massageDbText($this->getSpotandDaysArranged('nightName'));	}
+		function nightDesc()	{	return $this->getSpotandDaysArranged('nightDesc');	}
 
 		function lat()	{	return $this->getSpotandDaysArranged('lat');	}
 		function lon()	{	return $this->getSpotandDaysArranged('lon');	}

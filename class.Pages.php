@@ -156,11 +156,9 @@ class AllTrips extends ViewWhu
 			$trip = $trips->one($i);
 			$row = array('TRIP_DATE' => $trip->startDate(), 'TRIP_ID' => $trip->id(), 'TRIP_FOLDER' => $trip->folder());
 			$row['TRIP_NAME'] = $trip->name();
-			// $row['MAP_CLASS'] = $row['PIC_CLASS'] = $row['STORY_CLASS'] = "";
-			$row['MAP_CLASS'] = $trip->hasMap() ? '' : "class='vis_hidden'";
+			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='vis_hidden'";
 			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='vis_hidden'";
 			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='vis_hidden'";
-			// $row['WP_CAT_ID'] = $trip->wpCatId();
 			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
 			// dumpVar($row, "row");exit;
 			// dumpVar($row['MAP_CLASS'], "row['MAP_CLASS']");
@@ -309,11 +307,11 @@ class OneMap extends ViewWhu
 			$day = $this->build('DayInfo', $days->one($i));
 		
 			$row = array('point_ind' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), 
-										'point_name' => $day->nightName(), 'point_desc' => $day->date(), );
+										'point_name' => addslashes($day->nightName()), 'point_desc' => $day->date(), );
 			$rows[] = $row;
 		}
 		// dumpVar($rows, "rows");
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 
@@ -393,7 +391,7 @@ class TripStories extends ViewWhu
 			$rows[] = $row;
 		}          
 
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 
 		parent::showPage();
