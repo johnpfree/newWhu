@@ -2,7 +2,7 @@
 
 <!-- BEGIN rows -->
 <hr />
-<a href="?page=txt&type=id&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
+<a href="?page=txt&type=wpid&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
 <p class="storydates">{STORY_DATES}</p>
 <p class="storypart clearfix">{STORY_EXCERPT}</p>
 <!-- END rows -->
