@@ -73,7 +73,7 @@ $defaults = array(
 
 $props = new WhuProps($defaults);		// default settings
 $props->set($_REQUEST);							// absorb all web parms
-$props->dump('props');
+// $props->dump('props');
 
 $curpage = $props->get('page');
 $curtype = $props->get('type');
@@ -97,8 +97,9 @@ switch ("$curpage$curtype")
 	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'logid':				$page = new OneTripLog($props);		break;	
 	
-	case 'txtsid':			$page = new TripStories($props);		break;	
-	case 'txtwpid':			$page = new TripStory($props);		break;
+	case 'txtsid':			$page = new TripStories($props);			break;	
+	case 'txtwpid':			$page = new TripStory($props);				break;
+	case 'txtdate':			$page = new TripStoryByDate($props);	break;
 	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
 	case 'searchhome':	$page = new Search($props);			break;

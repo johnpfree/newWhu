@@ -1,15 +1,13 @@
-
 <div id="the_pic">
+	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 	<p>{PRETTY_DATE}</p>
 	What trip was I on?<br />
 	Where did I start today? Where did I stop?<br />
 	What blog post is it in? Show me an excerpt?<br />
 	What map?<br />
 	Other details - how many miles.
-	<br />
 </div>
-
-<div class=wirenotes>{WIRENOTES}</div>
+{LINK_BAR}
 
 <style type="text/css" media="screen">
 #the_pic {

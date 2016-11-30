@@ -1,15 +1,14 @@
-
-<div class=wirenotes>{WIRENOTES}</div>
-
 <div id="main_div">
+	<h1><a href="?page=txts&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 	<h2>{POST_TITLE}</h2>	
 	<div class=entry-content>{POST_CONTENT}</div>
 </div>
+{LINK_BAR}
 
 <style type="text/css" media="screen">
 #main_div {
 	margin: 0 auto;
-	padding: 0 30px;
+	xpadding: 0 8px;
 	width: 800px;
 	border: 1px solid #999;
 }

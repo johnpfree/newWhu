@@ -42,7 +42,6 @@
 		 }
 		function assert($val, $txt = "Assert FAILED") {
 			if ($val) return;
-			jfTrace();
 			jfDie($txt);
 		}
 		function assertIsCollection()  { $this->assert($this->isCollection, "NOT a Collection");  }
@@ -224,6 +223,7 @@
 			WhuThing::getRecord($key);		// FAIL
 		}
 		function date()				{ return $this->dbValue('wf_days_date'); }
+		function tripId()			{ return $this->dbValue('wf_trips_id'); }
 		function spotId()			{ return $this->dbValue('wf_spots_id'); }
 		function hasSpot()		{ return $this->spotId() > 0; }
 		function dayName()		{ return $this->dbValue('wf_route_name'); }
@@ -231,6 +231,7 @@
 		function nightName()	{ return $this->massageDbText($this->dbValue('wf_stop_name')); }
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
+		function hasStory()		{ return $this->postId() > 0; }
 		
 		function miles()			{ return $this->dbValue('wf_days_miles'); }
 		function cumulative()	{ return $this->dbValue('wf_days_cum_miles'); }
@@ -241,14 +242,20 @@
 		function prettyDate()	{ return Properties::prettyDate($this->date()); }
 		
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
+		function hasPics() 		{	return $this->pics()->size() > 0;	}
 	}
 
 	class WhuDbDays extends WhuDbDay {
 		var $isCollection = true;
-		function getRecord($key)			// trip id
+		function getRecord($parm)			// trip id
 		{
-			$this->assert($key > 0);
-			return $this->getAll("select * from wf_days where wf_trips_id=$key order by wf_days_date");
+			if (is_array($parm))					// an array of day records (for post days)
+			{
+				$this->assert(isset($parm[0]['wf_days_date']));
+				return $parm;
+			}
+			$this->assert($parm > 0);
+			return $this->getAll("select * from wf_days where wf_trips_id=$parm order by wf_days_date");
 		}
 	}
 	class WhuDayInfo extends WhuDbDay // WhuDbDay collects all the day, spot, and spot_day shit together
@@ -391,8 +398,17 @@
 
 			jfDie("WhuPost($parm)");
 		}
-		function title()		{ return $this->data[0]['title']; }
-		function content()	{ return $this->data[0]['content']; }
+		function wpid()				{ return $this->data[0]['wpid']; }
+		function title()			{ return $this->data[0]['title']; }
+		function content()		{ return $this->data[0]['content']; }		
+		function date()				{ return $this->data[0]['date']; }						// NOTE! this is the wordpress date, NOT the dateS that ref this post
+		function firstDate()	{	return $this->dates()[0]['wf_days_date'];	}	// first date for post - this is the one ypu want		
+
+		function dates()
+		{
+			$q = sprintf("select * from wf_days where wp_id=%s", $this->wpid());
+			return $this->getAll($q);
+		}
 		
 		function doWPQuery($args)
 		{
@@ -403,9 +419,12 @@
 			$posts = array();
 
 			while (have_posts()): the_post();										// The Loop
-				$this->wpTitle = the_title('', '', false);				// the_title can return a string
-				$this->wpContent = $this->the_content();					// the_content does NOT, so copy/modify below to do so			
-				$posts[] = array('title' => $this->wpTitle, 'content' => $this->wpContent);
+				$posts[] = array(
+					'title' 	=> the_title('', '', false),				// first two can return a string
+					'date'		=> the_date('Y-m-d', '', '', false), 
+					'content' => $this->the_content(),						// the_content does NOT, so copy/modify below to do so
+					'wpid'		=> get_the_ID(),
+				);
 			endwhile;
 			return $posts;
 		}
