@@ -197,6 +197,7 @@
 
 	class WhuDbDay extends WhuThing 
 	{
+		var $prvnxt = NULL;			// save calculation
 		var $prefix = 'wf_days';
 		function getRecord($key)
 		{
@@ -231,6 +232,44 @@
 		
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
+		
+		function previous() 
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxt();
+			return $this->prvnext['prev'];
+		}
+		function next() 
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxt();
+			return $this->prvnext['next'];
+		}
+		function getPrvNxt()
+		{
+			$items = $this->getAll("select * from wf_days order by wf_days_date");
+			$wps = array_column($items, 'wf_days_date');
+			$idx = array_search($id = $this->date(), $wps);
+			
+			$this->prvnext = array();
+			for ($i = 1; $i < 10; $i++) 
+			{
+				$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx - $i]));
+				if ($dc = $prvpics->size() > 0)
+					break;
+			}
+			$this->prvnext['prev']  = $d0;
+			$this->prvnext['prevc'] = $dc;
+						
+			for ($i = 1; $i < 10; $i++) 
+			{
+				$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx + $i]));
+				if ($dc = $prvpics->size() > 0)
+					break;
+			}
+			$this->prvnext['next']  = $d0;
+			$this->prvnext['nextc'] = $dc;
+		}
 	}
 
 	class WhuDbDays extends WhuDbDay {
@@ -396,16 +435,13 @@
 		function date()				{ return $this->data[0]['date']; }						// NOTE! this is the wordpress date, NOT the dateS that ref this post
 		function firstDate()	{	return $this->dates()[0]['wf_days_date'];	}	// first date for post - this is the one ypu want		
 		
-		function nextWpid()			{	return explode('=', $this->data[0]['next'])[1];	}
-		function previousWpid() {	return explode('=', $this->data[0]['prev'])[1];	}
+		function next()			{	return explode('=', $this->data[0]['next'])[1];	}
+		function previous() {	return explode('=', $this->data[0]['prev'])[1];	}
 
 		function dates()
 		{
 			$q = sprintf("select * from wf_days where wp_id=%s", $this->wpid());
 			return $this->getAll($q);
-		}
-		
-		function previous() {
 		}
 		
 		function doWPQuery($args)

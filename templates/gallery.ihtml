@@ -1,7 +1,14 @@
 
 <h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
-<h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2>
+	<hr>
+	<table id="postnav" border="0">
+		<tr>
+			<td><a {VIS_CLASS1} href="?page=pics&type=date&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></td>
+			<td><a {VIS_CLASS2} href="?page=pics&type=date&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
+		</tr>
+	</table>
 
+<h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2>
 <div id="thegal">
 	<!-- BEGIN rows -->
 	<p>
@@ -16,10 +23,18 @@
 
 
 <style type="text/css" media="screen">
+#postnav {
+	width: 100%;
+}
+#postnav td {
+	width: 50%;
+}
+#postnav td:nth-child(1) {	text-align: left;	 padding-left: 8px; }
+#postnav td:nth-child(2) {	text-align: right; padding-right: 8px; }
+
 #thegal {
 	margin: 0 auto;
 }
-
 #thegal>p {
 	float: left;
 	width: 146px; 

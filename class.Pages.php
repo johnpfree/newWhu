@@ -343,6 +343,8 @@ class TripPictures extends ViewWhu
 		{
 			$day = $days->one($i);
 			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $day->pics()->size());
+			if ($dc == 0)
+				continue;
 			$row['nice_date'] = Properties::prettyShortest($date);
 			$rows[] = $row;
 			$count += $dc;
@@ -367,6 +369,14 @@ class Gallery extends ViewWhu
 		$this->template->set_var('GAL_TITLE', $this->galleryTitle($key = $this->props->get('key')));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		
+		// do nav
+		$date = $this->build('DbDay', $key);
+
+		$this->template->set_var('PRV_ID', $navd = $date->previous());
+		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
+		$this->template->set_var('NXT_ID', $navd = $date->next());
+		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
+
 		$pics = $this->getPictures($key);
 		$this->template->set_var('GAL_KEY', $key);
 
@@ -388,15 +398,14 @@ class Gallery extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
-		// $this->linkBar('pics', $this->props->get('key'));
 	}
-class TripGallery extends Gallery
-{
-	var $galtype = "trip";   
-	function getPictures($key)	{ return $this->build('Pics', (array('tripid' => $key))); }	
-	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
-	function galleryTitle($key)	{	$trip = $this->build('Trip', $key);  return $trip->name(); }
-}
+// class TripGallery extends Gallery
+// {
+// 	var $galtype = "trip";
+// 	function getPictures($key)	{ return $this->build('Pics', (array('tripid' => $key))); }
+// 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
+// 	function galleryTitle($key)	{	$trip = $this->build('Trip', $key);  return $trip->name(); }
+// }
 class DateGallery extends Gallery
 {
 	var $galtype = "date";   
@@ -404,7 +413,6 @@ class DateGallery extends Gallery
 	{
 		$this->dayLinkBar('pics', $this->key);		
 		parent::showPage();
-		// $this->template->set_var('LINK_BAR', '');
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }	
 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
@@ -536,10 +544,10 @@ class TripStory extends ViewWhu
 		$this->template->set_var('POST_TITLE', $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());
 		
- 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previousWpid()));			
+ 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previous()));			
 		$this->template->set_var('PRV_TXT', $navpost->title());
 		$this->template->set_var('PRV_ID', $navid);
- 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->nextWpid()));			
+ 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->next()));			
 		$this->template->set_var('NXT_TXT', $navpost->title());
 		$this->template->set_var('NXT_ID', $navid);
 
