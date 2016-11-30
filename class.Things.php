@@ -1,17 +1,5 @@
 <?php
 
-	// var $prefix = 'wf_categories';
-	// var $prefix = 'wf_favepics';
-	// var $prefix = 'wf_geocoords';
-	// var $prefix = 'wf_idmap';
-	// var $prefix = 'wf_images';
-	// var $prefix = 'wf_post_map';
-	// var $prefix = 'wf_post_status';
-	// var $prefix = 'wf_resources';
-	// var $prefix = 'wf_routes';
-	// var $prefix = 'wf_segmentmap';
-	// var $prefix = 'wf_segments';
-
 	class WhuThing extends DbWhufu
 	{
 		var $data = NULL;
@@ -389,6 +377,10 @@
 		var $lazyPostRec = 0;
 		function getRecord($parm)	//  parm = array('wpid' => wpid)  OR jsut the wpid
 		{
+
+			// $cat = $this->doWPQuery("cat=60");
+			// exit;
+
 			if (is_array($parm) && isset($parm['wpid']))
 			{
 				return $this->doWPQuery("p={$parm['wpid']}");
@@ -403,11 +395,17 @@
 		function content()		{ return $this->data[0]['content']; }		
 		function date()				{ return $this->data[0]['date']; }						// NOTE! this is the wordpress date, NOT the dateS that ref this post
 		function firstDate()	{	return $this->dates()[0]['wf_days_date'];	}	// first date for post - this is the one ypu want		
+		
+		function nextWpid()			{	return explode('=', $this->data[0]['next'])[1];	}
+		function previousWpid() {	return explode('=', $this->data[0]['prev'])[1];	}
 
 		function dates()
 		{
 			$q = sprintf("select * from wf_days where wp_id=%s", $this->wpid());
 			return $this->getAll($q);
+		}
+		
+		function previous() {
 		}
 		
 		function doWPQuery($args)
@@ -422,8 +420,10 @@
 				$posts[] = array(
 					'title' 	=> the_title('', '', false),				// first two can return a string
 					'date'		=> the_date('Y-m-d', '', '', false), 
-					'content' => $this->the_content(),						// the_content does NOT, so copy/modify below to do so
 					'wpid'		=> get_the_ID(),
+					'prev' 	 	=> get_permalink(get_adjacent_post(false,'',true)),			// remember, WP's default is newest to oldest
+					'next' 	 	=> get_permalink(get_adjacent_post(false,'',false)),
+					'content' => $this->the_content(),						// the_content does NOT, so copy/modify below to do so
 				);
 			endwhile;
 			return $posts;
@@ -435,14 +435,6 @@
 			$content = str_replace(']]>', ']]&gt;', $content);
 			return $content;
 		}
-		// function postCatId() {
-		// 	define('WP_USE_THEMES', false);
-		// 	require(WP_PATH . 'wp-load.php');											// Include WordPress
-		//
-		// 	$cats = get_the_category($this->postId());
-		// 	dumpVar($cats, "cats");
-		// 	exit;
-		// }
 	}
 
 	class WhuPosts extends WhuPost 

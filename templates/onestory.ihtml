@@ -1,6 +1,13 @@
 <div id="main_div">
 	<h1><a href="?page=txts&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
-	<h2>{POST_TITLE}</h2>	
+	<hr>
+	<table id="postnav" border="0">
+		<tr>
+			<td><a {VIS_CLASS1} href="?page=txt&type=wpid&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></td>
+			<td><a {VIS_CLASS2} href="?page=txt&type=wpid&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
+		</tr>
+	</table>
+	<h2>{POST_TITLE}</h2>
 	<div class=entry-content>{POST_CONTENT}</div>
 </div>
 {LINK_BAR}
@@ -12,6 +19,19 @@
 	width: 800px;
 	border: 1px solid #999;
 }
+#postnav {
+	width: 100%;
+}
+#postnav td {
+	width: 50%;
+	margin: 0px 4px;
+	padding: 20px 8px;
+	foxnt-size: 140%;
+	texxt-align: center;
+	bordxer: 1px solid #999;
+}
+#postnav td:nth-child(1) {	text-align: left;	 padding-left: 8px; }
+#postnav td:nth-child(2) {	text-align: right; padding-right: 8px; }
 
 	/* ----------------------- from Wordpress ----------------------------- */
 .entry-content img {

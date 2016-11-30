@@ -68,7 +68,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 		
 		'txtwpid' 	=> "Core data: a story. 					Metadata: previous/next story, little locator map, maybe selected pics, trip, pictures", 
 		'pictrip' 	=> "Core data: a picture. 				Metadata: previous/next picture, little locator map, date/time, camera, file name, trip, story", 
-		'daydate' 	=> "Core data: everything about that day- including Date, where tonight's stop, last night's stop, some pictures, a locator map, an excerpt fo the post for that day.  Metadata: links to tomorrow/yesterday", 
+		'daydate' 	=> "Day Page: Core data: everything about that day- including Date, where tonight's stop, last night's stop, some pictures, a locator map, an excerpt fo the post for that day.  Metadata: links to tomorrow/yesterday", 
 		'spotid'	 	=> "Core data: everything about that spot - all the spot information, a list of the day descriptions for when I was there, some pictures, locator map, link to the stories where it appears", 
 		'searchhome' 	=> "Find stuff. Core data: UI to specify your search. A term can be found in blog posts, spot names, stop names and descriptions, picture labels, map labels, category names", 
 		'abouthome' 	=> "Core data: Contact info. Other data: tell about the project, tell about us. Metadata: none unless more than one page is required.", 
@@ -153,6 +153,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->setFile('LINK_BAR', 'linkbar.ihtml');
 		
 		$day = $this->build('DbDay', $date);
+		
 		$trip = $this->build('DbTrip', $id = $day->tripId());
 		$this->template->set_var("TRIP_ID", $id);
 		$this->template->set_var("TRIP_NAME", $trip->name());
@@ -178,7 +179,6 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		}		
 	}
 	
-
 	function build ($type = '', $key = '') 
 	{
 		// dumpVar($type, "VIEW Build: type");
@@ -532,16 +532,22 @@ class TripStory extends ViewWhu
 	{
 		$postid = $this->key;
  	 	$post = $this->build('Post', array('wpid' => $postid));	
-		dumpVar($post->title(), "post->title()");
 
 		$this->template->set_var('POST_TITLE', $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());
 		
+ 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previousWpid()));			
+		$this->template->set_var('PRV_TXT', $navpost->title());
+		$this->template->set_var('PRV_ID', $navid);
+ 	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->nextWpid()));			
+		$this->template->set_var('NXT_TXT', $navpost->title());
+		$this->template->set_var('NXT_ID', $navid);
+
 		// $dates = $post->dates();
 		// $days = $this->build('DbDays', $dates);
 		// dumpVar($post->firstDate(), "post->firstDate()");
 		if ($this->props->get('type') != 'date')
-			$this->dayLinkBar('txt', $post->firstDate());		
+			$this->dayLinkBar('txt', $post->firstDate());		// if type==date we have already done linkbar
 		parent::showPage();
 	}
 }
@@ -549,8 +555,8 @@ class TripStoryByDate extends TripStory
 {
 	function showPage()	
 	{
-		$this->dayLinkBar('txt', $this->key);		
- 	 	$day = $this->build('DbDay', $this->key);		// key here is the date
+		$this->dayLinkBar('txt', $this->key);				// the key is the magic value here
+		$day = $this->build('DbDay', $this->key);		// key here is the date
 		$this->key = $day->postId();
 		parent::showPage();
 	}
