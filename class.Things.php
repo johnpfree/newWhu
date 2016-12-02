@@ -351,14 +351,25 @@
 
 			return $this->getOne("select * from wf_spots where wf_spots_id=$key");	
 		}
-		function id()			{ return $this->dbValue('wf_spots_id'); }
+		function id()				{ return $this->dbValue('wf_spots_id'); }
 		function name()			{ return $this->massageDbText($this->dbValue('wf_spots_name')); }
 		function town()			{ return $this->massageDbText($this->dbValue('wf_spots_town')); }
 		function partof()		{ return $this->dbValue('wf_spots_partof'); }
 		function types()		{ return $this->dbValue('wf_spots_types'); }
 		
 		function visits()		{ 
-			return 'xx'; 
+			$vfld = $this->dbValue('wf_spots_visits');
+			if ($vfld == 'many')
+				return 'many';
+			if ($vfld == 'none')
+				return 'never';
+
+			$spotdays = $this->build('DbSpotDays', $this->id());
+			$ndays = $spotdays->size();
+			if (isset($vfld[0]) && $vfld[0] == "+")
+				$ndays += substr($vfld, 1);			
+			dumpVar($ndays, "vfld = $vfld, size=" . $spotdays->size() . "RESULT");
+			return $ndays;
 		}
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
@@ -414,16 +425,17 @@
 				return $key;
 
 			if ($this->isSpotDayParmsArray($key))
+			{
 				return $this->getOne($q = sprintf("select * from wf_spot_days where wf_spots_id=%s AND wf_spot_days_date='%s'", $key['spotId'], $key['date']));
-			
+			}
+
 			WhuThing::getRecord($key);
 		}
 		function id()			{ return $this->dbValue('wf_spots_id'); }
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
 		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
 	}
-	//  So far this can be a collection of days for a date, or of days for a Spot
-	class WhuDbSpotDays extends WhuDbSpotDay
+	class WhuDbSpotDays extends WhuDbSpotDay			//  So far this can be a collection of days for a date, or of days for a Spot
 	{
 		var $isCollection = true;
 		function getRecord($key)

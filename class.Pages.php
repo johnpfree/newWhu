@@ -259,7 +259,7 @@ class SpotsHome extends ViewWhu
 				'spot_id' 		=> $spot->id(), 
 				'spot_name' 	=> $spot->name(), 
 				'spot_part_of' => $spot->partof(), 
-				'spot_times' 	=> $spot->visits(), 
+				// 'spot_times' 	=> $spot->visits(),
 				'spot_where' 	=> $spot->town(), 
 				'spot_type' 	=> $spot->types(), 
  				);
@@ -510,7 +510,24 @@ class OneSpot extends ViewWhu
 		$spotid = $this->props->get('key');
  	 	$spot = $this->build('DbSpot', $spotid);		
 
-		$this->template->set_var('SPOT_NAME', $this->caption = $spot->name());
+		$this->template->set_var('SPOT_NAME', 	$this->caption = $spot->name());
+		$this->template->set_var('SPOT_ID', 		$spot->id());
+		$this->template->set_var('SPOT_TOWN', 	$spot->town());
+		$this->template->set_var('SPOT_PARTOF', $spot->partof());
+		$this->template->set_var('SPOT_NUM',  	$spot->visits());
+
+		$days = $this->build('DbSpotDays', $spot->id());	
+		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
+		{
+			$day = $days->one($i);
+			$row = array('stay_date' => $date = $day->date());
+			$row['nice_date'] = Properties::prettyDate($date);
+			$rows[] = $row;
+		}
+		// dumpVar($rows, "rows $count");
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop($rows);
+
 		parent::showPage();
 	}
 }

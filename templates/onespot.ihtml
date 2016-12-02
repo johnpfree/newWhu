@@ -1,7 +1,26 @@
 
-<div id="the_pic">
-	<p>{SPOT_NAME}</p>
-	What is it?<br />
+<div id="spot">
+	<h1>{SPOT_NAME}</h1>
+	<p>{SPOT_TOWN} &bull; {SPOT_PARTOF}</p>
+	<p>Number of visits: {SPOT_NUM}</p>
+
+	<div class="note1">Days visited:</div>
+	<div id="daylist">
+		&bull; 
+		<!-- BEGIN rows -->
+			<a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a>		
+		&bull; 
+			<!-- END rows -->	
+	</div>
+
+	<form id=nearform action="" method="post" accept-charset="utf-8">
+		<label for="radius">Show all spots within</label> 
+		<input type="text" name="id" value="" size=6> miles. 
+		<input type="submit" name="spot_map" value="Go" />
+			<input type="hidden" name="type" value="near" />
+		<input type="hidden" name="key" value="{SPOT_ID}" />
+	</form>
+	<hr />
 	Where is it? Show me a map.<br />
 	When did I stay here? What trips were I on?<br />
 	What blog posts is it in?<br />
@@ -13,16 +32,17 @@
 <div class=wirenotes>{WIRENOTES}</div>
 
 <style type="text/css" media="screen">
-#the_pic {
-	padding-top: 30px;
+#spot {
+	padding: 6px 0 10px 18px;
 	margin: 0 auto;
 	width: 800px;
 	border: 1px solid #999;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;	
 }
-#the_pic p {
-	font-weight: bold;
-	font-size: 140%;
+#spot p {
+}
+#spot form {
+	margin: 10px 0px;
 }
 </style>
