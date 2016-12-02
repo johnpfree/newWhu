@@ -347,11 +347,40 @@
 		{
 			return $this->getOne("select * from wf_spots where wf_spots_id=$key");	
 		}
-		function name()		{ return $this->dbValue('wf_spots_name'); }
+		function name()			{ return $this->dbValue('wf_spots_name'); }
+		function partof()		{ return $this->dbValue('spot_part_of'); }
+		
+		function visits()		{ 
+			return 'xx'; 
+		}
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
 		function lon()		{ return $this->dbValue('wf_spots_lon'); }
 	}
+	class WhuDbSpots extends WhuDbSpot 
+	{
+		var $isCollection = true;
+		function getRecord($searchterms = array())
+		{
+			// $props = new Properties(array())
+			$deflts = array(
+				'order'	=> 'wf_spots_name',
+				'where'	=> array(),
+			);
+
+			for ($i = 0, $wherestr = ''; $i < sizeof($deflts['where']); $i++) 
+			{
+				$wherestr .= sprintf('%s %s', ($i == 0) ? 'WHERE' : "AND", $deflts['where'][$i]);
+				dumpVar($wherestr, "$i wherestr");
+			}
+			dumpVar($wherestr, "wherestr");
+			
+			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $wherestr, $deflts['order']);
+			dumpVar($q, "q");
+
+			return $this->getAll($q);
+		}
+	}	
 	class WhuDbSpotDay extends WhuThing 
 	{
 		var $prefix = 'wf_spot_days';

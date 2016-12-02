@@ -60,21 +60,15 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $file = "UNDEF";
 	
 	var $wirenotes = array(
-		'logid'	 		=> "Core data: a trip log.  Metadata: stories/pics/map", 
-		
-		'txtsid'	 	=> "Core data: blog posts for a trip. Metadata: log/pics/map", 
 		'picsdate' 	=> "Core data: set of thumbnails.     Metadata: log/stories/map<br />Thumbnail count ranges from 1 or 2 for a day to 100's for a search result.<br />How to do navigation interface?", 
-		'mapid'	   	=> "Core data: map of a trip.         Metadata: log/stories/pics", 
 		
 		'txtwpid' 	=> "Core data: a story. 					Metadata: previous/next story, little locator map, maybe selected pics, trip, pictures", 
-		'pictrip' 	=> "Core data: a picture. 				Metadata: previous/next picture, little locator map, date/time, camera, file name, trip, story", 
-		'daydate' 	=> "Day Page: Core data: everything about that day- including Date, where tonight's stop, last night's stop, some pictures, a locator map, an excerpt fo the post for that day.  Metadata: links to tomorrow/yesterday", 
+		'picdate' 	=> "Core data: a picture. 				Metadata: previous/next picture, little locator map, date/time, camera, file name, trip, story", 
+
 		'spotid'	 	=> "Core data: everything about that spot - all the spot information, a list of the day descriptions for when I was there, some pictures, locator map, link to the stories where it appears", 
-		'searchhome' 	=> "Find stuff. Core data: UI to specify your search. A term can be found in blog posts, spot names, stop names and descriptions, picture labels, map labels, category names", 
 		'abouthome' 	=> "Core data: Contact info. Other data: tell about the project, tell about us. Metadata: none unless more than one page is required.", 
 		'homehome' 	=> "Core data: Where to start. Make the rest of the site inviting and accessible.", 
 		
-		'homesearch' 	=> "Core data: show a ", 
 		'homelook' 	=> "Core data: show a ", 
 		'homeread' 	=> "Core data: show a ", 
 		'homeorient' 	=> "Core data: show a ", 
@@ -198,14 +192,6 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 }
 
-class HomeSearch extends ViewWhu
-{
-	var $file = "homesearch.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
-}
 class HomeLook extends ViewWhu
 {
 	var $file = "homelook.ihtml";   
@@ -238,6 +224,33 @@ class HomeBrowse extends ViewWhu
 		parent::showPage();
 	}
 	function getCaption()	{	return "Browse Trips";	}
+}
+
+class SpotsHome extends ViewWhu
+{
+	var $file = "spotshome.ihtml";   
+	function showPage()	
+	{
+		parent::showPage();
+return;
+		$spots = $this->build('DbSpots');
+		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
+		{
+			$spot = $spots->one($i);
+			$row = array(
+				'spot_name' 	=> $spot->name(), 
+				'spot_part_of' => $spot->partof(), 
+				'spot_times' 	=> $spot->visits(), 
+				'spot_where' 	=> 'yy',//$spot->(), 
+				'spot_type' 	=> 'zz',//$spot->(), 
+ 				);
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
+		
+	}
+	function getCaption()	{	return "Browse Spots";	}
 }
 
 class AllTrips extends ViewWhu
