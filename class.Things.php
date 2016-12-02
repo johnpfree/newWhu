@@ -50,6 +50,7 @@
 		}
 		
 		// --------- getRecord() overloading utilities
+		function isSpotRecord($key)			{	return (is_array($key) && isset($key['wf_spots_id']));	}
 		function isSpotDayRecord($key)	{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
 		function isSpotDayParmsArray($key)	{	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
 		function isTripRecord($key)			{	return (is_array($key) && isset($key['wf_trips_id']));	}
@@ -343,12 +344,18 @@
 	class WhuDbSpot extends WhuThing 
 	{
 		var $prefix = 'wf_spots';
-		function getRecord($key)
+		function getRecord($key)		// parm is spot id OR the record for iteration
 		{
+			if ($this->isSpotRecord($key))
+				return $key;
+
 			return $this->getOne("select * from wf_spots where wf_spots_id=$key");	
 		}
-		function name()			{ return $this->dbValue('wf_spots_name'); }
-		function partof()		{ return $this->dbValue('spot_part_of'); }
+		function id()			{ return $this->dbValue('wf_spots_id'); }
+		function name()			{ return $this->massageDbText($this->dbValue('wf_spots_name')); }
+		function town()			{ return $this->massageDbText($this->dbValue('wf_spots_town')); }
+		function partof()		{ return $this->dbValue('wf_spots_partof'); }
+		function types()		{ return $this->dbValue('wf_spots_types'); }
 		
 		function visits()		{ 
 			return 'xx'; 
@@ -362,11 +369,31 @@
 		var $isCollection = true;
 		function getRecord($searchterms = array())
 		{
-			// $props = new Properties(array())
 			$deflts = array(
 				'order'	=> 'wf_spots_name',
 				'where'	=> array(),
 			);
+			if (sizeof($searchterms) == 0)			// show all
+			{
+				$where = " WHERE wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";				
+			}
+			else
+			{
+				// dumpVar($searchterms, "searchterms");
+				for ($i = 0, $where = ""; $i < sizeof($searchterms); $i++) 
+				{
+				 $where .= ($i == 0) ? "WHERE " : " OR ";
+				 $where .= "wf_spots_types LIKE '%{$searchterms[$i]}%'";
+				}
+				dumpVar($where, "where");
+			}
+	 
+			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
+			dumpVar($q, "q");
+			return $this->getAll($q);
+
+
+			// $props = new Properties(array())
 
 			for ($i = 0, $wherestr = ''; $i < sizeof($deflts['where']); $i++) 
 			{
@@ -375,10 +402,7 @@
 			}
 			dumpVar($wherestr, "wherestr");
 			
-			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $wherestr, $deflts['order']);
-			dumpVar($q, "q");
 
-			return $this->getAll($q);
 		}
 	}	
 	class WhuDbSpotDay extends WhuThing 

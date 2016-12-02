@@ -1,8 +1,19 @@
+<div id="tabform">
+	<form action="" method="post" accept-charset="utf-8">
+		Show only: &nbsp; &nbsp; 
+		<input type="checkbox" {CHK_chkcamp} name="search_fld[]" value="chkcamp" id="chkcamp"> <label for="">camping</label> &nbsp; &nbsp; 
+		<input type="checkbox" {CHK_chklodg} name="search_fld[]" value="chklodg" id="chklodg"> <label for="">lodging</label> &nbsp; &nbsp; 
+		<input type="checkbox" {CHK_chkhspr} name="search_fld[]" value="chkhspr" id="chkhspr"> <label for="">hot springs</label> &nbsp; &nbsp; 
+		<input type="checkbox" {CHK_chknwrf} name="search_fld[]" value="chknwrf" id="chknwrf"> <label for="">wildlife refuges</label> &nbsp; &nbsp; 
+		<input type="submit" name="submit" value="Show">
+	</form>
+</div>
+<hr />
 <table id="spotstable" border="0" cellspacing="5" cellpadding="5">
 	<caption>Whufu Spots</caption>
 	<thead>
 		<tr>
-			<td>name (visited)</td>
+			<td align="right">name</td>
 			<td>part of</td>
 			<td>where</td>
 			<td>type</td>
@@ -11,7 +22,7 @@
 	<tbody>
 		<!-- BEGIN rows -->
 		<tr>
-			<td align="right"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_NAME} ({SPOT_TIMES})</a></td>
+			<td align="right"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_NAME}</a></td>
 			<td>{SPOT_PART_OF}</td>
 			<td>{SPOT_WHERE}</td>
 			<td>{SPOT_TYPE}</td>
@@ -21,13 +32,19 @@
 </table>
 
 <style type="text/css" media="screen">
-	#spotstable {
-		margin: 0 auto;
-		xmargin-left: 200px;
-	}
-	#spotstable td {
-		padding: 4px 6px;
-	}
-	caption { font-size: 120%;}
-	thead { border-bottom: 2px solid #3A5950;	}
+#tabform { 
+	text-align: center;
+	margin: 0 0 10px;
+}
+#tabform input[type=submit] { font-size: 90%;}
+	
+#spotstable {
+	margin: 0 auto;
+}
+#spotstable td {
+	padding: 4px 6px;
+}
+caption { font-size: 120%;}
+thead { border-bottom: 2px solid #3A5950;	}
+
 </style>

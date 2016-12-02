@@ -11,11 +11,6 @@
 					<input type="checkbox" checked name="search_fld[]" value="z" id="pictures">         <label for="pictures" >pictures</label><br />
 					<input type="checkbox" checked name="search_fld[]" value="" id="trip_logs">      <label for="trip_logs">trip logs</label><br />
 					<input type="checkbox" checked name="search_fld[]" value="" id="maps"> <label for="maps">maps</label><br />
-					<!-- <input type="checkbox" checked name="story_titles" value="" id="story_titles"> <label for="story_titles">story titles</label><br />
-					<input type="checkbox" checked name="stories" value="" id="stories">            <label for="stories"  >stories</label><br />
-					<input type="checkbox" checked name="pictures" value="" id="pictures">         <label for="pictures" >pictures</label><br />
-					<input type="checkbox" checked name="trip_logs" value="" id="trip_logs">      <label for="trip_logs">trip logs</label><br />
-					<input type="checkbox" checked name="maps" value="" id="maps"> <label for="maps">maps</label><br /> -->
 					<p><input type="submit" name="search_for_term" value="Search for Text"></p>
 				</form>
 			</td>

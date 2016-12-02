@@ -232,17 +232,36 @@ class SpotsHome extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
-return;
-		$spots = $this->build('DbSpots');
+		
+		$opts = array();			// assume show all
+		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
+		{
+			$chkopts = array(
+				'chkcamp' => 'CAMP', 
+				'chklodg' => 'LODGE', 
+				'chkhspr' => 'HOTSPR', 
+				'chknwrf' => 'NWR', 
+				);
+			foreach ($srch as $k => $v) 
+			{
+				$opts[] = $chkopts[$v];
+				$this->template->set_var("CHK_$v", 'checked');
+			}
+		}
+
+		$spots = $this->build('DbSpots', $opts);
+		dumpVar(sizeof($spots->data), "spots->data");
+		
 		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
 		{
 			$spot = $spots->one($i);
 			$row = array(
+				'spot_id' 		=> $spot->id(), 
 				'spot_name' 	=> $spot->name(), 
 				'spot_part_of' => $spot->partof(), 
 				'spot_times' 	=> $spot->visits(), 
-				'spot_where' 	=> 'yy',//$spot->(), 
-				'spot_type' 	=> 'zz',//$spot->(), 
+				'spot_where' 	=> $spot->town(), 
+				'spot_type' 	=> $spot->types(), 
  				);
 			$rows[] = $row;
 		}
