@@ -73,7 +73,7 @@ $defaults = array(
 
 $props = new WhuProps($defaults);		// default settings
 $props->set($_REQUEST);							// absorb all web parms
-// $props->dump('props');
+$props->dump('props');
 
 $curpage = $props->get('page');
 $curtype = $props->get('type');
@@ -81,7 +81,6 @@ $curtype = $props->get('type');
 switch ("$curpage$curtype") 
 {
 	case 'homehome':		$page = new HomeHome($props);			break;		
-	case 'homesearch':	$page = new HomeSearch($props);			break;
 	case 'homelook':		$page = new HomeLook($props);				break;
 	case 'homeread':		$page = new HomeRead($props);				break;
 	case 'homeorient':	$page = new HomeOrient($props);			break;
@@ -92,7 +91,7 @@ switch ("$curpage$curtype")
 
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
-	case 'pictrip':			$page = new OnePic($props);					break;	
+	case 'picdate':			$page = new OnePic($props);					break;	
 	
 	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'logid':				$page = new OneTripLog($props);		break;	
@@ -103,6 +102,7 @@ switch ("$curpage$curtype")
 	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
 	case 'searchhome':	$page = new Search($props);			break;
+	case 'spotshome':		$page = new SpotsHome($props);			break;
 	case 'abouthome':		$page = new About($props);			break;	
 	
 	default: 
