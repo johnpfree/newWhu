@@ -1,5 +1,38 @@
 
 <div id="the_pic">
+	<table id=allsearch border="0">
+		<tr>
+			<td width=50%>
+				<form action="" method="post" accept-charset="utf-8">
+					<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">
+					<p>search where:</p>
+					<input type="checkbox" checked name="search_fld[]" value="x" id="story_titles"> <label for="story_titles">story titles</label><br />
+					<input type="checkbox" checked name="search_fld[]" value="y" id="stories">            <label for="stories"  >stories</label><br />
+					<input type="checkbox" checked name="search_fld[]" value="z" id="pictures">         <label for="pictures" >pictures</label><br />
+					<input type="checkbox" checked name="search_fld[]" value="" id="trip_logs">      <label for="trip_logs">trip logs</label><br />
+					<input type="checkbox" checked name="search_fld[]" value="" id="maps"> <label for="maps">maps</label><br />
+					<!-- <input type="checkbox" checked name="story_titles" value="" id="story_titles"> <label for="story_titles">story titles</label><br />
+					<input type="checkbox" checked name="stories" value="" id="stories">            <label for="stories"  >stories</label><br />
+					<input type="checkbox" checked name="pictures" value="" id="pictures">         <label for="pictures" >pictures</label><br />
+					<input type="checkbox" checked name="trip_logs" value="" id="trip_logs">      <label for="trip_logs">trip logs</label><br />
+					<input type="checkbox" checked name="maps" value="" id="maps"> <label for="maps">maps</label><br /> -->
+					<p><input type="submit" name="search_for_term" value="Search for Text"></p>
+				</form>
+			</td>
+			<td width=50%>
+				<h4>Search Spots</h4>
+				<form action="search_spots" method="get" accept-charset="utf-8">
+					<p>type of spot:</p>
+					<input type="checkbox" checked name="spot_type[]" value="" id="maps"> <label for="maps">hot springs</label>
+					<input type="checkbox" checked name="spot_type[]" value="" id="maps"> <label for="maps">lodging</label>
+					
+				
+					<p><input type="submit" name="search_for_spots" value="Search for Spots"></p>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<hr />
 	<p>Advanced Search Page</p>
 	Are you looking for a specific type thing - posts, or stops, or days, or pic labels?<br />
 	We should have a fancy spot search. All campgrounds in this park, free campgrounds. Do I get phone reception, is it noisy? Is there water?<br />
@@ -9,9 +42,25 @@
 	<li>Browse place - Campgrounds in Idaho</li>
 	<li>Browse park - Campgrounds in Inyo Nat Forest</li>
 </ul>
-<div class=wirenotes>{WIRENOTES}</div>
 
 <style type="text/css" media="screen">
+form {
+	width: 100%;
+	borxder: 1px solid #f00;
+}   
+#the_pic form p {
+	font-weight: normal;
+	font-size: 100%;
+}
+#allsearch {
+	width: 100%;
+	padding-bottom: 8px;
+}
+#allsearch td {
+	vertical-align: top;
+	padding: 10px;
+	border: 1px solid #444;
+}
 #the_pic {
 	padding: 0px 30px 20px;
 	margin: 0 auto;
