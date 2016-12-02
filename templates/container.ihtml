@@ -32,7 +32,8 @@
 								<ul>
 										<li><a href="?page=home&type=home">Home</a></li>
 										<li class="even-nav"><a href="?page=trips&type=home">Trips</a></li>
-										<li><a href="?page=txts&type=home">Blog</a></li>
+										<li><a href="?page=spots&type=home">Spots</a></li>
+										<!-- <li><a href="?page=txts&type=home">Blog</a></li> -->
 										<!-- <li><a href="http://jfmac.local/~jf/wptest/">Blog</a></li> -->
 										<li class="even-nav"><a href="?page=about&type=home">About</a></li>
 										<li><a href="?page=search&type=home">Search</a></li>
