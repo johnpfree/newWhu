@@ -1,0 +1,33 @@
+<table id="spotstable" border="0" cellspacing="5" cellpadding="5">
+	<caption>Whufu Spots</caption>
+	<thead>
+		<tr>
+			<td>name (visited)</td>
+			<td>part of</td>
+			<td>where</td>
+			<td>type</td>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- BEGIN rows -->
+		<tr>
+			<td align="right"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_NAME} ({SPOT_TIMES})</a></td>
+			<td>{SPOT_PART_OF}</td>
+			<td>{SPOT_WHERE}</td>
+			<td>{SPOT_TYPE}</td>
+		</tr>
+		<!-- END rows -->
+	</tbody>
+</table>
+
+<style type="text/css" media="screen">
+	#spotstable {
+		margin: 0 auto;
+		xmargin-left: 200px;
+	}
+	#spotstable td {
+		padding: 4px 6px;
+	}
+	caption { font-size: 120%;}
+	thead { border-bottom: 2px solid #3A5950;	}
+</style>
