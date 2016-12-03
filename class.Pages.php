@@ -669,9 +669,14 @@ class Search extends ViewWhu
 			'chk_trip', 
 			'chk_maps', 
 		);
-		if ($this->props->isProp('search_for_term'))
+		if ($this->props->isProp('search_for_term') && ($term = $this->props->get('search_term')) != '' && sizeof($srch = $this->props->get('search_fld')) > 0)
 		{
-			
+			dumpVar($srch, "term=$term, srch");
+			if (isset($srch['chk_stti']))		// search blog
+			{
+				// ((wp_posts.post_title LIKE '%football%') OR
+				// (wp_posts.post_content LIKE '%football%'))
+			}
 		}
 		else 
 		{
