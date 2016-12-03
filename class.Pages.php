@@ -662,6 +662,24 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
+		$opts = array(
+			'chk_stti', 
+			'chk_stst', 
+			'chk_pcti', 
+			'chk_trip', 
+			'chk_maps', 
+		);
+		if ($this->props->isProp('search_for_term'))
+		{
+			
+		}
+		else 
+		{
+			foreach ($opts as $k => $v) 
+			{
+				$this->template->set_var(strtoupper($v), 'checked');
+			}
+		}
 		parent::showPage();
 	}
 }

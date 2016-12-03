@@ -231,7 +231,7 @@
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		
-		function yesterday() {	return $this->anotherDate("-1");	}		// set of functions for getting the next and previous days.
+		function yesterday() {	return $this->anotherDate("-1");	}		// set of functions for getting the next and previous dates. Doesn't care if it's in a trip
 		function tomorrow()  {	return $this->anotherDate("1");	}
 		function anotherDate($offset)
 		{

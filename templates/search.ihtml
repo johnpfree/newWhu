@@ -1,32 +1,57 @@
 
-<div id="the_pic">
-	<table id=allsearch border="0">
-		<tr>
-			<td width=50%>
-				<form action="" method="post" accept-charset="utf-8">
-					<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">
-					<p>search where:</p>
-					<input type="checkbox" checked name="search_fld[]" value="x" id="story_titles"> <label for="story_titles">story titles</label><br />
-					<input type="checkbox" checked name="search_fld[]" value="y" id="stories">            <label for="stories"  >stories</label><br />
-					<input type="checkbox" checked name="search_fld[]" value="z" id="pictures">         <label for="pictures" >pictures</label><br />
-					<input type="checkbox" checked name="search_fld[]" value="" id="trip_logs">      <label for="trip_logs">trip logs</label><br />
-					<input type="checkbox" checked name="search_fld[]" value="" id="maps"> <label for="maps">maps</label><br />
-					<p><input type="submit" name="search_for_term" value="Search for Text"></p>
-				</form>
-			</td>
-			<td width=50%>
-				<h4>Search Spots</h4>
-				<form action="search_spots" method="get" accept-charset="utf-8">
-					<p>type of spot:</p>
-					<input type="checkbox" checked name="spot_type[]" value="" id="maps"> <label for="maps">hot springs</label>
-					<input type="checkbox" checked name="spot_type[]" value="" id="maps"> <label for="maps">lodging</label>
-					
-				
-					<p><input type="submit" name="search_for_spots" value="Search for Spots"></p>
-				</form>
-			</td>
-		</tr>
-	</table>
+<div id="main_panel">
+	<form action="" method="post" accept-charset="utf-8">
+		<h4>Search for text</h4>
+		<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">
+		<p>search where: &nbsp; &nbsp;
+			<input type="checkbox" {CHK_STTI} name="search_fld[]" value="chk_stti" id="story_titles"> <label for="story_titles">story titles</label> &nbsp; &nbsp; 
+			<input type="checkbox" {CHK_STST} name="search_fld[]" value="chk_stst" id="stories">            <label for="stories"  >stories</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_PCTI} name="search_fld[]" value="chk_pcti" id="pictures">         <label for="pictures" >pictures</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_TRIP} name="search_fld[]" value="chk_trip" id="trip_logs">      <label for="trip_logs">trip logs</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_MAPS} name="search_fld[]" value="chk_maps" id="maps"> <label for="maps">maps</label>
+		</p>
+		<p><input type="submit" name="search_for_term" value="Search for Text"></p>
+	</form>
+
+	<form id="spot_srch" action="search_spots" method="get" accept-charset="utf-8">
+		<h4>Search Spots</h4>
+		<p>type of spot: &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">hot springs</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">lodging</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">campground</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">parking lot</label> &nbsp; &nbsp;
+		</p>                
+		<p id=camptypes>type of campground: &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">National Park</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Army Corp of Engineers</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid5"> <label for="fid5">State Park</label> &nbsp; &nbsp;<br>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid6"> <label for="fid6">City/County Park</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid7"> <label for="fid7">Private Campground</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid8"> <label for="fid8">just a parking lot</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid9"> <label for="fid9">City/County Park</label> &nbsp; &nbsp;
+		</p>
+
+		<p>cost: &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label> &nbsp; &nbsp;
+			<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5>  &nbsp; &nbsp;
+		</p>                
+	
+		<p>amenities: &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label> &nbsp; &nbsp;
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label> &nbsp; &nbsp;
+		</p>                
+	
+		<p><input type="submit" name="search_for_spots" value="Search for Spots"></p>
+	</form>
+
 	<hr />
 	<p>Advanced Search Page</p>
 	Are you looking for a specific type thing - posts, or stops, or days, or pic labels?<br />
@@ -41,36 +66,29 @@
 <style type="text/css" media="screen">
 form {
 	width: 100%;
-	borxder: 1px solid #f00;
+	border: 1px solid #0d0;
+	padding: 4px 12px;
 }   
-#the_pic form p {
-	font-weight: normal;
-	font-size: 100%;
-}
-#allsearch {
-	width: 100%;
-	padding-bottom: 8px;
-}
-#allsearch td {
-	vertical-align: top;
-	padding: 10px;
-	border: 1px solid #444;
-}
-#the_pic {
+#spot_srch p {
+	padding-bottom: 6px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #8f8;
+}   
+#main_panel {
 	padding: 0px 30px 20px;
 	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
-	text-align: center;
+	width: 100%;
 }
-#the_pic p {
+#main_panel p {
 	font-weight: bold;
 	font-size: 140%;
 }
-#the_content ul {
-	padding: 0px 30px 20px;
-	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
+#main_panel form p {
+	font-weight: normal;
+	font-size: 100%;
 }
+#camptypes {
+	text-indent: -40px;
+	padding-left: 40px;
+}}
 </style>
