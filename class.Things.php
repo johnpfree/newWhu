@@ -231,19 +231,27 @@
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		
-		function previous() 
+		function yesterday() {	return $this->anotherDate("-1");	}		// set of functions for getting the next and previous days.
+		function tomorrow()  {	return $this->anotherDate("1");	}
+		function anotherDate($offset)
+		{
+			$date = Properties::sqlDate($x = sprintf("%s $offset day", $this->date()));
+			return $date;
+		}
+				
+		function previousDayGal() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
 		{
 			if (is_null($this->prvnxt))
-				$this->getPrvNxt();
+				$this->getPrvNxtDayGal();
 			return $this->prvnext['prev'];
 		}
-		function next() 
+		function nextDayGal() 
 		{
 			if (is_null($this->prvnxt))
-				$this->getPrvNxt();
+				$this->getPrvNxtDayGal();
 			return $this->prvnext['next'];
 		}
-		function getPrvNxt()
+		function getPrvNxtDayGal()
 		{
 			$items = $this->getAll("select * from wf_days order by wf_days_date");
 			$wps = array_column($items, 'wf_days_date');

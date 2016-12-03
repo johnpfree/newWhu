@@ -402,9 +402,9 @@ class Gallery extends ViewWhu
 		// do nav
 		$date = $this->build('DbDay', $key);
 
-		$this->template->set_var('PRV_ID', $navd = $date->previous());
+		$this->template->set_var('PRV_ID', $navd = $date->previousDayGal());
 		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
-		$this->template->set_var('NXT_ID', $navd = $date->next());
+		$this->template->set_var('NXT_ID', $navd = $date->nextDayGal());
 		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
 
 		$pics = $this->getPictures($key);
@@ -493,6 +493,13 @@ class OneDay extends ViewWhu
  	 	$day = $this->build('DbDay', $dayid);
 
 		$this->template->set_var('PRETTY_DATE', $this->caption = $day->prettyDate());
+		
+		$navday = $this->build('DbDay', $d = $day->yesterday());
+		$this->template->set_var('PRV_DATE', $d);
+		$this->template->set_var('PRV_LABEL', $navday->hasData ? 'yesterday' : '');
+		$navday = $this->build('DbDay', $d = $day->tomorrow());
+		$this->template->set_var('NXT_DATE', $d);
+		$this->template->set_var('NXT_LABEL', $navday->hasData ? 'tomorrow' : '');
 
 		$this->dayLinkBar('day', $dayid);		
 		parent::showPage();

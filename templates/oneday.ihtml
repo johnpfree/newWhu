@@ -1,5 +1,11 @@
 <div id="the_pic">
 	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
+	<table id="daynav" border="0">
+		<tr>
+			<td><a href="?page=day&type=date&key={PRV_DATE}">{PRV_LABEL}</a></td>
+			<td><a href="?page=day&type=date&key={NXT_DATE}">{NXT_LABEL}</a></td>
+		</tr>
+	</table>
 	<p>{PRETTY_DATE}</p>
 	What trip was I on?<br />
 	Where did I start today? Where did I stop?<br />
@@ -12,6 +18,12 @@ everything about that day- including Date, where tonight's stop, last night's st
 {LINK_BAR}
 
 <style type="text/css" media="screen">
+#daynav {
+	width: 100%;
+}
+#daynav td:nth-child(1) {	text-align: left;	}
+#daynav td:nth-child(2) {	text-align: right;	}
+
 #the_pic {
 	padding: 20px 30px 10px;
 	margin: 0 auto;
