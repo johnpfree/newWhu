@@ -265,7 +265,7 @@ class SpotsHome extends ViewWhu
  				);
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 	}
@@ -295,7 +295,6 @@ class AllTrips extends ViewWhu
 			// dumpVar($row['MAP_CLASS'], "row['MAP_CLASS']");
 			$rows[] = $row;
 		}
-		// $loop = new Looper($this->template, array('parent' => 'the_content'));
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
 		$loop->do_loop($rows);		
 	}
@@ -351,7 +350,6 @@ class OneTripLog extends ViewWhu
 				
 			$nodeList[] = $row;		
 		}
-		// $loop = new Looper($this->template, array('parent' => 'the_content'));
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
 		$loop->do_loop($nodeList);
 
@@ -419,8 +417,7 @@ class Gallery extends ViewWhu
 			$rows[] = $row;
 			// if ($i > 4) break;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
-		// $loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 		parent::showPage();
@@ -515,6 +512,24 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_TOWN', 	$spot->town());
 		$this->template->set_var('SPOT_PARTOF', $spot->partof());
 		$this->template->set_var('SPOT_NUM',  	$spot->visits());
+		
+		$types = $spot->prettyTypes();
+		for ($i = 0, $str = ''; $i < sizeof($types); $i++) 
+		{
+			$str .= $types[$i] . ', ';
+		}
+		
+		// dumpVar($types, "types"); exit;
+		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
+
+
+		$keys = $spot->keywords();
+		for ($i = 0; $i < sizeof($keys); $i++) 
+		{
+			$rows[] = 	array('spot_key' => $keys[$i]);
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
+		$loop->do_loop($rows);
 
 		$days = $this->build('DbSpotDays', $spot->id());	
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)

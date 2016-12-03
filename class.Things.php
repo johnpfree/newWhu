@@ -3,7 +3,6 @@
 	class WhuThing extends DbWhufu
 	{
 		var $data = NULL;
-		var $prefix = NULL;
 		var $isCollection = false;
 		var $hasData = true;
 		function __construct($p, $key = NULL)
@@ -38,7 +37,7 @@
 		function dbValue($key)   
 		{
 			$this->assert($this->hasData, sprintf("Object of class %s is empty, key=%s.", get_class($this), $key));
-			$this->assert(isset($this->data[$key]), "this->data[$key] not found for prefix={$this->prefix}");
+			$this->assert(isset($this->data[$key]), "this->data[$key] not found for class=" . get_class($this));
 			return $this->data[$key];  
 		}
 
@@ -118,7 +117,6 @@
 	
 	class WhuDbTrip extends WhuThing 
 	{
-		var $prefix = 'wf_trips';
 		var $lazyWpCat = 0;
 		function getRecord($key)
 		{
@@ -199,7 +197,6 @@
 	class WhuDbDay extends WhuThing 
 	{
 		var $prvnxt = NULL;			// save calculation
-		var $prefix = 'wf_days';
 		function getRecord($key)
 		{
 			// dumpVar($key, "key");
@@ -343,7 +340,14 @@
 
 	class WhuDbSpot extends WhuThing 
 	{
-		var $prefix = 'wf_spots';
+		var $lazyDays = NULL;
+		var $spottypes = array(
+					'CAMP'		=> 'Place to overnight in the van',
+					'LODGE'		=> 'Hotel/Motel',
+					'HOTSPR'	=> 'Hot Soak',
+					'HOUSE'		=> 'Somebody\'s house',
+					'NWR'			=> 'Wildlife Refuge',
+					);
 		function getRecord($key)		// parm is spot id OR the record for iteration
 		{
 			if ($this->isSpotRecord($key))
@@ -357,6 +361,16 @@
 		function partof()		{ return $this->dbValue('wf_spots_partof'); }
 		function types()		{ return $this->dbValue('wf_spots_types'); }
 		
+		function prettyTypes()		// an array of types, suitable for printing
+		{
+			$keys = WhuProps::parseKeys($this->types());			
+			for ($i = 0; $i < sizeof($keys); $i++) 
+			{
+				$keys[$i] = $this->spottypes[$keys[$i]];
+			}
+			return $keys;
+		}
+		
 		function visits()		{ 
 			$vfld = $this->dbValue('wf_spots_visits');
 			if ($vfld == 'many')
@@ -364,12 +378,31 @@
 			if ($vfld == 'none')
 				return 'never';
 
-			$spotdays = $this->build('DbSpotDays', $this->id());
-			$ndays = $spotdays->size();
+			if ($this->lazyDays == NULL)
+				$this->lazyDays = $this->build('DbSpotDays', $this->id());
+
+			if (($ndays = $this->lazyDays->size()) == 0)
+				return 'never';
+
 			if (isset($vfld[0]) && $vfld[0] == "+")
-				$ndays += substr($vfld, 1);			
-			dumpVar($ndays, "vfld = $vfld, size=" . $spotdays->size() . "RESULT");
+				$ndays += substr($vfld, 1);		
+				
+			dumpVar($ndays, "vfld = $vfld, day recs=" . $this->lazyDays->size() . "RESULT");
 			return $ndays;
+		}
+		
+		function keywords()
+		{
+			if ($this->lazyDays == NULL)
+				$this->lazyDays = $this->build('DbSpotDays', $this->id());
+			
+			for ($i = 0, $allkeys = array(); $i < $this->lazyDays->size(); $i++)
+			{
+				$spotDay = $this->lazyDays->one($i);
+				$allkeys = array_merge(array_flip($spotDay->keywords()), $allkeys);
+				// dumpVar($allkeys, "$i keys");
+			}
+			return array_flip($allkeys);
 		}
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
@@ -412,13 +445,10 @@
 				dumpVar($wherestr, "$i wherestr");
 			}
 			dumpVar($wherestr, "wherestr");
-			
-
 		}
 	}	
 	class WhuDbSpotDay extends WhuThing 
 	{
-		var $prefix = 'wf_spot_days';
 		function getRecord($key)
 		{
 			if ($this->isSpotDayRecord($key))
@@ -428,12 +458,16 @@
 			{
 				return $this->getOne($q = sprintf("select * from wf_spot_days where wf_spots_id=%s AND wf_spot_days_date='%s'", $key['spotId'], $key['date']));
 			}
-
 			WhuThing::getRecord($key);
 		}
 		function id()			{ return $this->dbValue('wf_spots_id'); }
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
 		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
+		function keywords()	
+		{
+			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
+// dumpVar($foo, "foo");			exit;
+		}
 	}
 	class WhuDbSpotDays extends WhuDbSpotDay			//  So far this can be a collection of days for a date, or of days for a Spot
 	{
@@ -444,8 +478,8 @@
 				return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");
 
 			if ($key > 0)
-				return $this->getAll("select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date");
-			
+				return $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date");
+
 			WhuThing::getRecord($key);
 		}
 		
@@ -481,10 +515,6 @@
 		var $lazyPostRec = 0;
 		function getRecord($parm)	//  parm = array('wpid' => wpid)  OR jsut the wpid
 		{
-
-			// $cat = $this->doWPQuery("cat=60");
-			// exit;
-
 			if (is_array($parm) && isset($parm['wpid']))
 			{
 				return $this->doWPQuery("p={$parm['wpid']}");

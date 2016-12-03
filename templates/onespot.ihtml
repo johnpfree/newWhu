@@ -1,16 +1,25 @@
 
 <div id="spot">
 	<h1>{SPOT_NAME}</h1>
-	<p>{SPOT_TOWN} &bull; {SPOT_PARTOF}</p>
+	<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
 	<p>Number of visits: {SPOT_NUM}</p>
 
 	<div class="note1">Days visited:</div>
-	<div id="daylist">
+	<div id="linklist">
 		&bull; 
 		<!-- BEGIN rows -->
 			<a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a>		
 		&bull; 
 			<!-- END rows -->	
+	</div>
+
+	<div class="note1">Spot keywords:</div>
+	<div id="linklist">
+		&bull; 
+		<!-- BEGIN keyrows -->
+			<a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
+		&bull; 
+			<!-- END keyrows -->	
 	</div>
 
 	<form id=nearform action="" method="post" accept-charset="utf-8">
