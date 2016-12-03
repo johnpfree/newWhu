@@ -456,6 +456,7 @@ class OneMap extends ViewWhu
 		$tripid = $this->props->get('key');
  	 	$trip = $this->build('DbTrip', $tripid);		
 		$this->template->set_var('TRIP_NAME', $trip->name());
+		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 
  	 	$days = $this->build('DbDays', $tripid);
 		for ($i = 0, $rows = array(); $i < $days->size(); $i++)

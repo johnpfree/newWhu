@@ -25,7 +25,7 @@ h2 {
 }
 </style>
 <script>
-L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
+L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 // var map = L.mapbox.map('map', 'mapbox.satellite');
 // var map = L.mapbox.map('map', 'mapbox.streets');
 // var map = L.mapbox .map('map', 'mapbox.emerald');
