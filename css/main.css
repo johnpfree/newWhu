@@ -211,9 +211,9 @@ xborder: 1px solid yellow;
 	
 @media only screen and (min-width: 768px) {
 
-	#triptable td:nth-child(5) {	display: none;	}
+/*	#triptable td:nth-child(5) {	display: none;	}
 	#triptable td:nth-child(5) {	background-color: #DDD;	}
-
+*/
 	#mysize:after {
 		content: "min-width: 768px";
 	}
