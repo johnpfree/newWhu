@@ -428,6 +428,26 @@
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
 		function lon()		{ return $this->dbValue('wf_spots_lon'); }
+
+		function getInRadius($item, $dist = 100.)		// returns a WhuDbSpots collection
+		{
+			$lat = $this->lat();
+			$lon = $this->lon();
+			
+			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM 'wf_spots' WHERE wf_spots_lon != '' ORDER BY distance ASC";
+			$items = $this->getAll($q);
+
+			// NOTE, the spot we searched for is the first item here, with distance = 0
+			for ($i = 0, $ret = array(); $i < sizeof($items); $i++) 
+			{
+	// dumpVar(sprintf("id:%04d., %s. -%s-", $items[$i]['wf_spots_id'], $items[$i]['distance'], $this->fullSpotName($items[$i])), $items[$i]['wf_spots_date']);
+				if ($items[$i]['distance'] > $dist)
+					break;
+				$ret[] = $items[$i];
+			}
+	dumpVar(sizeof($ret), "within $dist");
+			return $ret;
+		}
 	}
 	class WhuDbSpots extends WhuDbSpot 
 	{

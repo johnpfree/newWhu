@@ -15,7 +15,6 @@
 <style type="text/css" media="screen">
 	#tripstable {
 		margin: 0 auto;
-		xmargin-left: 200px;
 	}
 	#tripstable td {
 		padding: 4px 6px;

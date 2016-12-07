@@ -2,9 +2,9 @@
 	<caption>{TRIP_NAME}</caption>
 	<thead>
 		<tr id=triptablehead>
+			<td>#</td>
 			<td align=right>date</td>
 			<td>stop</td>
-			<td>map</td>
 			<td>miles</td>
 			<td>total miles</td>
 			<td>day</td>
@@ -15,9 +15,9 @@
 	<tbody>
 		<!-- BEGIN rows -->
 		<tr>
+			<td>{MAP_MARKER}</td>
 			<td align=right><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{NICE_DATE}</a></td>
 			<td><a href="?page={SDPAGE}&type={SDTYPE}&key={SDKEY}" title="Spot or Day page">{STOP_NAME}</a></td>
-			<td>{MAP_MARKER}</td>
 			<td>{MILES}</td>
 			<td>{CUM_MILES}</td>
 			<td>{DAY_NAME}</td>
@@ -41,8 +41,11 @@
 
 	thead { border-bottom: 2px solid #3A5950;	}
 
-	#triptable td:nth-child(1) {	white-space: nowrap;	}
-	#triptable td:nth-child(3) {	text-align: center;	}
+	#triptable td:nth-child(2) {	white-space: nowrap;	}
 	#triptable td:nth-child(4) {	text-align: center;	}
-	#triptable td:nth-child(6) {	text-align: center;	}
+	#triptable td:nth-child(5) {	text-align: center;	}
+	#triptable td:nth-child(6) {	display: none;	}
 	#triptable td:nth-child(7) {	text-align: center;	}
+	#triptable td:nth-child(8) {	text-align: center;	}
+
+</style>
