@@ -313,9 +313,11 @@ class OneTripLog extends ViewWhu
 
 		for ($i = $iPost = $prevPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
 		{
-			$day = new WhuDayInfo($days->one($i));
+			// $day = new WhuDayInfo($days->one($i));
+			$day = $this->build('DayInfo', $days->one($i));
 
-			$row = array('day_name' => $day->dayName(), 'day_date' => $day->date(), 'miles' => $day->miles(), 'cum_miles' => $day->cumulative());
+			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => $day->cumulative(), 'map_marker' => $i+1);
+			$row['nice_date'] = Properties::prettyDate($row['day_date'] = $day->date(), "M"); 
 
 			$parms = array('stop', 'date', $day->date());
 			if ($day->hasSpot())
@@ -454,17 +456,44 @@ class OneMap extends ViewWhu
 	function showPage()	
 	{
 		$tripid = $this->props->get('key');
- 	 	$trip = $this->build('DbTrip', $tripid);		
+ 	 	$trip = $this->build('Trip', $tripid);		
+		// $trip->dump('tripata');
+
 		$this->template->set_var('TRIP_NAME', $trip->name());
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
+		if ($trip->hasMapboxMap())
+		{
+			$filename = $trip->mapboxJson();
+			$fullpath = MAP_DATA_PATH . $filename;
+// dumpVar($fullpath, "fullpath");
+			$this->template->set_var("MAP_JSON", file_get_contents($fullpath));
+			$this->template->setFile('JSON_INSERT', 'mapjson.ihtml');
+		}	
+		else
+			$this->template->set_var("JSON_INSERT", '');
+		
+		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
+		dumpVar($foo, "WHU_URL == http://jfmac.local/~jf/whugit/index.php ??");							
+		// exit;
 
  	 	$days = $this->build('DbDays', $tripid);
-		for ($i = 0, $rows = array(); $i < $days->size(); $i++)
+		for ($i = 0, $rows = array(), $prevname = '@'; $i < $days->size(); $i++)
 		{
 			$day = $this->build('DayInfo', $days->one($i));
-		
-			$row = array('point_ind' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), 
-										'point_name' => addslashes($day->nightName()), 'point_desc' => $day->date(), );
+
+			$row = array('i_day' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
+										'point_name' => addslashes($day->nightName()), 'day_date' => $day->date(), 'day_info' => $day->prettyDate());
+										
+			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
+				dumpVar($row, "NO POSITION! $i row");
+				continue;
+			}
+			if ($row['point_name'] == $prevname) {											// skip if I'm at the same place as yesterday
+				dumpVar($row['point_name'], "skipping same $i");
+				continue;
+			}
+			$prevname = $row['point_name'];
+						
 			$rows[] = $row;
 		}
 		// dumpVar($rows, "rows");
@@ -530,15 +559,16 @@ class OneSpot extends ViewWhu
 		// dumpVar($types, "types"); exit;
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
 
-
 		$keys = $spot->keywords();
+		// dumpVar($keys, "keys");
 		for ($i = 0; $i < sizeof($keys); $i++) 
 		{
-			$rows[] = 	array('spot_key' => $keys[$i]);
+			// dumpVar($keys[$i], "keys[$i]");
+			$rows[] = array('spot_key' => $keys[$i]);
 		}
+		// dumpVar($rows, "rows");
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
 		$loop->do_loop($rows);
-
 		$days = $this->build('DbSpotDays', $spot->id());	
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{

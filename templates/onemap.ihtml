@@ -1,6 +1,6 @@
 
-<script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
-<link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 
 <div id="the_content">
 	<h2>{TRIP_NAME}</h2>
@@ -23,16 +23,21 @@ h2 {
 	width: 100%;
 	padding-bottom: 95%;  /*maintain aspect ratio*/
 }
+
+.leaflet-popup-content {
+	color: #8c2b09;
+	background-color: #ffebc9;
+}
 </style>
 <script>
 L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 // var map = L.mapbox.map('map', 'mapbox.satellite');
-// var map = L.mapbox.map('map', 'mapbox.streets');
 // var map = L.mapbox .map('map', 'mapbox.emerald');
 // var map = L.mapbox.map('map', 'mapbox.light');
 var map = L.mapbox.map('map', 'mapbox.streets');
 
-var myLayer = L.mapbox.featureLayer().addTo(map);
+{JSON_INSERT}
+
 var markers = [
 <!-- BEGIN rows -->
 	{
@@ -43,9 +48,9 @@ var markers = [
 		},
 		properties: {
 				title: '{POINT_NAME}',
-				description: 'POINT_DESC',
-				'marker-symbol': '12',
-				// 'marker-symbol': 'POINT_IND',
+				description: '<a href="{WHU_URL}?page=day&type=date&key={DAY_DATE}">{DAY_INFO}</a>',
+				'marker-symbol': '{I_DAY}',
+				// 'marker-symbol': 'campsite',// lodging
 				'marker-color': '#8c54ba'
 		}
 	},
@@ -61,10 +66,11 @@ for (var i = 0; i < markers.length; i++) {
 	// console.log(i, pt);
 	// console.log(i, bounds);
 }
-
-// bounds.pad(10);
+bounds.pad(30);
 map.fitBounds(bounds);	
-myLayer.setGeoJSON(markers);
+
+var markersLayer = L.mapbox.featureLayer().addTo(map);
+markersLayer.setGeoJSON(markers);
 
 map.on('click', function(e) {
     console.log(e.latlng);

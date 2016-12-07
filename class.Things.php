@@ -138,6 +138,7 @@
 		// function name()				{ return $this->dbValue('wf_trips_map_lon'); }
 
 		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
+		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		function isNewMap()		{ return (strlen($this->fid()) > 1); }
 
 		// function wpCatId()
@@ -156,6 +157,13 @@
 	}
 	class WhuTrip extends WhuDbTrip 
 	{
+		
+		var $multiMaps = array(
+			"johnpfree.02do91ob" => array('name' => "Eureka"		, 'file' => "multiEureka.js"), 
+			"johnpfree.pl58eik5" => array('name' => "395" 	  	, 'file' => "multi395.js"), 
+			"johnpfree.29opambf" => array('name' => "Louisville", 'file' => "mLouisvilleRtes.json"), 
+			// "johnpfree.0hb1fke9" => array('name' => "Louisville", 'file' => "mLouisville.js"   ),
+		);
 		function makeStoriesLink()
 		{}
 		function hasPics()
@@ -173,10 +181,12 @@
 			if ($this->isNewMap())			// cheapest test
 				return true;
 			return false;
-
 			// not a new map, look for routes for old map
 			return $this->getAll("select * from wf_routes where wf_trips_map=" . $this->id());				
 		}
+		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}
+		
+		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
 	}
 	class WhuTrips extends WhuTrip 
 	{
@@ -305,6 +315,7 @@
 
 		function lat()	{	return $this->getSpotandDaysArranged('lat');	}
 		function lon()	{	return $this->getSpotandDaysArranged('lon');	}
+		// function town()	{	return $this->hasSpot() ? $this;	}
 	
 		function getSpotandDaysArranged($key)
 		{
@@ -317,9 +328,10 @@
 				'lon' => 'wf_days_lon',
 			);
 			assert(isset($keys[$key]), "getSpotandDaysArranged() cannot handle $key.");
-		
-			if (!$this->hasSpot())
+		                           
+			if (!$this->hasSpot()) { //dumpVar($key, "key"); dumpVar($this->dbValue($keys[$key]), "this->dbValue($keys[$key])");
 				return $this->dbValue($keys[$key]);		// no spot, return the day value
+			}
 		
 			if (!isset($this->spot))								// first request, remember the Spot
 				$this->spot = $this->build('DbSpot', $this->spotId());	// create the spot
@@ -408,6 +420,7 @@
 			{
 				$spotDay = $this->lazyDays->one($i);
 				$allkeys = array_merge(array_flip($spotDay->keywords()), $allkeys);
+				// dumpVar($spotDay->keywords(), "spotDay->keywords()");
 				// dumpVar($allkeys, "$i keys");
 			}
 			return array_flip($allkeys);

@@ -24,9 +24,10 @@
 
 	<form id=nearform action="" method="post" accept-charset="utf-8">
 		<label for="radius">Show all spots within</label> 
-		<input type="text" name="id" value="" size=6> miles. 
+		<input type="text" name="id" value="50" size='6'> miles. 
 		<input type="submit" name="spot_map" value="Go" />
-			<input type="hidden" name="type" value="near" />
+		<input type="hidden" name="page" value="map" />
+		<input type="hidden" name="type" value="near" />
 		<input type="hidden" name="key" value="{SPOT_ID}" />
 	</form>
 	<hr />
