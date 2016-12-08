@@ -48,10 +48,9 @@ var markers = [
 		},
 		properties: {
 				title: '{POINT_NAME}',
-				description: '<a href="{WHU_URL}?page=day&type=date&key={DAY_DATE}">{DAY_INFO}</a>',
-				'marker-symbol': '{I_DAY}',
-				// 'marker-symbol': 'campsite',// lodging
-				'marker-color': '#8c54ba'
+				description: '<a href="{WHU_URL}?page={PAGE_VAL}&type={TYPE_VAL}&key={KEY_VAL}">{LINK_TEXT}</a>',
+				'marker-symbol': '{MARKER_VAL}',
+				'marker-color': '{MARKER_COLOR}'
 		}
 	},
 <!-- END rows -->

@@ -93,8 +93,9 @@ switch ("$curpage$curtype")
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picdate':			$page = new OnePic($props);					break;	
 	
-	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'logid':				$page = new OneTripLog($props);		break;	
+	case 'mapid':				$page = new OneMap($props);			break;	
+	case 'mapnear':			$page = new SpotMap($props);			break;	
 	
 	case 'txtsid':			$page = new TripStories($props);			break;	
 	case 'txtwpid':			$page = new TripStory($props);				break;

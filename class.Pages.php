@@ -455,12 +455,15 @@ class OneMap extends ViewWhu
 	var $file = "onemap.ihtml";   
 	function showPage()	
 	{
-		$tripid = $this->props->get('key');
+		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
+		$this->template->set_var('PAGE_VAL', 'day');
+		$this->template->set_var('TYPE_VAL', 'date');
+		$this->template->set_var('MARKER_COLOR', '#8c54ba');
+
+		$tripid = $this->key;
  	 	$trip = $this->build('Trip', $tripid);		
-		// $trip->dump('tripata');
 
 		$this->template->set_var('TRIP_NAME', $trip->name());
-		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		if ($trip->hasMapboxMap())
 		{
 			$filename = $trip->mapboxJson();
@@ -481,8 +484,8 @@ class OneMap extends ViewWhu
 		{
 			$day = $this->build('DayInfo', $days->one($i));
 
-			$row = array('i_day' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
-										'point_name' => addslashes($day->nightName()), 'day_date' => $day->date(), 'day_info' => $day->prettyDate());
+			$row = array('marker_val' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
+										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 'link_text' => $day->prettyDate());
 										
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
 				dumpVar($row, "NO POSITION! $i row");
@@ -502,6 +505,51 @@ class OneMap extends ViewWhu
 		
 		$this->tripLinkBar('map', $tripid);		
 		parent::showPage();
+	}
+}
+class SpotMap extends OneMap
+{
+	function showPage()	
+	{
+		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
+		$this->template->set_var('LINK_BAR', '');
+		$this->template->set_var("JSON_INSERT", '');
+		$this->template->set_var('PAGE_VAL', 'spot');
+		$this->template->set_var('TYPE_VAL', 'id');
+		
+		$spotid = $this->key;
+		$radius = $this->props->get('id');
+ 	 	$spot = $this->build('DbSpot', $spotid);		
+
+		$this->template->set_var('TRIP_NAME', sprintf("Spots in a %s mile radius of %s", $radius, $spot->name()));
+		
+		$items = $spot->getInRadius($radius);
+
+		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
+		
+			
+ 	 	$spots = $this->build('DbSpots', $items);
+		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
+		{
+			$spot = $spots->one($i);
+		
+			$row = array('point_lon' => $spot->lon(), 'point_lat' => $spot->lat(), 
+										'point_name' => addslashes($spot->name()), 'key_val' => $spot->id(), 'link_text' => addslashes($spot->town()));
+										
+			// $row['marker_val'] = 'campsite';
+			$row['marker_val'] = $markers[($i % sizeof($markers))];
+			$row['marker_color'] = ($i == 0) ? '#000' : '#8c54ba';
+										
+			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
+				dumpVar($row, "NO POSITION! $i row");
+				continue;
+			}
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
+		
+		ViewWhu::showPage();
 	}
 }
 
@@ -674,7 +722,8 @@ class TripStoryByDate extends TripStory
 
 class HomeHome extends ViewWhu
 {
-	var $file = "homehome.ihtml";   
+	// var $file = "blank.ihtml";
+	var $file = "homehome.ihtml";
 	function showPage()	
 	{
 		parent::showPage();

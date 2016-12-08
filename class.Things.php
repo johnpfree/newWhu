@@ -49,6 +49,7 @@
 		}
 		
 		// --------- getRecord() overloading utilities
+		function isSpotArray($key)			{	return (is_array($key) && isset($key[0]) && isset($key[0]['wf_spots_id']));	}
 		function isSpotRecord($key)			{	return (is_array($key) && isset($key['wf_spots_id']));	}
 		function isSpotDayRecord($key)	{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
 		function isSpotDayParmsArray($key)	{	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
@@ -429,12 +430,12 @@
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
 		function lon()		{ return $this->dbValue('wf_spots_lon'); }
 
-		function getInRadius($item, $dist = 100.)		// returns a WhuDbSpots collection
+		function getInRadius($dist = 100.)		// returns an array of spot records, suitable for creating a DbSpots collection
 		{
 			$lat = $this->lat();
 			$lon = $this->lon();
 			
-			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM 'wf_spots' WHERE wf_spots_lon != '' ORDER BY distance ASC";
+			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' ORDER BY distance ASC";
 			$items = $this->getAll($q);
 
 			// NOTE, the spot we searched for is the first item here, with distance = 0
@@ -454,6 +455,9 @@
 		var $isCollection = true;
 		function getRecord($searchterms = array())
 		{
+			if ($this->isSpotArray($searchterms))
+				return $searchterms;
+			
 			$deflts = array(
 				'order'	=> 'wf_spots_name',
 				'where'	=> array(),
