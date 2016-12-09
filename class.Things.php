@@ -369,6 +369,8 @@
 					'HOUSE'		=> 'Somebody\'s house',
 					'NWR'			=> 'Wildlife Refuge',
 					);
+		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
+					
 		function getRecord($key)		// parm is spot id OR the record for iteration
 		{
 			if ($this->isSpotRecord($key))
@@ -384,12 +386,12 @@
 		
 		function prettyTypes()		// an array of types, suitable for printing
 		{
-			$keys = WhuProps::parseKeys($this->types());			
-			for ($i = 0; $i < sizeof($keys); $i++) 
+			$types = WhuProps::parseKeys($this->types());	
+			foreach ($types as $k => $v) 
 			{
-				$keys[$i] = $this->spottypes[$keys[$i]];
+				$ret[$v] = $this->spottypes[$v];
 			}
-			return $keys;
+			return $ret;
 		}
 		
 		function visits()		{ 
@@ -435,7 +437,7 @@
 			$lat = $this->lat();
 			$lon = $this->lon();
 			
-			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' ORDER BY distance ASC";
+			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' AND $this->excludeString ORDER BY distance ASC";
 			$items = $this->getAll($q);
 
 			// NOTE, the spot we searched for is the first item here, with distance = 0
@@ -464,23 +466,19 @@
 			);
 			if (sizeof($searchterms) == 0)			// show all
 			{
-				$where = " WHERE wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";				
+				$where = " WHERE " . $this->excludeString;				
 			}
 			else
 			{
-				// dumpVar($searchterms, "searchterms");
 				for ($i = 0, $where = ""; $i < sizeof($searchterms); $i++) 
 				{
 				 $where .= ($i == 0) ? "WHERE " : " OR ";
 				 $where .= "wf_spots_types LIKE '%{$searchterms[$i]}%'";
 				}
-				dumpVar($where, "where");
 			}
 	 
 			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
-			dumpVar($q, "q");
 			return $this->getAll($q);
-
 
 			// $props = new Properties(array())
 

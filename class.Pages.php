@@ -525,9 +525,10 @@ class SpotMap extends OneMap
 		
 		$items = $spot->getInRadius($radius);
 
-		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
-		
-			
+		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
+		// CAMP(286), HOTSPR(30) • LODGE(31) • NWR(19) •
+dumpVar($markers, "markers");		
+	
  	 	$spots = $this->build('DbSpots', $items);
 		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
 		{
@@ -535,11 +536,15 @@ class SpotMap extends OneMap
 		
 			$row = array('point_lon' => $spot->lon(), 'point_lat' => $spot->lat(), 
 										'point_name' => addslashes($spot->name()), 'key_val' => $spot->id(), 'link_text' => addslashes($spot->town()));
-										
-			// $row['marker_val'] = 'campsite';
-			$row['marker_val'] = $markers[($i % sizeof($markers))];
 			$row['marker_color'] = ($i == 0) ? '#000' : '#8c54ba';
 										
+			$types = $spot->prettyTypes();
+			foreach ($types as $k => $v) 
+			{
+				$row['marker_val'] = $markers[$k];
+			}
+			// $row['marker_val'] = $markers[($i % sizeof($markers))];
+
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
 				dumpVar($row, "NO POSITION! $i row");
 				continue;
@@ -599,12 +604,12 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_NUM',  	$spot->visits());
 		
 		$types = $spot->prettyTypes();
-		for ($i = 0, $str = ''; $i < sizeof($types); $i++) 
-		{
-			$str .= $types[$i] . ', ';
-		}
-		
 		// dumpVar($types, "types"); exit;
+		$str = '';
+		foreach ($types as $k => $v) 
+		{
+			$str .= $v . ', ';
+		}		
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
 
 		$keys = $spot->keywords();
