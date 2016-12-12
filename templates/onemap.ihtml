@@ -3,7 +3,7 @@
 <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 
 <div id="the_content">
-	<h2>{TRIP_NAME}</h2>
+	<h2>{MAP_NAME}</h2>
 	<div id='map'></div>
 </div>
 {LINK_BAR}
@@ -34,7 +34,9 @@ L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 // var map = L.mapbox.map('map', 'mapbox.satellite');
 // var map = L.mapbox .map('map', 'mapbox.emerald');
 // var map = L.mapbox.map('map', 'mapbox.light');
-var map = L.mapbox.map('map', 'mapbox.streets');
+var map = L.mapbox.map('map', 'mapbox.streets', {
+  zoomControl: false
+});
 
 {JSON_INSERT}
 

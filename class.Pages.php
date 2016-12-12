@@ -459,11 +459,13 @@ class OneMap extends ViewWhu
 		$this->template->set_var('PAGE_VAL', 'day');
 		$this->template->set_var('TYPE_VAL', 'date');
 		$this->template->set_var('MARKER_COLOR', '#8c54ba');
+		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
+		dumpVar($foo, "WHU_URL");				
 
 		$tripid = $this->key;
  	 	$trip = $this->build('Trip', $tripid);		
 
-		$this->template->set_var('TRIP_NAME', $trip->name());
+		$this->template->set_var('MAP_NAME', $trip->name());
 		if ($trip->hasMapboxMap())
 		{
 			$filename = $trip->mapboxJson();
@@ -475,10 +477,6 @@ class OneMap extends ViewWhu
 		else
 			$this->template->set_var("JSON_INSERT", '');
 		
-		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
-		dumpVar($foo, "WHU_URL == http://jfmac.local/~jf/whugit/index.php ??");							
-		// exit;
-
  	 	$days = $this->build('DbDays', $tripid);
 		for ($i = 0, $rows = array(), $prevname = '@'; $i < $days->size(); $i++)
 		{
@@ -516,18 +514,20 @@ class SpotMap extends OneMap
 		$this->template->set_var("JSON_INSERT", '');
 		$this->template->set_var('PAGE_VAL', 'spot');
 		$this->template->set_var('TYPE_VAL', 'id');
+		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
+		dumpVar($foo, "WHU_URL");				
 		
 		$spotid = $this->key;
 		$radius = $this->props->get('id');
  	 	$spot = $this->build('DbSpot', $spotid);		
 
-		$this->template->set_var('TRIP_NAME', sprintf("Spots in a %s mile radius of %s", $radius, $spot->name()));
+		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $radius, $spot->name()));
 		
 		$items = $spot->getInRadius($radius);
 
 		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
 		// CAMP(286), HOTSPR(30) • LODGE(31) • NWR(19) •
-dumpVar($markers, "markers");		
+// dumpVar($markers, "markers");
 	
  	 	$spots = $this->build('DbSpots', $items);
 		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
@@ -539,9 +539,8 @@ dumpVar($markers, "markers");
 			$row['marker_color'] = ($i == 0) ? '#000' : '#8c54ba';
 										
 			$types = $spot->prettyTypes();
-			foreach ($types as $k => $v) 
-			{
-				$row['marker_val'] = $markers[$k];
+			foreach ($types as $k => $v)	{
+				$row['marker_val'] = $markers[$k];			// effectively, the larker is whichever TYPE was last in that field.
 			}
 			// $row['marker_val'] = $markers[($i % sizeof($markers))];
 
