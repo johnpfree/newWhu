@@ -51,15 +51,32 @@ class WhuProps extends Properties
 		return $ret;
 	}
 	// collects the so-frequent date(fmt, strtotime(str)) in one place
-	function dateFromString($fmt, $str)		{ 		return date($fmt, strtotime($str)); 		}
-	
+	function dateFromString($fmt, $str)		{ 		return date($fmt, strtotime($str)); 		}	
+}
+class StyleProps extends WhuProps 
+{
+	var $palette = 'UNSET';
+	function __construct($props, $over = array())		// little hack, overload the $over array to pass the palette name
+	{
+		$this->palette = $over;
+		dumpVar($over, "Set palette $over");
+		parent::__construct($props);
+	}
+
+	function pageBackColor() { return $this->getDefault("bbackcolor", "#fff"); }
+	function pageLineColor() { return $this->getDefault("bodycolor", "#000"); }
+	function contBackColor() { return $this->getDefault("backcolor", $this->pageBackColor()); }
+	function contLineColor() { return $this->getDefault("linecolor", $this->pageLineColor()); }
+	function allFontColor()  { return $this->getDefault("fontcolor" , $this->contLineColor()); }
+	function boldFontColor() { return $this->getDefault("boldcolor" , $this->allFontColor()); }
+	function linkColor()     { return $this->getDefault("linkcolor" , $this->allFontColor()); }
+	function linkHover()     { return $this->getDefault("linkhover", $this->allFontColor()); }
 }
 
 // ---------------- Template Class, for nothing just yet -------------
 
 class WhuTemplate extends VwTemplate
-{
-}
+{}
 
 // ---------------- Start Code ---------------------------------------------
 
@@ -114,7 +131,7 @@ switch ("$curpage$curtype")
 
 $templates = array("main" => 'container.ihtml', "the_content" => $page->file);
 $page->startPage($templates);
-$page->setStyle();
+$page->setStyle($curpage);
 $savepage = $page;
 $page->key = $props->get('key');		// just for convenience, everyone needs it
 $page->showPage();

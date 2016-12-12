@@ -20,6 +20,20 @@
 
 	<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Roboto" rel="stylesheet">
+	<style type="text/css" media="screen">
+		body {
+			color: {BODYCOLOR};
+			background-color: {BBACKCOLOR};
+		}
+		.boxborder {
+			border: 2px solid {BORDERCOLOR};
+			background-color: {BACKCOLOR};
+			padding: 12px;
+		}
+		h1,h2,h3,h4,h5,h6,b,strong {	color: {BOLDCOLOR};	}
+		a {	color: {LINKCOLOR}	}
+		a:hover {	color: {LINKHOVER};	}
+	</style>
 </head>
 <body>
 <!--[if lt IE 8]>

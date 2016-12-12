@@ -102,8 +102,36 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	{
 		return sprintf("%s | %s | %s", $this->props->get('page'), $this->props->get('type'), $this->props->get('key'));	
 	}
-	function setStyle()
+	function setStyle($page)
 	{
+		$pals =	array(
+			"deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#0000cc', 'linkhover' => '#000088', 'backcolor' => '#ffffff', 'bbackcolor' => '#ffffff'), 
+			"txt" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'backcolor' => '#c2ffff', 'bbackcolor' => '#e2ffff'), 
+			"pic" =>		array('boldcolor' => '#729200', 'linkcolor' => '#d2f252', 'linkhover' => '#fff272', 'backcolor' => '#ffff92', 'bbackcolor' => '#fffff2'), 
+			"map" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'backcolor' => '#ffebc9', 'bbackcolor' => '#ffffe9'), 
+			"log" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'backcolor' => '#cde9ff', 'bbackcolor' => '#edffff'), 
+			"search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'backcolor' => '#f9e6da', 'bbackcolor' => '#fffffa'), 
+			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
+			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
+		);
+		foreach ($pals as $k => $v)
+		{
+			// dumpVar($k, "pt= $page, k");
+			if (strpos($page, $k) !== false) {
+				$curPal = new StyleProps($v, $k);
+				break;
+			}
+		}	
+		if (!isset($curPal))
+			$curPal = new StyleProps($pals['deflt'], 'default');
+		
+		$this->template->set_var('BBACKCOLOR', 	$curPal->pageBackColor());
+		$this->template->set_var('BODYCOLOR', 	$curPal->pageLineColor());
+		$this->template->set_var('BACKCOLOR', 	$curPal->contBackColor());
+		$this->template->set_var('BORDERCOLOR', $curPal->contLineColor());
+		$this->template->set_var('BOLDCOLOR', 	$curPal->boldFontColor());
+		$this->template->set_var('LINKCOLOR', 	$curPal->linkColor()    );
+		$this->template->set_var('LINKHOVER', 	$curPal->linkHover()    );
 	}
 	
 	function tripLinkBar($page, $id)
