@@ -1,64 +1,22 @@
 <?php
 
-/**
-* Description
-*/
-class LinkBar
-{	
-	function __construct($viewwhu)
-	{
-		$this->template = $viewwhu->template;
-	}
-	function showLinks($page, $id)
-	{
-		$this->template->setFile('LINK_BAR', 'linkbar.ihtml');
-		$i = 1;
-		foreach ($this->allfour as $k => $v) 
-		{
-			if ($k == $page)	continue;
-
-			$trip = $this->build('Trip', $id);
-			switch ($k) {
-				case 'pics':				$gotSome = $trip->hasPics();	break;
-				case $this->txtKey:	$gotSome = $trip->hasStories();	break;
-				default:			$gotSome = TRUE;
-			}
-			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
-
-// dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
-			$this->template->set_var("PAGE$i", $k);
-			$this->template->set_var("LABEL$i", $v);
-			$this->template->set_var("TYPE$i", 'id');
-			$this->template->set_var("KEY$i", $id);			
-			$i++;
-		}		
-	}
-}
-class TripLinks extends LinkBar
-{	
-	var $allfour = array(
-		"map" => "map",
-		"log" => "log",
-		"pics" => "pictures",
-		"txts" => "stories",
-		);
-}	
-class DayLinks extends LinkBar
-{	
-	var $allfour = array(
-		"map" => "map",
-		"day" => "day",
-		"pics" => "pictures",
-		"txt" => "story",
-		);
-}
-
 // ---------------- Page Class ---------------------------------------------
 
 class ViewWhu extends ViewBase  // ViewDbBase
 {	
 	var $file = "UNDEF";
-	
+	var $curpal = NULL;
+	var $pals =	array(
+			"deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#615f5f', 'linkhover' => '#000088', 'backcolor' => '#ffffff', 'bbackcolor' => '#ffffff'), 
+			"pic" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'backcolor' => '#c2ffff', 'bbackcolor' => '#e2ffff'), 
+			"log" =>		array('boldcolor' => '#729200', 'linkcolor' => '#615f5f', 'linkhover' => '#729200', 'backcolor' => '#ffff92', 'bbackcolor' => '#fffff2'), 
+			"txt" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'backcolor' => '#ffebc9', 'bbackcolor' => '#ffffe9'), 
+			"map" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'backcolor' => '#cde9ff', 'bbackcolor' => '#edffff'), 
+			"search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'backcolor' => '#f9e6da', 'bbackcolor' => '#fffffa'), 
+			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
+			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
+		);
+
 	var $wirenotes = array(
 		'picsdate' 	=> "Core data: set of thumbnails.     Metadata: log/stories/map<br />Thumbnail count ranges from 1 or 2 for a day to 100's for a search result.<br />How to do navigation interface?", 
 		
@@ -104,34 +62,24 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function setStyle($page)
 	{
-		$pals =	array(
-			"deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#0000cc', 'linkhover' => '#000088', 'backcolor' => '#ffffff', 'bbackcolor' => '#ffffff'), 
-			"txt" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'backcolor' => '#c2ffff', 'bbackcolor' => '#e2ffff'), 
-			"pic" =>		array('boldcolor' => '#729200', 'linkcolor' => '#d2f252', 'linkhover' => '#fff272', 'backcolor' => '#ffff92', 'bbackcolor' => '#fffff2'), 
-			"map" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'backcolor' => '#ffebc9', 'bbackcolor' => '#ffffe9'), 
-			"log" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'backcolor' => '#cde9ff', 'bbackcolor' => '#edffff'), 
-			"search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'backcolor' => '#f9e6da', 'bbackcolor' => '#fffffa'), 
-			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
-			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
-		);
-		foreach ($pals as $k => $v)
+		foreach ($this->pals as $k => $v)
 		{
 			// dumpVar($k, "pt= $page, k");
 			if (strpos($page, $k) !== false) {
-				$curPal = new StyleProps($v, $k);
+				$this->curPal = new StyleProps($v, $k);
 				break;
 			}
 		}	
-		if (!isset($curPal))
-			$curPal = new StyleProps($pals['deflt'], 'default');
+		if (!isset($this->curPal))
+			$this->curPal = new StyleProps($this->pals['deflt'], 'default');
 		
-		$this->template->set_var('BBACKCOLOR', 	$curPal->pageBackColor());
-		$this->template->set_var('BODYCOLOR', 	$curPal->pageLineColor());
-		$this->template->set_var('BACKCOLOR', 	$curPal->contBackColor());
-		$this->template->set_var('BORDERCOLOR', $curPal->contLineColor());
-		$this->template->set_var('BOLDCOLOR', 	$curPal->boldFontColor());
-		$this->template->set_var('LINKCOLOR', 	$curPal->linkColor()    );
-		$this->template->set_var('LINKHOVER', 	$curPal->linkHover()    );
+		$this->template->set_var('BBACKCOLOR', 	$this->curPal->pageBackColor());
+		$this->template->set_var('BODYCOLOR', 	$this->curPal->pageLineColor());
+		$this->template->set_var('BACKCOLOR', 	$this->curPal->contBackColor());
+		$this->template->set_var('BORDERCOLOR', $this->curPal->contLineColor());
+		$this->template->set_var('BOLDCOLOR', 	$this->curPal->boldFontColor());
+		$this->template->set_var('LINKCOLOR', 	$this->curPal->linkColor()    );
+		$this->template->set_var('LINKHOVER', 	$this->curPal->linkHover()    );
 	}
 	
 	function tripLinkBar($page, $id)
@@ -148,10 +96,11 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		
 		foreach ($allfour as $k => $v) 
 		{
+			$paltag = $k;
 			if ($k == $page)	continue;
 			switch ($k) {
-				case 'pics':	$gotSome = $trip->hasPics();	break;
-				case 'txts':	$gotSome = $trip->hasStories();	break;
+				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasPics();	break;
+				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
 				default:			$gotSome = TRUE;
 			}
 			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
@@ -160,7 +109,9 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("PAGE$i", $k);
 			$this->template->set_var("LABEL$i", $v);
 			$this->template->set_var("TYPE$i", 'id');
-			$this->template->set_var("KEY$i", $id);			
+			$this->template->set_var("KEY$i", $id);		
+				
+			$this->template->set_var("BACK$i", $this->pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
 	}
@@ -321,6 +272,9 @@ class AllTrips extends ViewWhu
 			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
 			// dumpVar($row, "row");exit;
 			// dumpVar($row['MAP_CLASS'], "row['MAP_CLASS']");
+			// little hack for keeping track of maps
+			if ($trip->hasMapboxMap())	$row['TRIP_NAME'] .= "-M";
+			if ($trip->hasGoogleMap())	$row['TRIP_NAME'] .= "-G";
 			$rows[] = $row;
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
@@ -494,13 +448,27 @@ class OneMap extends ViewWhu
  	 	$trip = $this->build('Trip', $tripid);		
 
 		$this->template->set_var('MAP_NAME', $trip->name());
+		
+// dumpVar($trip->mapboxId(), "trip->");
+// dumpVar(boolStr($trip->hasMapboxMap()), "trip->hasMapboxMap()");
+// dumpVar(boolStr($trip->hasGoogleMap()), "trip->hasGoogleMap()");
+// exit;
+		
 		if ($trip->hasMapboxMap())
 		{
 			$filename = $trip->mapboxJson();
 			$fullpath = MAP_DATA_PATH . $filename;
 // dumpVar($fullpath, "fullpath");
 			$this->template->set_var("MAP_JSON", file_get_contents($fullpath));
-			$this->template->setFile('JSON_INSERT', 'mapjson.ihtml');
+			$this->template->setFile('JSON_INSERT', 'mapjson.js');
+		}	
+		else if ($trip->hasGoogleMap())
+		{
+			$filename = $trip->folder();
+			$fullpath = 'data/' . $filename;
+// dumpVar($fullpath, "fullpath");
+			$this->template->set_var("KML_FILE", $fullpath);
+			$this->template->setFile('JSON_INSERT', 'mapkml.js');
 		}	
 		else
 			$this->template->set_var("JSON_INSERT", '');

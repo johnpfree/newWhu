@@ -186,6 +186,7 @@
 			return $this->getAll("select * from wf_routes where wf_trips_map=" . $this->id());				
 		}
 		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}
+		function hasGoogleMap()	{	return ($this->mapboxId() == 'kml');	}
 		
 		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
 	}
