@@ -255,13 +255,13 @@
 		{
 			if (is_null($this->prvnxt))
 				$this->getPrvNxtDayGal();
-			return $this->prvnext['prev'];
+			return $this->prvnxt['prev'];
 		}
 		function nextDayGal() 
 		{
 			if (is_null($this->prvnxt))
 				$this->getPrvNxtDayGal();
-			return $this->prvnext['next'];
+			return $this->prvnxt['next'];
 		}
 		function getPrvNxtDayGal()
 		{
@@ -269,15 +269,15 @@
 			$wps = array_column($items, 'wf_days_date');
 			$idx = array_search($id = $this->date(), $wps);
 			
-			$this->prvnext = array();
+			$this->prvnxt = array();
 			for ($i = 1; $i < 10; $i++) 
 			{
 				$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx - $i]));
 				if ($dc = $prvpics->size() > 0)
 					break;
 			}
-			$this->prvnext['prev']  = $d0;
-			$this->prvnext['prevc'] = $dc;
+			$this->prvnxt['prev']  = $d0;
+			$this->prvnxt['prevc'] = $dc;
 						
 			for ($i = 1; $i < 10; $i++) 
 			{
@@ -285,8 +285,8 @@
 				if ($dc = $prvpics->size() > 0)
 					break;
 			}
-			$this->prvnext['next']  = $d0;
-			$this->prvnext['nextc'] = $dc;
+			$this->prvnxt['next']  = $d0;
+			$this->prvnxt['nextc'] = $dc;
 		}
 	}
 
@@ -623,18 +623,44 @@
 
 	class WhuPic extends WhuThing 
 	{
-		function getRecord($key)
+		var $prvnxt = NULL;
+		function getRecord($key)		// key = pic id
 		{
 			if ($this->isPicRecord($key))
 				return $key;
-
-			return $this->getOne("select * from wf_images_id where wf_trips_id=$key");	
+			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
 		function id()				{ return $this->dbValue('wf_images_id'); }
 		function caption()	{ return $this->dbValue('wf_images_text'); }
-		function datetime()	{ return $this->dbValue('wf_images_create'); }
+		function datetime()	{ return $this->dbValue('wf_images_localtime'); }
+		function date()			{ return substr($this->datetime(), 0, 10); }
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
-		function path()			{ return $this->dbValue('wf_images_path'); }
+		function folder()		{ return $this->dbValue('wf_images_path'); }
+		
+		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxtPic();
+			return $this->prvnxt['prev'];
+		}
+		function next() 
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxtPic();
+			return $this->prvnxt['next'];
+		}
+		function getPrvNxtPic()
+		{
+			$this->prvnxt = array();
+
+			$q = sprintf("select * from wf_images where wf_images_localtime > '%s' order by wf_images_localtime ASC LIMIT 3", $dt = $this->datetime());
+			$items = $this->getAll($q);			
+			$this->prvnxt['next'] = $this->build('Pic', $items[0]);
+			
+			$q = sprintf("select * from wf_images where wf_images_localtime < '%s' order by wf_images_localtime DESC LIMIT 3", $dt);
+			$items = $this->getAll($q);
+			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
+		}
 	}
 	class WhuPics extends WhuPic 
 	{

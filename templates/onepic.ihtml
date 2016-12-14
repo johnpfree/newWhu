@@ -1,21 +1,36 @@
 
 <div id="the_pic">
-	the image fits in an 800x800 box<br />
-	I hope we can find a usable responsive gallery for this.<br />
-	We have a lot of pictures and making them manageable will be an issue.
+	<table id="navcollect" border="0">
+		<tr>
+			<td><a {VIS_CLASS1} href="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></td>
+			<td><a href=?page=pics&type=date&key={THIS_KEY}>{COLLECTION_NAME}</a></td>
+			<td><a {VIS_CLASS2} href="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
+		</tr>
+	</table>
+
+	<img src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />
+
+	<p id=pic_label>{WF_IMAGES_TEXT}</p>
 </div>
 
-<div class=wirenotes>{WIRENOTES}</div>
-
 <style type="text/css" media="screen">
-#the_pic {
-	padding-top: 100px;
-	margin: 0 auto;
-	width: 800px;
-	height: 300px;
-	border: 1px solid #999;
-	text-align: center;
-	vertical-align: middle;
-	
-}
+	#the_pic {
+		margin: 0 auto;
+		width: 100%;
+		xpadding-bottom: 95%;  /*maintain aspect ratio*/
+	}
+	#pic_label {
+		margin-top: 20px;
+		text-align: center;
+		font-weight: bold; 
+		font-size: 130%;
+	}
+
+	#navcollect {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	#navcollect td:nth-child(1) {	text-align: left;	 padding-left: 8px; }
+	#navcollect td:nth-child(2) {	text-align: center; font-weight: bold; font-size: 130%;}
+	#navcollect td:nth-child(3) {	text-align: right; padding-right: 8px; }
 </style>

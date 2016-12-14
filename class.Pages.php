@@ -7,14 +7,21 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $file = "UNDEF";
 	var $curpal = NULL;
 	var $pals =	array(
-			"deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#615f5f', 'linkhover' => '#000088', 'backcolor' => '#ffffff', 'bbackcolor' => '#ffffff'), 
-			"pic" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'backcolor' => '#c2ffff', 'bbackcolor' => '#e2ffff'), 
-			"log" =>		array('boldcolor' => '#729200', 'linkcolor' => '#615f5f', 'linkhover' => '#729200', 'backcolor' => '#ffff92', 'bbackcolor' => '#fffff2'), 
-			"txt" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'backcolor' => '#ffebc9', 'bbackcolor' => '#ffffe9'), 
-			"map" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'backcolor' => '#cde9ff', 'bbackcolor' => '#edffff'), 
-			"search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'backcolor' => '#f9e6da', 'bbackcolor' => '#fffffa'), 
-			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
-			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'backcolor' => '#d0d0d0', 'bbackcolor' => '#f0f0f0'), 
+			"deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#659a8b', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'), 
+			"map" => 		array('boldcolor' => '#47894B', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
+			"log" =>		array('boldcolor' => '#2d4976', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
+			"txt" => 		array('boldcolor' => '#59463A', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'), 
+			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#a5a345', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
+			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#d4946c', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
+			// "deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#615f5f', 'linkhover' => '#000088', 'bbackcolor' => '#ffffff', 'backcolor' => '#ffffff'),
+			// "pic" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'bbackcolor' => '#e2ffff', 'backcolor' => '#c2ffff'),
+			// "log" =>		array('boldcolor' => '#729200', 'linkcolor' => '#615f5f', 'linkhover' => '#729200', 'bbackcolor' => '#fffff2', 'backcolor' => '#ffff92'),
+			// "txt" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'bbackcolor' => '#ffffe9', 'backcolor' => '#ffebc9'),
+			// "map" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'bbackcolor' => '#edffff', 'backcolor' => '#cde9ff'),
+			// "search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'bbackcolor' => '#fffffa', 'backcolor' => '#f9e6da'),
+			// "spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'),
+			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
+			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
 
 	var $wirenotes = array(
@@ -80,6 +87,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->set_var('BOLDCOLOR', 	$this->curPal->boldFontColor());
 		$this->template->set_var('LINKCOLOR', 	$this->curPal->linkColor()    );
 		$this->template->set_var('LINKHOVER', 	$this->curPal->linkHover()    );
+		$this->template->set_var('PAL_NAME', 	$this->curPal->palette);
 	}
 	
 	function tripLinkBar($page, $id)
@@ -559,6 +567,28 @@ class OnePic extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
+
+ 	 	$pic = $this->build('Pic', $picid = $this->props->get('id'));
+		
+		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
+		$this->template->set_var('WF_IMAGES_FILENAME', $pic->filename());
+		$this->template->set_var('WF_IMAGES_TEXT', $pic->caption());
+		$this->template->set_var('REL_PICPATH', REL_PICPATH);
+		
+		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $pic->date()));
+		$this->template->set_var('THIS_KEY', $date);
+		$this->template->set_var('VIS_CLASS1', '');
+		$this->template->set_var('VIS_CLASS2', '');
+
+		$this->template->set_var('NXT_TXT', 'next');
+		$this->template->set_var('NXT_KEY', $pic->next()->date());
+		$this->template->set_var('NXT_ID' , $pic->next()->id());
+
+		$this->template->set_var('PRV_TXT', 'previous');
+		$this->template->set_var('PRV_KEY', $pic->prev()->date());
+		$this->template->set_var('PRV_ID' , $pic->prev()->id());
+		
+		// <td><a {VIS_CLASS2} href="?page=pics&type=date&key={PIC_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
 	}
 }
 

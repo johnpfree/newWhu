@@ -1,6 +1,6 @@
 
 <div id="main_panel">
-	<form action="" method="post" accept-charset="utf-8">
+	<form id="txt_srch" action="" method="post" accept-charset="utf-8">
 		<h4>Search for text</h4>
 		<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">
 		<p>search where: &nbsp; &nbsp;
@@ -74,13 +74,15 @@
 <style type="text/css" media="screen">
 form {
 	width: 100%;
-	border: 1px solid #0d0;
 	padding: 4px 12px;
-}   
+/*}
+#txt_srch {*/
+		border: 1px solid {BORDERCOLOR};
+}
 #spot_srch p {
 	padding-bottom: 6px;
 	margin-bottom: 12px;
-	border-bottom: 1px solid #8f8;
+	border-bottom: 1px solid {BORDERCOLOR};
 }   
 #main_panel {
 	padding: 0px 30px 20px;
