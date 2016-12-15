@@ -445,6 +445,7 @@ class OneMap extends ViewWhu
 // dumpVar($fullpath, "fullpath");
 			$this->template->set_var("MAP_JSON", file_get_contents($fullpath));
 			$this->template->setFile('JSON_INSERT', 'mapjson.js');
+			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		}	
 		else if ($trip->hasGoogleMap())
 		{
@@ -453,9 +454,13 @@ class OneMap extends ViewWhu
 // dumpVar($fullpath, "fullpath");
 			$this->template->set_var("KML_FILE", $fullpath);
 			$this->template->setFile('JSON_INSERT', 'mapkml.js');
+			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		}	
 		else
+		{	
 			$this->template->set_var("JSON_INSERT", '');
+			$this->template->set_var("CONNECT_DOTS", 'true');		// there is no route map, so connect the dots with polylines
+		}
 		
  	 	$days = $this->build('DbDays', $tripid);
 		for ($i = 0, $rows = array(), $prevname = '@'; $i < $days->size(); $i++)
@@ -492,6 +497,7 @@ class SpotMap extends OneMap
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		$this->template->set_var('LINK_BAR', '');
 		$this->template->set_var("JSON_INSERT", '');
+		$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		$this->template->set_var('PAGE_VAL', 'spot');
 		$this->template->set_var('TYPE_VAL', 'id');
 		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));

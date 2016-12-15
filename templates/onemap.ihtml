@@ -36,8 +36,10 @@ L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 // var map = L.mapbox .map('map', 'mapbox.emerald');
 // var map = L.mapbox.map('map', 'mapbox.light');
 var map = L.mapbox.map('map', 'mapbox.streets', {
-  zoomControl: false
+  touchZoom: false, 
+  scrollWheelZoom: false
 });
+console.log(map);
 
 {JSON_INSERT}
 
@@ -61,18 +63,26 @@ var markers = [
 
 var bounds = L.latLngBounds(L.latLng(markers[0].geometry.coordinates[1], markers[0].geometry.coordinates[0]));
 console.log('11', bounds.toString());
+var pline = [];
 for (var i = 0; i < markers.length; i++) {
 	var pt = L.latLng(markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]);
 	bounds.extend(pt);
 	// console.log(i, markers[i].properties.title);
 	// console.log(i, pt);
 	// console.log(i, bounds);
+	
+	// collect coords for pline
+	pline.push([markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]]);
 }
 bounds.pad(30);
 map.fitBounds(bounds);	
 
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);
+
+pline.push([markers[0].geometry.coordinates[1], markers[0].geometry.coordinates[0]]);
+if ({CONNECT_DOTS})
+var polyline = L.polyline(pline, { color: '#3A5950', 'weight' : 6 }).addTo(map);		// default weight = 5
 
 map.on('click', function(e) {
     console.log(e.latlng);
