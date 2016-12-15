@@ -1,12 +1,33 @@
+
+<script src="js/vendor/jquery-1.11.2.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script> -->
+
 <script type="text/javascript" charset="utf-8">
-$(document).ready(function(){
+console.log('jQuery', jQuery);
+
+
+$(document).ready(function()
+{
 	$(document).keydown(function(event) {
 		if (event.keyCode == 37)
 			window.location="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}";
 		else if (event.keyCode == 39)
 			window.location="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}";
-	});	
-})
+	});
+
+	// show/hide details
+	$("#hide").click(function(){
+	    $("#infotable").hide();
+	    $("#show").show();
+	    $("#hide").hide();
+	});
+	$("#show").click(function(){
+	    $("#infotable").show();
+	    $("#show").hide();
+	    $("#hide").show();
+	});
+});
+
 </script>
 
 <div id="the_pic">
@@ -21,6 +42,9 @@ $(document).ready(function(){
 	<img src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />
 	
 	<p id=pic_label>{WF_IMAGES_TEXT}</p>
+	<span class="vis_switch" id="show">Show Details</span>
+	<span class="vis_switch" id="hide">Hide Details</span>
+	
 </div>
 
 <table id="infotable" border="0">
@@ -40,7 +64,12 @@ $(document).ready(function(){
 </table>
 
 <style type="text/css" media="screen">
+
+#hide { display:none; }
+.vis_switch { font-style: italic;  }
+
 	#infotable {
+		display:none;		
 		width: 100%;
 	}
 	#infotable td {

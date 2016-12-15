@@ -579,7 +579,7 @@ class OnePic extends ViewWhu
 		$this->template->set_var('PIC_TIME', $pic->time());
 		$this->template->set_var('PIC_CAMERA', $pic->cameraDesc());
 		// keywords
-		$keys = $this->build('PicCats', array('picid' => $picid));
+		$keys = $this->build('PicKeywords', array('picid' => $picid));
 		for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
 		{
 			$key = $keys->one($i);	

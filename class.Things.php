@@ -681,6 +681,7 @@
 			if (isset($parm['date'])) 
 			{				
 				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
 			}
 			
@@ -709,7 +710,7 @@
 		}
 	}
 	
-	class WhuPicCat extends WhuThing 
+	class WhuPicKeyword extends WhuThing 
 	{
 		function getRecord($key)		// key = pic id
 		{
@@ -721,7 +722,7 @@
 		function name()		{ return $this->dbValue('wf_categories_text'); }
 		function parent()	{ return $this->dbValue('wf_categories_parent'); }
 	}
-	class WhuPicCats extends WhuPicCat 
+	class WhuPicKeywords extends WhuPicKeyword 
 	{
 		var $isCollection = true;
 		function getRecord($parm)	//  picid
