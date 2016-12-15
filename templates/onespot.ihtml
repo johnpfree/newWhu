@@ -39,8 +39,6 @@
 	<br />
 </div>
 
-<div class=wirenotes>{WIRENOTES}</div>
-
 <style type="text/css" media="screen">
 #spot {
 	padding: 6px 0 10px 18px;

@@ -9,7 +9,7 @@
 	</table>
 
 	<img src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />
-
+	
 	<p id=pic_label>{WF_IMAGES_TEXT}</p>
 </div>
 

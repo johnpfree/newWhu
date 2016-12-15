@@ -23,37 +23,13 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
-
-	var $wirenotes = array(
-		'picsdate' 	=> "Core data: set of thumbnails.     Metadata: log/stories/map<br />Thumbnail count ranges from 1 or 2 for a day to 100's for a search result.<br />How to do navigation interface?", 
-		
-		'txtwpid' 	=> "Core data: a story. 					Metadata: previous/next story, little locator map, maybe selected pics, trip, pictures", 
-		'picdate' 	=> "Core data: a picture. 				Metadata: previous/next picture, little locator map, date/time, camera, file name, trip, story", 
-
-		'spotid'	 	=> "Core data: everything about that spot - all the spot information, a list of the day descriptions for when I was there, some pictures, locator map, link to the stories where it appears", 
-		'abouthome' 	=> "Core data: Contact info. Other data: tell about the project, tell about us. Metadata: none unless more than one page is required.", 
-		'homehome' 	=> "Core data: Where to start. Make the rest of the site inviting and accessible.", 
-		
-		'homelook' 	=> "Core data: show a ", 
-		'homeread' 	=> "Core data: show a ", 
-		'homeorient' 	=> "Core data: show a ", 
-		'homebrowse' 	=> "Core data: show a ", 
-		'tripshome' 	=> "Core data: show a ", 
-	);
 	
 	var $caption = '';		// if $caption is non-blank, use it. Otherwise call getCaption()
 
 	function __construct($p)
 	{
 		$this->props = $p;
-		parent::__construct(new WhuTemplate()); 
-
-		$pagetype = $this->props->get('page') . $this->props->get('type');
-		if (isset($this->wirenotes[$pagetype]))
-			$this->template->set_var("WIRENOTES", $this->wirenotes[$pagetype]);
-		else
-			$this->template->set_var("SHOW_WIRE", 'style="display: none"');
-		
+		parent::__construct(new WhuTemplate()); 		
 		$pagetype = $this->props->get('page') . $this->props->get('type');
 dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>");
 	}
@@ -573,7 +549,8 @@ class OnePic extends ViewWhu
 		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
 		$this->template->set_var('WF_IMAGES_FILENAME', $pic->filename());
 		$this->template->set_var('WF_IMAGES_TEXT', $pic->caption());
-		$this->template->set_var('REL_PICPATH', REL_PICPATH);
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
+		// $this->template->set_var('REL_PICPATH', REL_PICPATH);
 		
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $pic->date()));
 		$this->template->set_var('THIS_KEY', $date);

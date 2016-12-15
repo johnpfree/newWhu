@@ -9,16 +9,6 @@
 .vis_hidden { visibility: hidden; }
 .clear_all { clear: both; }
 
-.wirenotes {
-	width: 100%;
-	margin: 0px 20px;
-	padding: 20px 50px;
-	font-size: 120%;
-	text-align: center;
-	background-color: #ffa;
-	color: #f44;
-}
-
 /* ================================= 
 	was base.css
 ==================================== */
