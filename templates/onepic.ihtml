@@ -1,3 +1,13 @@
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$(document).keydown(function(event) {
+		if (event.keyCode == 37)
+			window.location="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}";
+		else if (event.keyCode == 39)
+			window.location="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}";
+	});	
+})
+</script>
 
 <div id="the_pic">
 	<table id="navcollect" border="0">
@@ -13,7 +23,37 @@
 	<p id=pic_label>{WF_IMAGES_TEXT}</p>
 </div>
 
+<table id="infotable" border="0">
+	<tr>
+		<td>
+			<i>taken on</i> <b>{PRETTIEST_DATE}</b> <i>at</i> <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
+		</td>
+		<td>map</td>
+		<td>
+			<i>keywords for this picture:</i><br />
+			&bull; 
+<!-- BEGIN rows -->
+			<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 
+<!-- END rows -->			
+		</td>
+	</tr>
+</table>
+
 <style type="text/css" media="screen">
+	#infotable {
+		width: 100%;
+	}
+	#infotable td {
+		width: 33%;
+		xmargin: 0px 20px;
+		padding: 20px 20px;
+		text-align: center;
+		vertical-align: top;
+		border-top: 1px solid {BOLDCOLOR};
+	}
+	#infotable td:nth-child(1) {	border-right: 1px solid {BOLDCOLOR}; }
+	#infotable td:nth-child(3) {	border-left: 1px solid {BOLDCOLOR}; }
+
 	#the_pic {
 		margin: 0 auto;
 		width: 100%;

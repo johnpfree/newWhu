@@ -118,11 +118,13 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$i = 1;
 		foreach ($allfour as $k => $v) 
 		{
+			$paltag = $k;
 			if ($k == $page)	continue;
 
 			switch ($k) {
-				case 'pics':	$gotSome = $day->hasPics();	break;
+				case 'pics':	$gotSome = $day->hasPics();	$paltag = 'pic'; break;
 				case 'txt':		$gotSome = $day->hasStory();	break;
+				case 'day':		$paltag = 'log'; 	break;
 				default:			$gotSome = TRUE;
 			}
 			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
@@ -132,6 +134,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("LABEL$i", $v);
 			$this->template->set_var("TYPE$i", 'date');
 			$this->template->set_var("KEY$i", $date);			
+			$this->template->set_var("BACK$i", $this->pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
 	}
@@ -570,8 +573,22 @@ class OnePic extends ViewWhu
 		$this->template->set_var('PRV_TXT', 'previous');
 		$this->template->set_var('PRV_KEY', $pic->prev()->date());
 		$this->template->set_var('PRV_ID' , $pic->prev()->id());
+
+		// pic info
+		$this->template->set_var('PRETTIEST_DATE', Properties::prettiestDate($date));
+		$this->template->set_var('PIC_TIME', $pic->time());
+		$this->template->set_var('PIC_CAMERA', $pic->cameraDesc());
+		// keywords
+		$keys = $this->build('PicCats', array('picid' => $picid));
+		for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
+		{
+			$key = $keys->one($i);	
+			$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
 		
-		// <td><a {VIS_CLASS2} href="?page=pics&type=date&key={PIC_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
 	}
 }
 

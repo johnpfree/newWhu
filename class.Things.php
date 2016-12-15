@@ -55,6 +55,7 @@
 		function isSpotDayParmsArray($key)	{	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
 		function isTripRecord($key)			{	return (is_array($key) && isset($key['wf_trips_id']));	}
 		function isPicRecord($key)			{	return (is_array($key) && isset($key['wf_images_id']));	}
+		function isPicCatRecord($key)		{	return (is_array($key) && isset($key['wf_categories_id']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
@@ -634,8 +635,18 @@
 		function caption()	{ return $this->dbValue('wf_images_text'); }
 		function datetime()	{ return $this->dbValue('wf_images_localtime'); }
 		function date()			{ return substr($this->datetime(), 0, 10); }
+		function time()			{ return Properties::prettyTime($this->datetime()); }
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
 		function folder()		{ return $this->dbValue('wf_images_path'); }
+		function camera()		{ return $this->dbValue('wf_images_origin'); }
+		function cameraDesc()
+		{
+			$names = array('Canon650' => 'my good ole Canon 650', 'Ericsson' => 'Ericsson W350i phone', 
+											'CanonG9X' => 'my state of the art Powershot G9X', 
+											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
+			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
+		}
+		
 		
 		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
 		{
@@ -697,11 +708,31 @@
 			WhuThing::getRecord($parm);		// FAIL
 		}
 	}
-
 	
-	// class WhuMap extends WhuThing
-	// {
-	// 	function getRecord($key)
-	// 	{}
-	// }
-?>
+	class WhuPicCat extends WhuThing 
+	{
+		function getRecord($key)		// key = pic id
+		{
+			if ($this->isPicCatRecord($key))
+				return $key;
+			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
+		}
+		function id()			{ return $this->dbValue('wf_categories_id'); }
+		function name()		{ return $this->dbValue('wf_categories_text'); }
+		function parent()	{ return $this->dbValue('wf_categories_parent'); }
+	}
+	class WhuPicCats extends WhuPicCat 
+	{
+		var $isCollection = true;
+		function getRecord($parm)	//  picid
+		{
+			if (isset($parm['picid'])) 
+			{				
+				$q = sprintf("select * from wf_idmap i join wf_categories c on c.wf_categories_id=i.wf_id_2 where i.wf_type_1='pic' and i.wf_id_1=%s and i.wf_type_2='cat' order by i.wf_type_2", $parm['picid']);
+				return $this->getAll($q);
+			}
+			WhuThing::getRecord($parm);		// FAIL
+		}
+	}
+	
+	?>
