@@ -598,11 +598,28 @@ class OneDay extends ViewWhu
 	function showPage()	
 	{
 		$dayid = $this->key;
- 	 	$day = $this->build('DbDay', $dayid);
+ 	 	$day = $this->build('DayInfo', $dayid);
 
-		$this->template->set_var('PRETTY_DATE', $this->caption = $day->prettyDate());
+		$this->caption = Properties::prettyDate($date = $day->date());
+		$this->template->set_var('PRETTY_DATE', Properties::prettiestDate($date));
 		
+		$this->template->set_var('ORDINAL', $day->day());
+		$this->template->set_var('MILES', $day->miles());
+		$this->template->set_var('CUMMILES', $day->cumulative());
+		
+		$this->template->set_var('WPID', $wpid = $day->postId());
+		if ($wpid > 0)
+			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+		$this->template->set_var("VIS_CLASS_TXT", $day->hasStory() ? '' : "class='vis_hidden'");
+		
+		$this->template->set_var('DAY_DESC', $day->dayDesc());
+		$this->template->set_var('NIGHT_DESC', $day->nightDesc());
+		$this->template->set_var('PM_STOP', $day->nightNameUrl());
+	
+		// do next|prev nav - as long as I have yesterday, show where I woke up today
 		$navday = $this->build('DbDay', $d = $day->yesterday());
+		$this->template->set_var('AM_STOP', $this->build('DayInfo', $d)->nightNameUrl());
+
 		$this->template->set_var('PRV_DATE', $d);
 		$this->template->set_var('PRV_LABEL', $navday->hasData ? 'yesterday' : '');
 		$navday = $this->build('DbDay', $d = $day->tomorrow());

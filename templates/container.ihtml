@@ -16,7 +16,10 @@
 	<link rel="stylesheet" href="css/normalize.min.css">
 	<link rel="stylesheet" href="css/gridiculous.css">
 	<link rel="stylesheet" href="css/main.css">
+	<!-- <link rel="stylesheet" href="https://rawgit.com/johnpfree/newWhu/master/css/main.css"> -->
 	<link rel="stylesheet" href="css/jf.css">		
+
+https://rawgit.com/johnpfree/newWhu/master/css/main.css
 
 	<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Roboto" rel="stylesheet">

@@ -56,10 +56,12 @@
 		function isTripRecord($key)			{	return (is_array($key) && isset($key['wf_trips_id']));	}
 		function isPicRecord($key)			{	return (is_array($key) && isset($key['wf_images_id']));	}
 		function isPicCatRecord($key)		{	return (is_array($key) && isset($key['wf_categories_id']));	}
+		function isDayRecord($key)			{	return (is_array($key) && isset($key['wf_days_date']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
 		{
+			dumpVar($str, "str");
 			$parts = explode('-', $str);
 	// dumpVar($parts, "indate($str)");
 			if (sizeof($parts) < 3)		return FALSE;
@@ -232,6 +234,13 @@
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
 		function hasStory()		{ return $this->postId() > 0; }
+
+		function day()
+		{
+			$q = sprintf("select COUNT(wf_days_date) num from wf_days where wf_trips_id=%s AND wf_days_date < '%s'", $this->tripId(), $this->date());
+			$item = $this->getOne($q);
+			return $item['num'] + 1;
+		}
 		
 		function miles()			{ return $this->dbValue('wf_days_miles'); }
 		function cumulative()	{ return $this->dbValue('wf_days_cum_miles'); }
@@ -239,8 +248,6 @@
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
-		function prettyDate()	{ return Properties::prettyDate($this->date()); }
-		
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		
@@ -308,13 +315,23 @@
 	{
 		function getRecord($key)
 		{
+			if ($this->isDate($key))		// $key == date?
+		 	 	$key = $this->build('DbDay', $key);
+
 			if (get_class($key) == 'WhuDbDay')
 				return $key->data;
 
 			return parent::getRecord($key);
 		}
-		function nightName()	{	return $this->massageDbText($this->getSpotandDaysArranged('nightName'));	}
-		function nightDesc()	{	return $this->getSpotandDaysArranged('nightDesc');	}
+		function nightName()		{	return $this->massageDbText($this->getSpotandDaysArranged('nightName'));	}
+		function nightDesc()		{	return $this->getSpotandDaysArranged('nightDesc');	}
+		function nightNameUrl()			// No Spot => no URL
+		{	
+			$name = $this->nightName();
+			if ($this->hasSpot())
+				return sprintf("<a href='?page=spot&type=id&key=%s'>%s</a>", $this->spotId(), $name);
+			return $name;
+		}
 
 		function lat()	{	return $this->getSpotandDaysArranged('lat');	}
 		function lon()	{	return $this->getSpotandDaysArranged('lon');	}
@@ -371,6 +388,17 @@
 					'HOUSE'		=> 'Somebody\'s house',
 					'NWR'			=> 'Wildlife Refuge',
 					);
+		var $camptypes = array(
+					'usfs'		=> 'Forest Service Campground',
+					'usnp'		=> 'National Park Campground',
+					'state'		=> 'State Park Campground',
+					'blm'			=> 'Bureau of Land Management Campground',
+					'ace'			=> 'Army Corps of Engineers Campground',
+					'nwr'			=> 'Campground on a Wildlife Refuge',
+					'county'	=> 'County Campground',
+					'private'	=> 'Private Campground',
+					'roadside'	=> 'Pullover when there\'s no place to camp',
+				);
 		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
 					
 		function getRecord($key)		// parm is spot id OR the record for iteration
@@ -385,12 +413,28 @@
 		function town()			{ return $this->massageDbText($this->dbValue('wf_spots_town')); }
 		function partof()		{ return $this->dbValue('wf_spots_partof'); }
 		function types()		{ return $this->dbValue('wf_spots_types'); }
+		function status()		{ return $this->dbValue('wf_spots_status'); }
 		
 		function prettyTypes()		// an array of types, suitable for printing
 		{
 			$types = WhuProps::parseKeys($this->types());	
 			foreach ($types as $k => $v) 
 			{
+				if ($v == 'CAMP')
+				{
+					$stats = WhuProps::parseParms($this->status());	
+					// dumpVar($stats, "this->status");
+					foreach ($stats as $k1 => $v1) 
+					{
+						// dumpVar($v1, "v1 $k1");
+						if ($k1 == 'CAMP' && isset($this->camptypes[$v1]))
+						{
+							$ret[$v] = $this->camptypes[$v1];
+							// dumpVar($ret[$v], "Cret[$v]");
+							continue 2;
+						}
+					}
+				}
 				$ret[$v] = $this->spottypes[$v];
 			}
 			return $ret;
@@ -612,7 +656,6 @@
 			return $content;
 		}
 	}
-
 	class WhuPosts extends WhuPost 
 	{
 		var $isCollection = true;

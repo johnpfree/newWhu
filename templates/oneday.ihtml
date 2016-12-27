@@ -1,4 +1,4 @@
-<div id="the_pic">
+<article>         
 	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 	<table id="daynav" border="0">
 		<tr>
@@ -6,15 +6,17 @@
 			<td><a href="?page=day&type=date&key={NXT_DATE}">{NXT_LABEL}</a></td>
 		</tr>
 	</table>
-	<p>{PRETTY_DATE}</p>
-	What trip was I on?<br />
-	Where did I start today? Where did I stop?<br />
-	What blog post is it in? Show me an excerpt?<br />
-	What map?<br />
-	Other details - how many miles.
-	<hr>
-everything about that day- including Date, where tonight's stop, last night's stop, some pictures, a locator map, an excerpt fo the post for that day.  Metadata: links to tomorrow/yesterday
-</div>
+	<h2>{PRETTY_DATE}</h2>
+	<p>Today is day <b>{ORDINAL}</b> of the trip. I drove <b>{MILES}</b> miles today, for a total of <b>{CUMMILES}</b> miles so far.</p>
+	<p>Here is a short description of the day:<br />
+	<blockquote>{DAY_DESC}</blockquote>
+	</p>
+	<p>I awoke at {AM_STOP}, spent the night at {PM_STOP}</p>
+	<p>Here is a short description of the evening:<br />
+	<blockquote>{NIGHT_DESC}</blockquote>
+	<p {VIS_CLASS_TXT}>The story for this day is called <a href="?page=txt&type=wpid&key={WPID}">{STORY}</a></p>
+</article>        
+
 {LINK_BAR}
 
 <style type="text/css" media="screen">
@@ -24,16 +26,14 @@ everything about that day- including Date, where tonight's stop, last night's st
 #daynav td:nth-child(1) {	text-align: left;	}
 #daynav td:nth-child(2) {	text-align: right;	}
 
-#the_pic {
-	padding: 20px 30px 10px;
-	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
-	text-align: center;
-	vertical-align: middle;	
+article {
+	width: 100%;
 }
-#the_pic p {
+article h2 {
 	font-weight: bold;
 	font-size: 140%;
+}
+blockquote {
+	font-style: italic;
 }
 </style>
