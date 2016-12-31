@@ -10,7 +10,7 @@ include_once("class.Pages.php");
 // include_once("class.Geo.php");				// after Pages
 
 include_once(INCPATH . "jfdbg.php");
-$noDbg = NODBG_DFLT;
+$noDbg = 1;//NODBG_DFLT;
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 

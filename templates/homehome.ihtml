@@ -31,7 +31,7 @@
 	font-weight: bold;
 	font-size: 140%;
 }
-ul {
+#the_content ul {
 	padding: 0px 30px 20px;
 	margin: 0 auto;
 	width: 800px;
