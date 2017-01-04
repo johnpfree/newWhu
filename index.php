@@ -23,7 +23,6 @@ class WhuProps extends Properties
 		parent::__construct(array_merge($props, $over));
 	}
 
-
 	static function parseKeys($str)					// just return names
 	{
 		$ret = array();

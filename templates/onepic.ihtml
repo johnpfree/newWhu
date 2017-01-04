@@ -86,7 +86,7 @@ $(document).ready(function()
 	#the_pic {
 		margin: 0 auto;
 		width: 100%;
-		xpadding-bottom: 95%;  /*maintain aspect ratio*/
+		padding-bottom: 95%;  /*maintain aspect ratio*/
 	}
 	#pic_label {
 		margin-top: 20px;

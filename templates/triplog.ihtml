@@ -1,13 +1,15 @@
 <table id="triptable" border="0" cellspacing="5" cellpadding="5">
-	<caption>{TRIP_NAME}</caption>
 	<thead>
+		<tr>
+			<td class="table-caption" colspan="11"><h4>{TRIP_NAME}</h4></td>
+		</tr>
 		<tr id=triptablehead>
 			<td>#</td>
 			<td align=right>date</td>
 			<td>stop</td>
 			<td>miles</td>
 			<td>total miles</td>
-			<td>day</td>
+			<td class="dropout">day</td>
 			<td><img src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Today's Pictures"></td>
 			<td><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Today's Story"></td>
 		</tr>
@@ -20,7 +22,7 @@
 			<td><a href="?page={SDPAGE}&type={SDTYPE}&key={SDKEY}" title="Spot or Day page">{STOP_NAME}</a></td>
 			<td>{MILES}</td>
 			<td>{CUM_MILES}</td>
-			<td>{DAY_NAME}</td>
+			<td class="dropout">{DAY_NAME}</td>
 			<td><a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a></td>
 			<td><a {POST_CLASS}  href="?page=txt&type=wpid&key={WP_ID}">{DAY_POST}</a></td>
 		</tr>
@@ -33,7 +35,6 @@
 <style type="text/css" media="screen">
 	#triptable {
 		margin: 0 auto;
-		xmargin-left: 200px;
 	}
 	#triptable td {
 		padding: 4px 6px;
@@ -41,10 +42,11 @@
 
 	thead { border-bottom: 2px solid #3A5950;	}
 
+	td.dropout {	display: none;	}
+
 	#triptable td:nth-child(2) {	white-space: nowrap;	}
 	#triptable td:nth-child(4) {	text-align: center;	}
 	#triptable td:nth-child(5) {	text-align: center;	}
-	#triptable td:nth-child(6) {	display: none;	}
 	#triptable td:nth-child(7) {	text-align: center;	}
 	#triptable td:nth-child(8) {	text-align: center;	}
 

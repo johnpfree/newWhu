@@ -27,15 +27,46 @@ body {
 }
 
 .bg-faded {
-    background-color: #ff0;
+    background-color: #3A5950;
 }
+
+					header {
+						height: 120px;
+					}
+					#main-menu {
+						padding-top: 1.5rem;
+						font-weight: bold;
+						font-size: 120%;
+					}
+					#main-menu a {
+						color: #F84F33;
+					}
+					#main-menu a:hover {
+/*						color: #35dcf7;*/
+						color: #ddd;
+/*						color: #20549E;*/
+					}
+			    .btn-outline-success {
+			        color: #fff; 
+			    }
+			    footer {
+			        background-color: #3A5950;
+			    }
+			    .footer-inner {
+			        text-align: center; 
+							padding: .5rem 0;
+			    }
 
 /* ================================= 
   Media Queries
 ==================================== */
 
 @media (min-width: 769px) {
-
+	
+	#mysize:after {
+		content: "min-width: 769px";
+	}
+	
 	.main-header,
 	.main-nav {
 		display: flex;
@@ -48,6 +79,10 @@ body {
 }
 
 @media (min-width: 1025px) {
+	
+	#mysize:after {
+		content: "min-width: 1025px";
+	}
 
 	.main-header {
 		flex-direction: row;

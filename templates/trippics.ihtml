@@ -11,29 +11,8 @@
 
 {LINK_BAR}
 
-
 <style type="text/css" media="screen">
-#thegal {
-	margin: 0 auto;
+#daylist {
+	margin: 20px 0;
 }
-
-#thegal>p {
-	float: left;
-	width: 146px; 
-/*	width: 170px;*/
-	height: 190px; 
-	text-align: center;
-	margin: 6px;
-	margin-bottom: 20px;
-	border: 3px solid #44f855;		
-}
-#thegal>img {
-	border: 3px solid #e6f8cc;		
-}
-.squareme {
-	width: 160px;
-	height: 160px;
-	object-fit: cover;
-}
-	
 </style>

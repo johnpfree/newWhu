@@ -315,11 +315,11 @@
 	{
 		function getRecord($key)
 		{
-			if ($this->isDate($key))		// $key == date?
-		 	 	$key = $this->build('DbDay', $key);
-
 			if (get_class($key) == 'WhuDbDay')
 				return $key->data;
+
+			if ($this->isDate($key))		// $key == date?
+		 	 	$key = $this->build('DbDay', $key);
 
 			return parent::getRecord($key);
 		}

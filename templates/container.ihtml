@@ -11,7 +11,6 @@
 
 		<link rel="stylesheet" href="css/normalize.min.css">
 		<link rel="stylesheet" href="css/bootstrap.css">
-		<link rel="stylesheet" href="css/whuBase.css">
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Roboto" rel="stylesheet">
 
@@ -30,45 +29,24 @@
 			h1,h2,h3,h4,h5,h6,b,strong {	color: {BOLDCOLOR};	}
 			a {	color: {LINKCOLOR}	}
 			a:hover {	color: {LINKHOVER};	}
+			
 			#mysize:before {
 				color: "#1bb";
-				font-size: 90%;
+				font-size: 80%;
 				content: "palette: {PAL_NAME} || ";
 			}		
 
-/*#92B212 */
-			    .bg-faded {
-			        background-color: #3A5950;
-			    }
-			    .btn-outline-success {
-			        color: #fff; 
-			    }
-			    footer {
-			        background-color: #3A5950;
-			    }
-			    .footer-inner {
-			        text-align: center; 
-							padding: .5rem 0;
-			    }
+			#mysize {
+				color: #bb0;
+			}
+			#mysize:after {
+				color: yellow;
+				font-weight: bold;
+				content: "less than 480";
+			}
 
-					header {
-						height: 120px;
-					}
-					#main-menu {
-						padding-top: 1.5rem;
-						font-weight: bold;
-						font-size: 120%;
-					}
-					#main-menu a {
-						color: #F84F33;
-					}
-					#main-menu a:hover {
-/*						color: #35dcf7;*/
-						color: #ddd;
-/*						color: #20549E;*/
-					}
+		</style>		<link rel="stylesheet" href="css/whuBase.css">
 
-		</style>
 	</head>
 <body>
 
@@ -95,12 +73,12 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="?page=search&type=home">Search</a>
+		<i id="mysize">size: </i>
             </li>
           </ul>
         </div>
       </div>
     </nav><!--    Navbar    -->
-		<i id="mysize">size: </i>
 	</header><!--/.main-header-->   
 
 

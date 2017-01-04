@@ -471,7 +471,7 @@ class OneMap extends ViewWhu
 			$day = $this->build('DayInfo', $days->one($i));
 
 			$row = array('marker_val' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
-										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 'link_text' => $day->prettyDate());
+										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 'link_text' => Properties::prettyDate($day->date()));
 										
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
 				dumpVar($row, "NO POSITION! $i row");
