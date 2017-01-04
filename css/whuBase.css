@@ -61,34 +61,39 @@ body {
   Media Queries
 ==================================== */
 
-@media (min-width: 769px) {
+// Small devices (landscape phones, 544px and up)
+@media (min-width: 544px) {
 	
 	#mysize:after {
-		content: "min-width: 769px";
-	}
-	
-	.main-header,
-	.main-nav {
-		display: flex;
-	}
-	.main-header {
-		flex-direction: column;
-		align-items: center;
-	}
+		content: "min-width: 544px";
+	}	
 
 }
 
-@media (min-width: 1025px) {
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
 	
 	#mysize:after {
-		content: "min-width: 1025px";
-	}
-
-	.main-header {
-		flex-direction: row;
-		justify-content: space-between;      
-	}
+		content: "min-width: 768px";
+	}	
 
 }
 
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+	
+	#mysize:after {
+		content: "min-width: 992px";
+	}	
+
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+	
+	#mysize:after {
+		content: "min-width: 1200px";
+	}	
+
+}
 

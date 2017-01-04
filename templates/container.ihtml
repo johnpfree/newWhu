@@ -42,7 +42,7 @@
 			#mysize:after {
 				color: yellow;
 				font-weight: bold;
-				content: "less than 480";
+				content: "default";
 			}
 
 		</style>		<link rel="stylesheet" href="css/whuBase.css">
@@ -54,8 +54,8 @@
     <!--    Navbar    -->
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
       <div class="container">
-        <div class="collapse navbar-toggleable-md" id="navbarResponsive">
-          <a class="navbar-brand" href="#">
+        <div class="collapse navbar-toggleable-md">
+          <a class="navbar-brand" href="?page=home&type=home">
             <img class="mr-2" src="resources/JohnFreeman_logo_sm_03.png" height="80" alt="">
           </a>
           <ul id="main-menu" class="nav navbar-nav">
