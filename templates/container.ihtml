@@ -9,12 +9,23 @@
 		<meta name="keywords" content="travel" />
 		<title>WHUFU: {CAPTION}</title>
 
-		<link rel="stylesheet" href="css/normalize.min.css">
-		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/normalize.min.css">		
+		<!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
+		<!-- <link rel="stylesheet" href="https://rawgit.com/johnpfree/newWhu/master/css/whuBase.css"> -->
+
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/whuBase.css">
+
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		<link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Roboto" rel="stylesheet">
 
 		<style type="text/css" media="screen">
+		
+		/* ================================= 
+		 CSS for color themes (needs to be in a file know tot he template engine)
+		==================================== */
 			body {
 		    font: 16px/26px Helvetica, Helvetica Neue, Arial;
 		    margin: 0;
@@ -30,56 +41,73 @@
 			a {	color: {LINKCOLOR}	}
 			a:hover {	color: {LINKHOVER};	}
 			
+			/* =========================	 CSS debugging 		==================================== */
 			#mysize:before {
 				color: "#1bb";
 				font-size: 80%;
 				content: "palette: {PAL_NAME} || ";
 			}		
-
-			#mysize {
-				color: #bb0;
-			}
+			#mysize {		color: #bb0;		}
 			#mysize:after {
 				color: yellow;
 				font-weight: bold;
 				content: "default";
 			}
+			@media (min-width: 544px)  {	#mysize:after {	content: "min-width: 544px";	}	}
+			@media (min-width: 768px)  {	#mysize:after {	content: "min-width: 768px";	}	}
+			@media (min-width: 992px)  {	#mysize:after {	content: "min-width: 992px";	}	}
+			@media (min-width: 1200px) {	#mysize:after {	content: "min-width: 1200px";	}	}
 
-		</style>		<link rel="stylesheet" href="css/whuBase.css">
+			/* ================================= 
+			 CSS for header and footer might as well be here with the header and footer.
+			==================================== */
+			.navbar           { background-color: #3A5950; }
+			.navbar-brand     { padding: 0 15px; }
+			.navbar-brand img { height: 50px; }
 
+	    footer {  background-color: #3A5950;    }
+	    .footer-inner {
+	        text-align: center; 
+					padding: .5rem 0;
+	    }			
+		</style>				
 	</head>
-<body>
-
+	<body>
 	<header>
-    <!--    Navbar    -->
-    <nav class="navbar navbar-fixed-top navbar-light bg-faded">
-      <div class="container">
-        <div class="collapse navbar-toggleable-md">
-          <a class="navbar-brand" href="?page=home&type=home">
-            <img class="mr-2" src="resources/JohnFreeman_logo_sm_03.png" height="80" alt="">
-          </a>
-          <ul id="main-menu" class="nav navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="?page=home&type=home">Home<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="?page=trips&type=home">Trips</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="?page=spots&type=home">Spots</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="?page=about&type=home">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="?page=search&type=home">Search</a>
-		<i id="mysize">size: </i>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav><!--    Navbar    -->
-	</header><!--/.main-header-->   
+		
+		<nav class="navbar navbar-inverse">
+		  <div class="container">
+		    <div class="navbar-header">
+		      <!-- <a class="navbar-brand" href="#">WebSiName</a> -->
+					<a class="navbar-brand" href="?page=home&type=home"><img src="resources/JohnFreeman_logo_sm_03.png" alt=""></a>
+		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#whuNavbar">
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>                        
+		      </button>
+		    </div>
+		    <div class="collapse navbar-collapse" id="whuNavbar">
+			    <ul class="nav navbar-nav">
+		        <li class="nav-item {ACTIVE_home}" ><a class="nav-link" href="?page=home&type=home">Home</a></li>              
+		        <li class="nav-item {ACTIVE_trips}"><a class="nav-link" href="?page=trips&type=home">Trips</a></li>
+		        <li class="nav-item {ACTIVE_spots}"><a class="nav-link" href="?page=spots&type=home">Spots</a></li>
+		        <li class="nav-item {ACTIVE_about}"><a class="nav-link" href="?page=about&type=home">About</a></li>
+		        <li class="nav-item {ACTIVE_search}"><a class="nav-link" href="?page=search&type=home">Search</a></li>
+		<!-- <i id="mysize">size: </i> -->
+			    </ul>
+			    <form class="navbar-form navbar-right">
+			      <div class="form-group">
+							<input class="form-control" type="text" id="search_text" name="search_text" placeholder="search text">
+			        <!-- <input type="text" class="form-control" placeholder="Search"> -->
+			      </div>
+		        <button class="btn btn-default" type="submit" name="do_text_search">
+		          <i class="glyphicon glyphicon-search"></i>
+		        </button>
+			    </form>
+				</div>
+			</div>
+		</nav>
+	</header>
 
 
 	<div id="the_content" class="container">
@@ -88,7 +116,7 @@
 
 	<footer class="main-footer">
 		<div class="footer-inner">
-			<span class="ml-3">&copy; 2010-2016 John P Freeman 
+			<span class="ml-3">&copy; 2010-201 John P Freeman 
 							&mdash;
 	        <a href="https://twitter.com/johnpfreem" target="_blank"><img src="resources/icons/tweet.png" height="20"></a>
 	        <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>

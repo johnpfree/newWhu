@@ -18,82 +18,23 @@ body {
     flex: 1;
 }
 
-.banner {
-    text-align: center;
-    background: #fff url('../resources/img/Whu_placeholder_jambotron.jpg') no-repeat center;
-    background-size: cover;
-    padding: 3em 0;
-    margin-top: 3.5em; 
-}
-
-.bg-faded {
-    background-color: #3A5950;
-}
-
-					header {
-						height: 120px;
-					}
-					#main-menu {
-						padding-top: 1.5rem;
-						font-weight: bold;
-						font-size: 120%;
-					}
-					#main-menu a {
-						color: #F84F33;
-					}
-					#main-menu a:hover {
-/*						color: #35dcf7;*/
-						color: #ddd;
-/*						color: #20549E;*/
-					}
-			    .btn-outline-success {
-			        color: #fff; 
-			    }
-			    footer {
-			        background-color: #3A5950;
-			    }
-			    .footer-inner {
-			        text-align: center; 
-							padding: .5rem 0;
-			    }
-
 /* ================================= 
   Media Queries
 ==================================== */
 
 // Small devices (landscape phones, 544px and up)
 @media (min-width: 544px) {
-	
-	#mysize:after {
-		content: "min-width: 544px";
-	}	
-
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
-	
-	#mysize:after {
-		content: "min-width: 768px";
-	}	
-
 }
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
-	
-	#mysize:after {
-		content: "min-width: 992px";
-	}	
-
 }
 
 // Extra large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
-	
-	#mysize:after {
-		content: "min-width: 1200px";
-	}	
-
 }
 

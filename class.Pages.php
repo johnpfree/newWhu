@@ -29,7 +29,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	function __construct($p)
 	{
 		$this->props = $p;
-		parent::__construct(new WhuTemplate()); 		
+		parent::__construct(new WhuTemplate());
 		$pagetype = $this->props->get('page') . $this->props->get('type');
 dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>");
 	}
@@ -38,6 +38,20 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	function setCaption()	
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
+		// also set active menu
+		$menu_items = array(
+			'home', 
+			'trips', 
+			'spots', 
+			'about', 
+			'search', 
+		);
+		$page = $this->props->get('page');
+		foreach ($menu_items as $k => $v) 
+		{
+			// dumpVar(($page == $v) ? "active" : '', "ACTIVE_$v");
+			$this->template->set_var("ACTIVE_$v", ($page == $v) ? "active" : '');
+		}
 	}
 	function getCaption()	
 	{
