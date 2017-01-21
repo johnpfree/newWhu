@@ -61,7 +61,6 @@
 		// --------- utilities
 		function isDate($str) 				// true for 
 		{
-			dumpVar($str, "str");
 			$parts = explode('-', $str);
 	// dumpVar($parts, "indate($str)");
 			if (sizeof($parts) < 3)		return FALSE;
@@ -315,11 +314,11 @@
 	{
 		function getRecord($key)
 		{
-			if (get_class($key) == 'WhuDbDay')
-				return $key->data;
-
 			if ($this->isDate($key))		// $key == date?
 		 	 	$key = $this->build('DbDay', $key);
+
+			if (get_class($key) == 'WhuDbDay')
+				return $key->data;
 
 			return parent::getRecord($key);
 		}
