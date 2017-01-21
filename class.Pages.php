@@ -313,7 +313,7 @@ class OneTripLog extends ViewWhu
 			$row['stop_desc'] = $day->baseExcerpt($day->nightDesc(), 30);
 
 			$row['day_pics'] = $npics = $day->pics()->size();
-			$row['pics_msg'] = "$npics pics";
+			$row['pics_msg'] = $npics;
 			$row['PIC_CLASS'] = $npics > 0 ? '' : "class='vis_hidden'";
 			
 			$row['wp_id'] = $day->postId();
@@ -325,7 +325,7 @@ class OneTripLog extends ViewWhu
 					$prevPostId = $row['wp_id'];
 					$iPost++;
 				}
-				$row['day_post'] = "Post $iPost";
+				$row['day_post'] = $iPost;
 				$row['POST_CLASS'] = '';
 			}
 			else

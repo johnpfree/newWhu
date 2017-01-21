@@ -86,10 +86,9 @@ $(document).ready(function()
 		font-size: 130%;
 	}
 	
-	#hide { display:none; }
 	.vis_switch { font-style: italic;  }
-
-		#infotable {
-			display:none;		
-		}
+	#hide { display:none; }
+	#infotable {
+		display:none;		
+	}
 </style>
