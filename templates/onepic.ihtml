@@ -1,10 +1,5 @@
-
-<script src="js/vendor/jquery-1.11.2.min.js"></script>
-<!-- <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script> -->
-
 <script type="text/javascript" charset="utf-8">
 console.log('jQuery', jQuery);
-
 
 $(document).ready(function()
 {
@@ -27,79 +22,74 @@ $(document).ready(function()
 	    $("#hide").show();
 	});
 });
-
 </script>
 
-<div id="the_pic">
-	<table id="navcollect" border="0">
-		<tr>
-			<td><a {VIS_CLASS1} href="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></td>
-			<td><a href=?page=pics&type=date&key={THIS_KEY}>{COLLECTION_NAME}</a></td>
-			<td><a {VIS_CLASS2} href="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
-		</tr>
-	</table>
-
-	<img src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />
+<div class="jumbotron jumbotron-fluid" id="one_pic">
+	<div class="row" id="navcollect">
+			<div class="col-xs-4"><a {VIS_CLASS1} href="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
+			<div class="col-xs-4"><a href=?page=pics&type=date&key={THIS_KEY}>{COLLECTION_NAME}</a></div>
+			<div class="col-xs-4"><a {VIS_CLASS2} href="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></div>
+	</div> 
+         
+	<img class="img-rounded img-responsive" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />
 	
 	<p id=pic_label>{WF_IMAGES_TEXT}</p>
 	<span class="vis_switch" id="show">Show Details</span>
 	<span class="vis_switch" id="hide">Hide Details</span>
 	
-</div>
-
-<table id="infotable" border="0">
-	<tr>
-		<td>
+	<div class="row" id="infotable">
+		<div class="col-xs-4">
 			<i>taken on</i> <b>{PRETTIEST_DATE}</b> <i>at</i> <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
-		</td>
-		<td>map</td>
-		<td>
+		</div>
+		<div class="col-xs-4">
+			map
+		</div>
+		<div class="col-xs-4">
 			<i>keywords for this picture:</i><br />
 			&bull; 
 <!-- BEGIN rows -->
 			<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 
 <!-- END rows -->			
-		</td>
-	</tr>
-</table>
+		</div>
+	</div>
+</div>
 
 <style type="text/css" media="screen">
 
-#hide { display:none; }
-.vis_switch { font-style: italic;  }
+.jumbotron { background-color: transparent; }
 
-	#infotable {
-		display:none;		
-		width: 100%;
-	}
-	#infotable td {
-		width: 33%;
-		xmargin: 0px 20px;
-		padding: 20px 20px;
-		text-align: center;
-		vertical-align: top;
-		border-top: 1px solid {BOLDCOLOR};
-	}
-	#infotable td:nth-child(1) {	border-right: 1px solid {BOLDCOLOR}; }
-	#infotable td:nth-child(3) {	border-left: 1px solid {BOLDCOLOR}; }
+#one_pic img {
+	margin: 0 auto;
+	width: 100%;
+}
 
-	#the_pic {
-		margin: 0 auto;
+	#navcollect {
 		width: 100%;
-		padding-bottom: 95%;  /*maintain aspect ratio*/
+		margin: 0 auto 20px;
 	}
+	#navcollect div:nth-child(1) {	text-align: left;	 padding-left: 8px; }
+	#navcollect div:nth-child(2) {	text-align: center; font-weight: bold; font-size: 130%;}
+	#navcollect div:nth-child(3) {	text-align: right; padding-right: 8px; }
+	@media (max-width: 544px)  {	
+		#navcollect div:nth-child(2) {	
+			visibility: hidden;	
+		}	
+		#navcollect {
+			margin: 0 auto;
+		}
+	}
+
 	#pic_label {
 		margin-top: 20px;
 		text-align: center;
 		font-weight: bold; 
 		font-size: 130%;
 	}
+	
+	#hide { display:none; }
+	.vis_switch { font-style: italic;  }
 
-	#navcollect {
-		width: 100%;
-		margin-bottom: 20px;
-	}
-	#navcollect td:nth-child(1) {	text-align: left;	 padding-left: 8px; }
-	#navcollect td:nth-child(2) {	text-align: center; font-weight: bold; font-size: 130%;}
-	#navcollect td:nth-child(3) {	text-align: right; padding-right: 8px; }
+		#infotable {
+			display:none;		
+		}
 </style>

@@ -13,13 +13,6 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"txt" => 		array('boldcolor' => '#59463A', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'), 
 			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#a5a345', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
 			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#d4946c', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
-			// "deflt" => 	array('boldcolor' => '#000000', 'linkcolor' => '#615f5f', 'linkhover' => '#000088', 'bbackcolor' => '#ffffff', 'backcolor' => '#ffffff'),
-			// "pic" => 		array('boldcolor' => '#002d92', 'linkcolor' => '#82cdff', 'linkhover' => '#a2edff', 'bbackcolor' => '#e2ffff', 'backcolor' => '#c2ffff'),
-			// "log" =>		array('boldcolor' => '#729200', 'linkcolor' => '#615f5f', 'linkhover' => '#729200', 'bbackcolor' => '#fffff2', 'backcolor' => '#ffff92'),
-			// "txt" => 		array('boldcolor' => '#8c2b09', 'linkcolor' => '#d9c6ba', 'linkhover' => '#ffcba9', 'bbackcolor' => '#ffffe9', 'backcolor' => '#ffebc9'),
-			// "map" => 		array('boldcolor' => '#2d4976', 'linkcolor' => '#8da9a6', 'linkhover' => '#adc9f6', 'bbackcolor' => '#edffff', 'backcolor' => '#cde9ff'),
-			// "search" => array('boldcolor' => '#59463A', 'linkcolor' => '#ffcba9', 'linkhover' => '#d9c6ba', 'bbackcolor' => '#fffffa', 'backcolor' => '#f9e6da'),
-			// "spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'),
 			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
@@ -34,7 +27,12 @@ class ViewWhu extends ViewBase  // ViewDbBase
 dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>");
 	}
 	function showPage()	
-		{	}
+	{	
+		global $noDbg;
+		// $this->template->set_var('PROD_NAVBAR'   , $noDbg ? "navbar-fixed-top" : "");		// fixed navbar messes up debugging
+		$this->template->set_var('PROD_NAVBAR'   , $noDbg ? "" : "");		// fixed navbar sucks
+		$this->template->set_var('DEBUG_SIZE_MSG', $noDbg ? "" : '<i id="mysize">size: </i>');		// which media query
+	}
 	function setCaption()	
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());

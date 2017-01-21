@@ -76,8 +76,7 @@
 	<body>
 	<header>
 		
-		<nav class="navbar navbar-inverse">
-		<!-- <nav class="navbar navbar-inverse navbar-fixed-top"> -->
+		<nav class="navbar navbar-inverse {PROD_NAVBAR}">	  <!-- if not debugging, add navbar-fixed-top class -->
 		  <div class="container">
 		    <div class="navbar-header">
 		      <!-- <a class="navbar-brand" href="#">WebSiName</a> -->
@@ -96,7 +95,7 @@
 		        <li class="nav-item {ACTIVE_spots}"><a class="nav-link" href="?page=spots&type=home">Spots</a></li>
 		        <li class="nav-item {ACTIVE_about}"><a class="nav-link" href="?page=about&type=home">About</a></li>
 		        <li class="nav-item {ACTIVE_search}"><a class="nav-link" href="?page=search&type=home">Search</a></li>
-		<i id="mysize">size: </i>
+						{DEBUG_SIZE_MSG}
 			    </ul>
 			    <form class="navbar-form navbar-right">
 					  <div class="input-group">
