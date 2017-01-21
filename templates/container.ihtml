@@ -61,21 +61,23 @@
 			/* ================================= 
 			 CSS for header and footer might as well be here with the header and footer.
 			==================================== */
-			.navbar           { background-color: #3A5950; }
 			.navbar-inverse .navbar-nav>.active>a { background-color: #59503a; }
 			.navbar-brand     { padding: 0 15px; }
 			.navbar-brand img { height: 50px; }
-
-	    footer {  background-color: #3A5950;    }
-	    .footer-inner {
-	        text-align: center; 
-					padding: .5rem 0;
-	    }			
+	    .navbar,footer {  
+				background-color: #3A5950;
+				color: #f75035;
+			}
+	    .navbar a {  
+				color: #f75035;
+			}
+			footer {
+				padding: 1rem 0;
+			}
 		</style>				
 	</head>
 	<body>
-	<header>
-		
+	<header>	
 		<nav class="navbar navbar-inverse {PROD_NAVBAR}">	  <!-- if not debugging, add navbar-fixed-top class -->
 		  <div class="container">
 		    <div class="navbar-header">
@@ -115,16 +117,23 @@
 
 	<div id="the_content" class="container">{THE_CONTENT}</div> <!-- #the_content -->
 
-	<footer class="main-footer">
-		<div class="footer-inner">
-			<span class="ml-3">&copy; 2010-201 John P Freeman 
-							&mdash;
-	        <a href="https://twitter.com/johnpfreem" target="_blank"><img src="resources/icons/tweet.png" height="20"></a>
-	        <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>
-							&mdash; <a href="http://www.cloudyhands.com/">cloudyhands.com</a> 
-				&mdash; design with <a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
+	<footer>
+	  <div class="container">
+			<div class="row" id="main-footer">
+				<div class="col-sm-3">
+		      <a href="https://twitter.com/johnpfreem"      target="_blank"><img src="resources/icons/tweet.png" height="20"></a>
+		      <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>
+				</div>
+				<div class="col-sm-6">
+					&copy; 2010-201 John P Freeman &mdash; 
+					<a href="http://www.cloudyhands.com/">cloudyhands.com</a> 
+				</div>
+				<div class="col-sm-3">
+					design with <a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
+				</div>
+			</div>
 		</div>
-	</footer>
+	</footer> 
 
   <script src="js/vendor/jquery-1.11.2.min.js"></script>
 	<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.12.0.min.js"><\/script>')</script>
