@@ -49,18 +49,20 @@
 		}
 		
 		// --------- getRecord() overloading utilities
-		function isSpotArray($key)			{	return (is_array($key) && isset($key[0]) && isset($key[0]['wf_spots_id']));	}
-		function isSpotRecord($key)			{	return (is_array($key) && isset($key['wf_spots_id']));	}
-		function isSpotDayRecord($key)	{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
-		function isSpotDayParmsArray($key)	{	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
-		function isTripRecord($key)			{	return (is_array($key) && isset($key['wf_trips_id']));	}
-		function isPicRecord($key)			{	return (is_array($key) && isset($key['wf_images_id']));	}
-		function isPicCatRecord($key)		{	return (is_array($key) && isset($key['wf_categories_id']));	}
-		function isDayRecord($key)			{	return (is_array($key) && isset($key['wf_days_date']));	}
+		function isSpotArray($key)				{	return (is_array($key) && isset($key[0]) && isset($key[0]['wf_spots_id']));	}
+		function isSpotRecord($key)				{	return (is_array($key) && isset($key['wf_spots_id']));	}
+		function isSpotDayRecord($key)		{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
+		function isSpotDayParmsArray($key){	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
+		function isTripRecord($key)				{	return (is_array($key) && isset($key['wf_trips_id']));	}
+		function isPicRecord($key)				{	return (is_array($key) && isset($key['wf_images_id']));	}
+		function isPicCatRecord($key)			{	return (is_array($key) && isset($key['wf_categories_id']));	}
+		function isDayRecord($key)				{	return (is_array($key) && isset($key['wf_days_date']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
 		{
+			if (!is_string($str))
+				return false;
 			$parts = explode('-', $str);
 	// dumpVar($parts, "indate($str)");
 			if (sizeof($parts) < 3)		return FALSE;
