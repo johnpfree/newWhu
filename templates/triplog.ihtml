@@ -44,7 +44,7 @@
 
 	thead { border-bottom: 2px solid #3A5950;	}
 
-	@media (max-width: 544px)  {	
+	@media (max-width: 700px)  {	
 		td.dropout {	display: none;	}
 	}
 

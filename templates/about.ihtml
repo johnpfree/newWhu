@@ -1,26 +1,24 @@
 
-<div id="the_pic">
-	<p>About Page</p>
-	Me, cloudyhands, email, twitter!<br />
-	Shout out to Elton, email, twitter!<br />	
-  About the site. What is this anyway?<br />
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<h2>W H U F U ~ "Where the f--- is that?"</h2>
+	<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's. But it was in the early 2000's when I started travelling with my laptop and a digital camera that I got the notion to put together an app to try to convey the experiences. </p>		
+		<li>Here is the <a href="http://cloudyhands.com/fall00/fall00.php">first try</a>.</li>
+		<li>Here is the <a href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a>.</li>
+		<li>Here is the massive <a href="http://www.whufu.com/">third try</a>.</li>
+	<p>This is the third try re-designed to be mroe mobile friendly and I hope, more people friendly.</p>
+	<hr>
+	<li>What is this?</li>
+	<li>Where didit come from?</li>
+	<li>How do I plan trips</li>
+	<li>How do I find stuff?</li>
+	<li>Nerd stuff 
+		<br />- what technology is used
+		<br />- how do I enter all this stuff?
+	</li>
+	<li></li>
+	<hr>
 	Tools used - find us on github, Mapbox, Wordpress, Fonts?, Bootstrap? ...
-	<br />
-	<br />
-	<br />
 </div>
 
 <style type="text/css" media="screen">
-#the_pic {
-	padding: 20px 30px 10px;
-	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
-	text-align: center;
-	vertical-align: middle;	
-}
-#the_pic p {
-	font-weight: bold;
-	font-size: 140%;
-}
 </style>

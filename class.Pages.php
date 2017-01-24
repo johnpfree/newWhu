@@ -785,6 +785,10 @@ class HomeHome extends ViewWhu
 	var $file = "homehome.ihtml";
 	function showPage()	
 	{
+		$this->template->set_var('N_MAP', 22);
+		$this->template->set_var('N_TXT', 142);
+		$this->template->set_var('N_PIC', 6748);
+
 		parent::showPage();
 	}
 }

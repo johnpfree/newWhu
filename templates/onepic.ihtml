@@ -56,8 +56,6 @@ $(document).ready(function()
 
 <style type="text/css" media="screen">
 
-.jumbotron { background-color: transparent; }
-
 #main_item img {
 	margin: 0 auto;
 	width: 100%;

@@ -16,7 +16,12 @@ body {
     flex: 1;
 }
 
-.jumbotron { background-color: transparent; }
+
+.jumbotron { 
+	background-color: transparent; 
+	padding-top: 0;
+}		/* un-color jumbotrons */
+.jumbotron p {	font: inherit;	}
 
 
 /* ================================= 

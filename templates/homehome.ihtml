@@ -1,39 +1,48 @@
 
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<p>W H U F U ~ "Where the f--- is that?"</p>
-	<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have always kept a mileage log, forever, since trips in the 70's.</p>
-	<p>I think it was getting a laptop and a digital camera that did the trick.</p>
-	<hr>
-	What do you want to do? 
-	<br />
-	If you want to read, we got stories.
-	<br />
-	If you want ideas on where to go camping, we got that.
-	<br />
-	Pictures, movies ...
-	<br />
-</div>
-<ul>
-	Either on this page or pointed to from this page:
-	<li>How to find the campground or hot springs you want.</li>
-	<li>How to find stories you might like.</li>
-	<li>How to browse the thousands of pictures.</li>
-	<li>Maps.</li>
-	<li>Describe the Stories/Map/Pics/Log connection.</li>
-</ul>
-
+	<h1>W H U F U</h1>
+	<div class="row">
+		<div class="col-md-6">
+			<ul id="biglist">
+				<li>We have <b>{N_MAP}</b> Maps.</li>
+				<li>We have <b>{N_TXT}</b> Stories.</li>
+				<li>We have <b>{N_PIC}</b> Pictures.</li>
+				<li>We have hundreds of places to <a href="#">camp</a>, many <a href="#">hot springs</a>, and many <a href="#">wildlife refuges</a>.</li>
+			</ul>
+			<hr />
+			<p>It's all organized around trips.  A trip has:</p>
+			<ul>
+				<li>a <i>map</i>, </li>
+				<li>a <i>triplog</i> of the days of the trip, </li>
+				<li><i>stories</i>, </li>
+				<li>and a bunch of <i>pictures</i>. </li>	
+			</ul>
+			<p>There is almost sure to be something interesting in here, the trick is finding it.</p>
+		</div> 
+		<div class="col-md-6">
+			<h2>Finding what you want in WHUFU</h2>
+			<ul id="findlist">
+				<li>Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have the <a href="#">Spot Search</a>.</li>
+				<li>If you already have a place in mind and want to find what spots are near it, we have the <a href="#">Area Search</a>.</li>
+				<li>The "search text" box in the header above will look for that text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I said anything mean about them.</li>
+				<li></li>
+			</ul>
+			<p>Whatever method you use to get there, you will soon end up at a Spot you are interested in. There will be links to trips where I visited this spot, stories about my visit, and pictures I took at that time. My hope is that you will be intrigued to follow the links for a while.</p>
+		</div> 
+	</div> 
+	</div> 
 <style type="text/css" media="screen">
-#main_item {
-	padding: 0px 30px 20px;
-	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
-	text-align: center;
-}
-#the_content ul {
-	padding: 0px 30px 20px;
-	margin: 0 auto;
-	width: 800px;
-	border: 1px solid #999;
-}
+	#main_item h2 {
+		margin-top: 0;
+	}
+	#main_item hr {
+		background-color: #3a5950;
+		height:4px;
+	}
+	#biglist {
+		font-size: 120%;
+	}
+	#biglist li,#findlist li {
+		margin-bottom: .8rem;
+	}
 </style>
