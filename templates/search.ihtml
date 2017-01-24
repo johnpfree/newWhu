@@ -1,5 +1,12 @@
 
 <div id="main_panel">
+	<form id="loc_srch" action="" method="post" accept-charset="utf-8">
+		<h4>Find Spots near this location</h4>
+		<label for="search_term">Location (city,state zip):</label> <input type="text" name="search_term" value="" id="search_term">
+		<label for="search_term">Radius:</label> <input type="text" name="search_term" value="100" size=10 id="search_term">
+		<p><input type="submit" name="search_near" value="Find Spots"></p>
+	</form>
+
 	<form id="txt_srch" action="" method="post" accept-charset="utf-8">
 		<h4>Search for text</h4>
 		<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">

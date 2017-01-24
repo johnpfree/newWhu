@@ -1,6 +1,9 @@
 
-<div id="main_item">
-	<p>H O M E</p>
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<p>W H U F U ~ "Where the f--- is that?"</p>
+	<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have always kept a mileage log, forever, since trips in the 70's.</p>
+	<p>I think it was getting a laptop and a digital camera that did the trick.</p>
+	<hr>
 	What do you want to do? 
 	<br />
 	If you want to read, we got stories.
@@ -26,10 +29,6 @@
 	width: 800px;
 	border: 1px solid #999;
 	text-align: center;
-}
-#main_item p {
-	font-weight: bold;
-	font-size: 140%;
 }
 #the_content ul {
 	padding: 0px 30px 20px;

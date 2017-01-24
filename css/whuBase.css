@@ -16,6 +16,9 @@ body {
     flex: 1;
 }
 
+.jumbotron { background-color: transparent; }
+
+
 /* ================================= 
   Media Queries
 ==================================== */

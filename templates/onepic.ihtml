@@ -24,7 +24,7 @@ $(document).ready(function()
 });
 </script>
 
-<div class="jumbotron jumbotron-fluid" id="one_pic">
+<div class="jumbotron jumbotron-fluid" id="main_item">
 	<div class="row" id="navcollect">
 			<div class="col-xs-4"><a {VIS_CLASS1} href="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
 			<div class="col-xs-4"><a href=?page=pics&type=date&key={THIS_KEY}>{COLLECTION_NAME}</a></div>
@@ -58,7 +58,7 @@ $(document).ready(function()
 
 .jumbotron { background-color: transparent; }
 
-#one_pic img {
+#main_item img {
 	margin: 0 auto;
 	width: 100%;
 }
