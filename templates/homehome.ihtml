@@ -7,7 +7,7 @@
 				<li>We have <b>{N_MAP}</b> Maps.</li>
 				<li>We have <b>{N_TXT}</b> Stories.</li>
 				<li>We have <b>{N_PIC}</b> Pictures.</li>
-				<li>We have hundreds of places to <a href="#">camp</a>, many <a href="#">hot springs</a>, and many <a href="#">wildlife refuges</a>.</li>
+				<li>We have <b>{N_SPO}</b> Spots - <a href="#">campgrounds</a>, <a href="#">hot springs</a>, <a href="#">wildlife refuges</a> and more.</li>
 			</ul>
 			<hr />
 			<p>It's all organized around trips.  A trip has:</p>
@@ -17,17 +17,17 @@
 				<li><i>stories</i>, </li>
 				<li>and a bunch of <i>pictures</i>. </li>	
 			</ul>
-			<p>There is almost sure to be something interesting in here, the trick is finding it.</p>
+			<p>There is almost sure to be something interesting for you here, the trick is finding it and convincing you that you want to find it!</p>
+			<hr />
 		</div> 
 		<div class="col-md-6">
-			<h2>Finding what you want in WHUFU</h2>
+			<h3>Finding what you want in WHUFU</h3>
 			<ul id="findlist">
-				<li>Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have the <a href="#">Spot Search</a>.</li>
-				<li>If you already have a place in mind and want to find what spots are near it, we have the <a href="#">Area Search</a>.</li>
-				<li>The "search text" box in the header above will look for that text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I said anything mean about them.</li>
-				<li></li>
+				<li><a href="?page=search&type=home">Spot Search</a> &ndash; Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have a feature search for the hundreds of spots.</li>
+				<li><a href="?page=search&type=home">Area Search</a> &ndash; Alternatively you can search for all the spots near your home, or any other place.</li>
+				<li>Text Search &ndash; The "search text" box above will look for text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I said anything mean about them. Enter the name of a town or a beach, or whatever strikes your fancy.</li>
 			</ul>
-			<p>Whatever method you use to get there, you will soon end up at a Spot you are interested in. There will be links to trips where I visited this spot, stories about my visit, and pictures I took at that time. My hope is that you will be intrigued to follow the links for a while.</p>
+			<p>Whatever method you use, you will soon end up at something interesting. The whole point of WHUFU is that it is <i>rich in interconnections</i>. Related pictures, stories, maps shound be a click away no matter where you are. My hope is that you will be intrigued to follow those links for a while.</p>
 		</div> 
 	</div> 
 	</div> 
@@ -35,11 +35,7 @@
 	#main_item h2 {
 		margin-top: 0;
 	}
-	#main_item hr {
-		background-color: #3a5950;
-		height:4px;
-	}
-	#biglist {
+		#biglist {
 		font-size: 120%;
 	}
 	#biglist li,#findlist li {

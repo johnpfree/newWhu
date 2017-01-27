@@ -5,7 +5,7 @@
 		<li>Here is the <a href="http://cloudyhands.com/fall00/fall00.php">first try</a>.</li>
 		<li>Here is the <a href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a>.</li>
 		<li>Here is the massive <a href="http://www.whufu.com/">third try</a>.</li>
-	<p>This is the third try re-designed to be mroe mobile friendly and I hope, more people friendly.</p>
+	<p>This is the third try re-designed to be more mobile friendly and I hope, more people friendly.</p>
 	<hr>
 	<li>What is this?</li>
 	<li>Where didit come from?</li>
@@ -21,4 +21,8 @@
 </div>
 
 <style type="text/css" media="screen">
+#main_item hr {
+	background-color: #3a5950;
+	height:4px;
+}
 </style>

@@ -1,39 +1,41 @@
-<article>         
+<article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
-	<table id="daynav" border="0">
-		<tr>
-			<td><a href="?page=day&type=date&key={PRV_DATE}">{PRV_LABEL}</a></td>
-			<td><a href="?page=day&type=date&key={NXT_DATE}">{NXT_LABEL}</a></td>
-		</tr>
-	</table>
+
+	<div class="row" id="navcollect">
+			<div class="col-xs-6"><a href="?page=day&type=date&key={PRV_DATE}">{PRV_LABEL}</a></div>
+			<div class="col-xs-6"><a href="?page=day&type=date&key={NXT_DATE}">{NXT_LABEL}</a></div>
+	</div> 
+	
 	<h2>{PRETTY_DATE}</h2>
+	
+	<hr />
+
 	<p>Today is day <b>{ORDINAL}</b> of the trip. I drove <b>{MILES}</b> miles today, for a total of <b>{CUMMILES}</b> miles so far.</p>
+	
 	<p>Here is a short description of the day:<br />
-	<blockquote>{DAY_DESC}</blockquote>
+		<blockquote>{DAY_DESC}</blockquote>
 	</p>
-	<p>I awoke at {AM_STOP}, spent the night at {PM_STOP}</p>
+	
+	<p>I started the day at {AM_STOP}. I ended the day at {PM_STOP}</p>
+	
 	<p>Here is a short description of the evening:<br />
-	<blockquote>{NIGHT_DESC}</blockquote>
-	<p {VIS_CLASS_TXT}>The story for this day is called <a href="?page=txt&type=wpid&key={WPID}">{STORY}</a></p>
+		<blockquote>{NIGHT_DESC}</blockquote>
+	<p {VIS_CLASS_TXT}>The story for this day is called: <span><a href="?page=txt&type=wpid&key={WPID}#{DATE}">{STORY}</a></span></p>
+	
 </article>        
 
 {LINK_BAR}
 
 <style type="text/css" media="screen">
-#daynav {
-	width: 100%;
-}
-#daynav td:nth-child(1) {	text-align: left;	}
-#daynav td:nth-child(2) {	text-align: right;	}
 
-article {
-	width: 100%;
-}
-article h2 {
-	font-weight: bold;
-	font-size: 140%;
-}
+#navcollect div:nth-child(1) {	text-align: left;	}
+#navcollect div:nth-child(2) {	text-align: right;	}
+
 blockquote {
 	font-style: italic;
+}
+
+span {
+	font-size: 120%;
 }
 </style>

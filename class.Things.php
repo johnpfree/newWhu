@@ -57,6 +57,7 @@
 		function isPicRecord($key)				{	return (is_array($key) && isset($key['wf_images_id']));	}
 		function isPicCatRecord($key)			{	return (is_array($key) && isset($key['wf_categories_id']));	}
 		function isDayRecord($key)				{	return (is_array($key) && isset($key['wf_days_date']));	}
+		function isTextSearch($key)				{	return (is_array($key) && isset($key['searchterm']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
@@ -197,8 +198,11 @@
 	class WhuTrips extends WhuTrip 
 	{
 		var $isCollection = true;
-		function getRecord($parms)
+		function getRecord($parms = true)
 		{
+			if ($parms)			// little hack 'cuz I don't need data for functions below
+				return true;
+			
 			$defaults = array('order' => "DESC", 'field' => 'wf_trips_start');
 			$qProps = new Properties($defaults, $parms);
 			// $qProps->dump('$qProps->');
@@ -207,6 +211,11 @@
 			return $this->getAll($q);	
 			// return $this->getOne(sprintf("select * from wf_trips ORDER BY %s %s"), $qProps->get('field'), $qProps->get('order'));
 		}
+		// good a place as any to put the global queries for home page
+		function numPics() 	{	return $this->getOne("select count(*) RES from wf_images")['RES'];	}
+		function numSpots()	{	return $this->getOne("select count(*) RES from wf_spots" )['RES'];	}
+		function numPosts()	{	return $this->getOne("select count(distinct wp_id) RES from wf_days" )['RES'];	}
+		function numMaps() 	{	return $this->getOne("select count(*) RES from wf_trips where wf_trips_extra !='' OR wf_trips_map_fid !=''")['RES'];	}
 	}
 
 
@@ -303,11 +312,26 @@
 		var $isCollection = true;
 		function getRecord($parm)			// trip id
 		{
+			if ($this->isTextSearch($parm))						// for text search
+			{
+				$qterm = $parm['searchterm'];
+				$q = "SELECT d.wf_days_date,d.wf_stop_name
+							FROM wf_days d
+							JOIN wf_spots s ON s.wf_spots_id=d.wf_spots_id
+							JOIN wf_spot_days sd ON sd.wf_spot_days_date=d.wf_days_date
+							WHERE d.wf_stop_name LIKE '$qterm' OR d.wf_stop_desc LIKE '$qterm'
+							OR d.wf_route_name LIKE '$qterm' OR d.wf_route_desc LIKE '$qterm'
+							OR s.wf_spots_name LIKE '$qterm' OR sd.wf_spot_days_desc LIKE '$qterm'";
+				dumpVar($q, "q");
+				return $this->getAll($q);
+			}
+
 			if (is_array($parm))					// an array of day records (for post days)
 			{
 				$this->assert(isset($parm[0]['wf_days_date']));
 				return $parm;
 			}
+
 			$this->assert($parm > 0);
 			return $this->getAll("select * from wf_days where wf_trips_id=$parm order by wf_days_date");
 		}
@@ -504,9 +528,18 @@
 		var $isCollection = true;
 		function getRecord($searchterms = array())
 		{
-			if ($this->isSpotArray($searchterms))
+			if ($this->isSpotArray($searchterms))		// already have a list?
 				return $searchterms;
 			
+			if (is_string($searchterms))												// for text search
+			{
+				$q = "SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE '$searchterms' OR d.wf_spot_days_desc LIKE '$searchterms' GROUP BY s.wf_spots_id";
+				dumpVar($q, "q");
+				return $this->getAll($q);
+				// return $this->getAll("SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE $searchterms OR d.wf_spot_days_desc LIKE $searchterms GROUP BY s.wf_spots_id");
+			}
+			
+			// assume this is an array of search terms
 			$deflts = array(
 				'order'	=> 'wf_spots_name',
 				'where'	=> array(),

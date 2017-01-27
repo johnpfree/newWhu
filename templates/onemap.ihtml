@@ -3,22 +3,18 @@
 <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
 
-<div id="the_content">
+<div class="jumbotron jumbotron-fluid" id="main_item">
 	<h2>{MAP_NAME}</h2>
 	<div id='map'></div>
-</div>
 {LINK_BAR}
+</div>
+<div id="the_content">
+</div>
 
 <style type="text/css" media="screen">
 h2 {
-	margin: 0;
+	margin: 0 0 1em;
 	text-align: center;
-}
-#the_content {
-	width: 100%;
-	xborder: 1px solid #999;
-	text-align: center;
-	vertical-align: top;
 }
 #map {
 	width: 100%;

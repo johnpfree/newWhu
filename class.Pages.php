@@ -33,7 +33,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->set_var('PROD_NAVBAR'   , $noDbg ? "" : "");		// fixed navbar sucks
 		$this->template->set_var('DEBUG_SIZE_MSG', $noDbg ? "" : '<i id="mysize">size: </i>');		// which media query
 	}
-	function setCaption()	
+	function setCaption()		// hand place for bookkeeping shared for all pages
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
 		// also set active menu
@@ -44,12 +44,19 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			'about', 
 			'search', 
 		);
+		
+		// set active menu
 		$page = $this->props->get('page');
 		foreach ($menu_items as $k => $v) 
 		{
 			// dumpVar(($page == $v) ? "active" : '', "ACTIVE_$v");
 			$this->template->set_var("ACTIVE_$v", ($page == $v) ? "active" : '');
 		}
+		
+		// set "from" values for contact page
+		$this->template->set_var('FROM_P', $page);
+		$this->template->set_var('FROM_T', $this->props->get('type'));
+		$this->template->set_var('FROM_K', $this->props->get('key'));
 	}
 	function getCaption()	
 	{
@@ -471,7 +478,7 @@ class OneMap extends ViewWhu
 			$this->template->setFile('JSON_INSERT', 'mapkml.js');
 			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		}	
-		else
+		else 			// NO map, do our connect the dots trick
 		{	
 			$this->template->set_var("JSON_INSERT", '');
 			$this->template->set_var("CONNECT_DOTS", 'true');		// there is no route map, so connect the dots with polylines
@@ -494,7 +501,8 @@ class OneMap extends ViewWhu
 				continue;
 			}
 			$prevname = $row['point_name'];
-						
+
+// dumpVar($row, "$i - row");
 			$rows[] = $row;
 		}
 		// dumpVar($rows, "rows");
@@ -613,6 +621,7 @@ class OneDay extends ViewWhu
  	 	$day = $this->build('DayInfo', $dayid);
 
 		$this->caption = Properties::prettyDate($date = $day->date());
+		$this->template->set_var('DATE', $date);
 		$this->template->set_var('PRETTY_DATE', Properties::prettiestDate($date));
 		
 		$this->template->set_var('ORDINAL', $day->day());
@@ -785,9 +794,11 @@ class HomeHome extends ViewWhu
 	var $file = "homehome.ihtml";
 	function showPage()	
 	{
-		$this->template->set_var('N_MAP', 22);
-		$this->template->set_var('N_TXT', 142);
-		$this->template->set_var('N_PIC', 6748);
+		$site = $this->build('Trips');
+		$this->template->set_var('N_MAP', $site->numMaps());
+		$this->template->set_var('N_TXT', $site->numPosts());
+		$this->template->set_var('N_PIC', $site->numPics());
+		$this->template->set_var('N_SPO', $site->numSpots());
 
 		parent::showPage();
 	}
@@ -828,6 +839,89 @@ class Search extends ViewWhu
 				$this->template->set_var(strtoupper($v), 'checked');
 			}
 		}
+		parent::showPage();
+	}
+}
+class SearchResults extends ViewWhu
+{
+	var $file = "searchresults.ihtml";   
+	function showPage()	
+	{
+		$this->template->set_var('SEARCHTERM', $this->key);
+		$qterm = sprintf("%%%s%%", $this->key);
+		dumpVar($qterm, "qterm");
+		
+		$spots = $this->build('DbSpots', $qterm);
+		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $spots->size(); $i++)
+		{
+			$spot = $spots->one($i);
+			$str .= sprintf("<a href='?page=spot&type=id&key=%s'>%s</a> &bull;", $spot->id(), $spot->name());
+		}	
+		$this->template->set_var('SPOTLIST', $str);
+		
+		$days = $this->build('Dbdays', array('searchterm' => $qterm));
+		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $days->size(); $i++)
+		{
+			$day = $days->one($i);
+			$str .= sprintf("<a href='?page=day&type=id&key=%s'>%s</a> &bull;", $day->date(), $day->date());
+		}	
+		$this->template->set_var('DAYLIST', $str);
+
+// 		// $ret['txts'] = array_merge($this->wpdbOld->search($term), $this->wpdbNew->search($term));
+// 		$ret['txts'] = $this->wpdbNew->search($term);
+// // dumpVar($ret['txts'], "search $term");
+// // exit;
+//
+// 		$q = "SELECT * FROM wf_categories WHERE wf_categories_text LIKE $term";
+// 		$ret['cats'] = $this->getAll($q);
+//
+// 		// save spots - search spot names and spot_days desc
+// 		$ret['spots'] = $this->getAll("SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE $term OR d.wf_spot_days_desc LIKE $term GROUP BY s.wf_spots_id");
+//
+// 		// which trips to save?
+// 		// 1. whiffle spots, look for their stops, save the trip_id of those stops
+// 		for ($i = 0, $trips = array(); $i < sizeof($ret['spots']); $i++)
+// 		{
+// 			$q = "SELECT * from wf_days WHERE wf_spots_id={$ret['spots'][$i]['wf_spots_id']}";
+// 			$stops = $this->getAll($q);
+// // dumpVar($stops, "stops $i. $q");
+// 			for ($j = 0; $j < sizeof($stops); $j++)
+// 			{
+// 				$trips[$stops[$j]['wf_trips_id']] = 1;
+// 			}
+// 		}
+// 		// also... whiffle spots without a stop, save their trip_ids
+// 		$q = "SELECT * from wf_days WHERE wf_spots_id = 0 AND (wf_stop_name LIKE $term OR wf_stop_desc LIKE $term)";
+// 		$stops = $this->getAll($q);
+// 		// whiffle spots without a stop, save their trip_id
+// 		for ($i = 0; $i < sizeof($stops); $i++)
+// 		{
+// 			$trips[$stops[$i]['wf_trips_id']] = 1;
+// 		}
+// 		// save the trip records for the ids collected above
+// 		foreach ($trips as $k => $v)
+// 		{
+// 			$ret['trips'][] = $this->getTrip($k);
+// 		}
+
+		parent::showPage();
+	}
+}
+class ContactForm extends ViewWhu
+{
+	var $file = "contact.ihtml";   
+	function showPage()	
+	{
+		$x1 = rand(2, 9);
+		$x2 = rand(2, 9);
+		$this->template->set_var('MATH_Q', "$x1 * $x2");
+		$this->template->set_var('MATH_A', $x1 * $x2);
+
+$this->props->dump('contact');
+		$this->template->set_var('FROM_P', $this->props->get('fromp'));
+		$this->template->set_var('FROM_T', $this->props->get('fromt'));
+		$this->template->set_var('FROM_K', $this->props->get('fromk'));
+
 		parent::showPage();
 	}
 }

@@ -1,92 +1,127 @@
 
-<div id="main_panel">
-	<form id="loc_srch" action="" method="post" accept-charset="utf-8">
-		<h4>Find Spots near this location</h4>
-		<label for="search_term">Location (city,state zip):</label> <input type="text" name="search_term" value="" id="search_term">
-		<label for="search_term">Radius:</label> <input type="text" name="search_term" value="100" size=10 id="search_term">
-		<p><input type="submit" name="search_near" value="Find Spots"></p>
-	</form>
+<div class="container"id="main_item">
+	<h2>Find Spots near a location</h2>
+  <form role="form" id="loc_srch" data-toggle="validator">
+    <div class="form-group row">
+      <label for="search_term" class="col-sm-1 col-form-label">Location:</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="search_term" id="search_term" placeholder="City, State or ZIP" required>
+      </div>
+      <label for="search_radius" class="col-sm-1 col-form-label">Radius:</label>
+      <div class="col-sm-2">
+        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
+      </div>
+      <div class="col-sm-2" id="search_near">         
+        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+      </div>
+    </div>
+  </form>
+	<hr />		
+	<h2>Find Overnights by feature</h2>
+  <form role="form" id="feat_srch" data-toggle="validator">
+		<h4>Type of Spot</h4>
+    <div class="form-group row">
+      <div class="col-sm-2">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">campground</label>
+      </div>
+      <div class="col-sm-2">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">lodging</label>
+      </div>
+      <div class="col-sm-2">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">parking lot</label>
+      </div>
+    </div>
+		<h4>Type of Campground</h4>
+    <div class="form-group row">
+      <div class="col-sm-4">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; 
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">National Park</label>
+      </div>
+      <div class="col-sm-4">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid5"> <label for="fid5">State Park</label> &nbsp; 
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Army Corp of Engineers</label>
+      </div>
+      <div class="col-sm-4">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; 
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid6"> <label for="fid6">City/County Park</label>
+      </div>
+      <div class="col-sm-6">
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid7"> <label for="fid7">Private Campground</label>
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid8"> <label for="fid8">just a parking lot</label>
+				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid9"> <label for="fid9">City/County Park</label>
+      </div>
+    </div>
+  </form>
+	<hr />		
+</div>
+	
+<div>	
 
-	<form id="txt_srch" action="" method="post" accept-charset="utf-8">
-		<h4>Search for text</h4>
-		<label for="search_term">search term:</label> <input type="text" name="search_term" value="" id="search_term">
-		<p>search where: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_STTI} name="search_fld[]" value="chk_stti" id="story_titles"> <label for="story_titles">story titles</label> &nbsp; &nbsp; 
-			<input type="checkbox" {CHK_STST} name="search_fld[]" value="chk_stst" id="stories">            <label for="stories"  >stories</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_PCTI} name="search_fld[]" value="chk_pcti" id="pictures">         <label for="pictures" >pictures</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_TRIP} name="search_fld[]" value="chk_trip" id="trip_logs">      <label for="trip_logs">trip logs</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_MAPS} name="search_fld[]" value="chk_maps" id="maps"> <label for="maps">maps</label>
-		</p>
-		<p><input type="submit" name="search_for_term" value="Search for Text"></p>
-	</form>
-
-	<form id="spot_srch" action="" method="post" accept-charset="utf-8">
-		<h4>Search Spots</h4>
-		<p>type of spot: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">hot springs</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">lodging</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">campground</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">parking lot</label> &nbsp; &nbsp;
-		</p>                
-		<p class="indented">type of campground: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">National Park</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Army Corp of Engineers</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid5"> <label for="fid5">State Park</label> &nbsp; &nbsp;<br>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid6"> <label for="fid6">City/County Park</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid7"> <label for="fid7">Private Campground</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid8"> <label for="fid8">just a parking lot</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid9"> <label for="fid9">City/County Park</label> &nbsp; &nbsp;
-		</p>
-
-		<p>cost: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label> &nbsp; &nbsp;
-			<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5>  &nbsp; &nbsp;
+		<p>cost:
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label>
+			<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5> 
 		</p>                
 	
-		<p class="indented">amenities: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">hot water</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">quiet</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shady</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">electricity</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">swimming</label> &nbsp; &nbsp;
+		<p class="indented">amenities:
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">hot water</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">quiet</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shady</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">electricity</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">swimming</label>
 		</p>                
 
-		<p class="indented">area: &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">North Cali</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon Coast</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Nevada</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Utah</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Idaho</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">New Mexico</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Oklahoma</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Corn Belt</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">East</label> &nbsp; &nbsp;
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">South</label> &nbsp; &nbsp;
+		<p class="indented">area:
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">North Cali</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon Coast</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Nevada</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Utah</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Idaho</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">New Mexico</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Oklahoma</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Corn Belt</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">East</label>
+			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">South</label>
 		</p>                
 	
 		<p><input type="submit" name="search_for_spots" value="Search for Spots"></p>
 	</form>
 
 <style type="text/css" media="screen">
-form {
+
+#Xloc_srch .col-sm-* {
+	margin: 1em 0;
+}
+#search_near {
+	text-align: center;
+}
+xdiv[class^='col-sm-'] {
+	border: 1px solid red;
+}
+
+label {
+	text-align: right;
+}
+button {
+	text-align: center;
+}
+
+Xform {
 	width: 100%;
 	padding: 4px 12px;
 /*}
 #txt_srch {*/
 		border: 1px solid {BORDERCOLOR};
 }
-#spot_srch p {
+#Xspot_srch p {
 	padding-bottom: 6px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid {BORDERCOLOR};

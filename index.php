@@ -22,6 +22,20 @@ class WhuProps extends Properties
 	{
 		parent::__construct(array_merge($props, $over));
 	}
+	
+	function pagetypekey($page, $type = NULL, $key = NULL, $id = NULL)
+	{
+		$this->set('page', $page);
+		if ($type == NULL) return;
+		
+		$this->set('type', $type);
+		if ($key == NULL) return;
+		
+		$this->set('key', $key);
+		if ($id == NULL) return;
+
+		$this->set('id', $id);
+	}
 
 	static function parseKeys($str)					// just return names
 	{
@@ -91,6 +105,25 @@ $props = new WhuProps($defaults);		// default settings
 $props->set($_REQUEST);							// absorb all web parms
 $props->dump('props');
 
+// grab form requests and package them for the factory below
+if ($props->isProp('do_text_search'))	{				// text search
+	$props->pagetypekey('search', 'text', $props->get('search_text'));
+}
+else if ($props->isProp('comment_form')) {		// comment form
+	$props->pagetypekey('search', 'text', $props->get('search_text'));	
+
+	// choose_purpose	=> chk_sugg
+	// f_name	=> 66
+	// f_email	=> aaa@bbb.ccc
+	// f_comment	=> asdfafdsaf
+	// comment_form	=>
+	// user_id	=> 6
+	
+}
+else if ($props->isProp('search_near')) {		// comment form
+	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
+}
+
 $curpage = $props->get('page');
 $curtype = $props->get('type');
 
@@ -118,9 +151,11 @@ switch ("$curpage$curtype")
 	case 'txtdate':			$page = new TripStoryByDate($props);	break;
 	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
-	case 'searchhome':	$page = new Search($props);			break;
-	case 'spotshome':		$page = new SpotsHome($props);			break;
-	case 'abouthome':		$page = new About($props);			break;	
+	case 'spotshome':		$page = new SpotsHome($props);		break;
+	case 'abouthome':		$page = new About($props);				break;	
+	case 'searchhome':	$page = new Search($props);				break;
+	case 'searchtext':	$page = new SearchResults($props);	break;
+	case 'contacthome':	$page = new ContactForm($props);	break;	
 	
 	default: 
 		dumpVar("$curpage$curtype", "Unknown page/type:");
