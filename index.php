@@ -144,7 +144,8 @@ switch ("$curpage$curtype")
 	
 	case 'logid':				$page = new OneTripLog($props);		break;	
 	case 'mapid':				$page = new OneMap($props);			break;	
-	case 'mapnear':			$page = new SpotMap($props);			break;	
+	case 'mapspot':			$page = new SpotMap($props);			break;	
+	case 'mapnear':			$page = new NearMap($props);			break;	
 	
 	case 'txtsid':			$page = new TripStories($props);			break;	
 	case 'txtwpid':			$page = new TripStory($props);				break;

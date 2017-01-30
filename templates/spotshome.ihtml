@@ -1,50 +1,52 @@
-<div id="tabform">
-	<form action="" method="post" accept-charset="utf-8">
-		Show only: &nbsp; &nbsp; 
-		<input type="checkbox" {CHK_chkcamp} name="search_fld[]" value="chkcamp" id="chkcamp"> <label for="">camping</label> &nbsp; &nbsp; 
-		<input type="checkbox" {CHK_chklodg} name="search_fld[]" value="chklodg" id="chklodg"> <label for="">lodging</label> &nbsp; &nbsp; 
-		<input type="checkbox" {CHK_chkhspr} name="search_fld[]" value="chkhspr" id="chkhspr"> <label for="">hot springs</label> &nbsp; &nbsp; 
-		<input type="checkbox" {CHK_chknwrf} name="search_fld[]" value="chknwrf" id="chknwrf"> <label for="">wildlife refuges</label> &nbsp; &nbsp; 
-		<input type="submit" name="submit" value="Show">
-	</form>
+<div class="jumbotron jumbotron-fluid" id="main_item_sm">
+	<h2>A Random Selection of Spots</h2>
+<!-- BEGIN rows -->
+	<button class="btn btn-outline-success" type="button"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_SHORT}</a></button>
+<!-- END rows -->
 </div>
-<hr />
-<table id="spotstable" border="0" cellspacing="5" cellpadding="5">
-	<caption>Whufu Spots</caption>
-	<thead>
-		<tr>
-			<td align="right">name</td>
-			<td>part of</td>
-			<td>where</td>
-			<td>type</td>
-		</tr>
-	</thead>
-	<tbody>
-		<!-- BEGIN rows -->
-		<tr>
-			<td align="right"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_NAME}</a></td>
-			<td>{SPOT_PART_OF}</td>
-			<td>{SPOT_WHERE}</td>
-			<td>{SPOT_TYPE}</td>
-		</tr>
-		<!-- END rows -->
-	</tbody>
-</table>
+
+<div class="jumbotron jumbotron-fluid" id="main_item_lg">
+	<h2>A Random Selection of Spots</h2>
+	<table class="table table-hover" id="spotstable">
+		<thead>
+			<tr>
+				<td align="right">name</td>
+				<td>part of</td>
+				<td>where</td>
+				<td>type</td>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- BEGIN lg_rows -->
+			<tr>
+				<td align="right"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_NAME}</a></td>
+				<td>{SPOT_PART_OF}</td>
+				<td>{SPOT_WHERE}</td>
+				<td>{SPOT_TYPE}</td>
+			</tr>
+			<!-- END lg_rows -->
+		</tbody>
+	</table>
+</div>
 
 <style type="text/css" media="screen">
-#tabform { 
-	text-align: center;
-	margin: 0 0 10px;
+
+@media (max-width: 700px)  {	
+	#main_item_lg { display: none;}
 }
-#tabform input[type=submit] { font-size: 90%;}
-	
-#spotstable {
-	margin: 0 auto;
+@media (min-width: 701px)  {	
+	#main_item_sm { display: none;}
 }
-#spotstable td {
-	padding: 4px 6px;
+
+#main_item_sm button {
+	background-color: #D3F2E9;
+	border: 2px solid #3A5950;
+	margin: .4em .2em;
 }
-caption { font-size: 120%;}
+#main_item_sm button a {
+	color: #f75035;
+}
+
 thead { border-bottom: 2px solid #3A5950;	}
 
 </style>

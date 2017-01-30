@@ -1,56 +1,60 @@
-
-<div id="spot">
+<article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1>{SPOT_NAME}</h1>
-	<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
-	<p>Number of visits: {SPOT_NUM}</p>
-
-	<div class="note1">Days visited:</div>
-	<div id="linklist">
-		&bull; 
-		<!-- BEGIN rows -->
-			<a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a>		
-		&bull; 
-			<!-- END rows -->	
+	<div class="row">
+		<div class="col-sm-12">
+			<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
+		</div>
 	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<p>Number of visits: {SPOT_NUM}</p>
+			<div class="note1">Days visited:</div>
+			<div id="linklist">
+				&bull; 
+				<!-- BEGIN rows -->
+					<a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a>		
+				&bull; 
+					<!-- END rows -->	
+			</div>
 
-	<div class="note1">Spot keywords:</div>
-	<div id="linklist">
-		&bull; 
-		<!-- BEGIN keyrows -->
-			<a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
-		&bull; 
-			<!-- END keyrows -->	
-	</div>
-
-	<form id=nearform action="" method="get" accept-charset="utf-8">
-		<input type="hidden" name="page" value="map" />
-		<input type="hidden" name="type" value="near" />
-		<input type="hidden" name="key" value="{SPOT_ID}" />
-		<label for="radius">Show all spots within</label> 
-		<input type="text" name="id" value="50" size='6'> miles. 
-		<input type="submit" name="spot_map" value="Go" />
-	</form>
+			<div class="note1">Spot keywords:</div>
+			<div id="linklist">
+				&bull; 
+				<!-- BEGIN keyrows -->
+					<a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
+				&bull; 
+					<!-- END keyrows -->	
+			</div>
+		</div>
+		<div class="col-sm-4" id="formbox">
+			<h4>Find Spots near here:</h4>
+		  <form role="form" id="nearform" method="get" data-toggle="validator">
+		    <div class="form-group row">
+		      <label for="search_radius" class="col-sm-12 col-form-label">Show all spots within:</label>
+		    </div>
+		    <div class="form-group row">
+		      <div class="col-sm-6">
+		        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
+		      </div>
+		      <div class="col-sm-6" id="search_near">         
+		        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+		      </div>
+		    </div>
+				<input type="hidden" name="page" value="map" />
+				<input type="hidden" name="type" value="spot" />
+				<input type="hidden" name="key" value="{SPOT_ID}" />
+		  </form>
+		</div>
+	</div>	
+</article>
 	<hr />
 	Where is it? Show me a map.<br />
-	When did I stay here? What trips were I on?<br />
-	What blog posts is it in?<br />
 	Other details - cost, gps<br />
 	description of my visits	<br />
 	<br />
-</div>
 
 <style type="text/css" media="screen">
-#spot {
-	padding: 6px 0 10px 18px;
-	margin: 0 auto;
-	width: 800px;
+#formbox {
 	border: 1px solid #999;
-	text-align: left;
-	vertical-align: middle;	
-}
-#spot p {
-}
-#spot form {
-	margin: 10px 0px;
 }
 </style>

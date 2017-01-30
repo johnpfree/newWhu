@@ -11,5 +11,6 @@
 		padding: 20px 0px;
 		font-size: 140%;
 		text-align: center;
+		border: 1px solid #3a5950;
 	}
 </style>

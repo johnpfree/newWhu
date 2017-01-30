@@ -39,7 +39,7 @@ $(document).ready(function()
 	
 	<div class="row" id="infotable">
 		<div class="col-xs-4">
-			<i>taken on</i> <b>{PRETTIEST_DATE}</b> <i>at</i> <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
+			<i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> at <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
 		</div>
 		<div class="col-xs-4">
 			map

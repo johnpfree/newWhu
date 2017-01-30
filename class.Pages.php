@@ -234,23 +234,28 @@ class SpotsHome extends ViewWhu
 			}
 		}
 
-		$spots = $this->build('DbSpots', $opts);
-		dumpVar(sizeof($spots->data), "spots->data");
+		$spots = $this->build('DbSpots', array('CAMP' => 'wf_spots_types', 'usfs' => 'wf_spots_status', 'usnp' => 'wf_spots_status'));
+		// dumpVar(sizeof($spots->data), "spots->data");
+		shuffle($spots->data);
 		
-		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
+		for ($i = 0, $rows = array(); $i < 60 /*$spots->size()*/; $i++)
 		{
 			$spot = $spots->one($i);
 			$row = array(
 				'spot_id' 		=> $spot->id(), 
-				'spot_name' 	=> $spot->name(), 
-				'spot_part_of' => $spot->partof(), 
+				'spot_short' 	=> $spot->shortName(), 
+				'spot_name' 	=> $spot->name(),
+				'spot_part_of' => $spot->partof(),
 				// 'spot_times' 	=> $spot->visits(),
-				'spot_where' 	=> $spot->town(), 
-				'spot_type' 	=> $spot->types(), 
+				'spot_where' 	=> $spot->town(),
+				'spot_type' 	=> $spot->types(),
  				);
 			$rows[] = $row;
 		}
+		// do loop twice, for mobile version and for full version
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop($rows);
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true, 'one' =>'lg_row'));
 		$loop->do_loop($rows);
 		
 	}
@@ -526,19 +531,13 @@ class SpotMap extends OneMap
 		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
 		dumpVar($foo, "WHU_URL");				
 		
-		$spotid = $this->key;
-		$radius = $this->props->get('id');
- 	 	$spot = $this->build('DbSpot', $spotid);		
-
-		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $radius, $spot->name()));
+		$items = $this->getSpotsandTitle();
 		
-		$items = $spot->getInRadius($radius);
-
 		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
 		// CAMP(286), HOTSPR(30) • LODGE(31) • NWR(19) •
 // dumpVar($markers, "markers");
 	
- 	 	$spots = $this->build('DbSpots', $items);
+		$spots = $this->build('DbSpots', $items);
 		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
 		{
 			$spot = $spots->one($i);
@@ -559,10 +558,25 @@ class SpotMap extends OneMap
 			}
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 		ViewWhu::showPage();
+	}
+	function getSpotsandTitle() 
+	{ 
+ 	 	$spot = $this->build('DbSpot', $this->key);		
+		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad = $this->props->get('id'), $spot->name()));
+		return $spot->getInRadius($rad);
+	}
+}
+class NearMap extends SpotMap
+{
+	function getSpotsandTitle() 
+	{ 
+		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of \"%s\"", $rad = $this->props->get('search_radius'), $this->props->get('search_radius')));
+		exit;
+		return $spot->getInRadius($rad);
 	}
 }
 
@@ -595,6 +609,7 @@ class OnePic extends ViewWhu
 		$this->template->set_var('PRV_ID' , $pic->prev()->id());
 
 		// pic info
+		$this->template->set_var('DATE', $date);
 		$this->template->set_var('PRETTIEST_DATE', Properties::prettiestDate($date));
 		$this->template->set_var('PIC_TIME', $pic->time());
 		$this->template->set_var('PIC_CAMERA', $pic->cameraDesc());
@@ -606,7 +621,7 @@ class OnePic extends ViewWhu
 			$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 	}

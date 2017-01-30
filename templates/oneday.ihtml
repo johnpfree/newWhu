@@ -12,15 +12,19 @@
 
 	<p>Today is day <b>{ORDINAL}</b> of the trip. I drove <b>{MILES}</b> miles today, for a total of <b>{CUMMILES}</b> miles so far.</p>
 	
-	<p>Here is a short description of the day:<br />
-		<blockquote>{DAY_DESC}</blockquote>
-	</p>
+	<dl>
+		<dt>Here is a short description of the day:</dt>
+		<dd>{DAY_DESC}</dd>
+	</dl>
 	
 	<p>I started the day at {AM_STOP}. I ended the day at {PM_STOP}</p>
 	
-	<p>Here is a short description of the evening:<br />
-		<blockquote>{NIGHT_DESC}</blockquote>
-	<p {VIS_CLASS_TXT}>The story for this day is called: <span><a href="?page=txt&type=wpid&key={WPID}#{DATE}">{STORY}</a></span></p>
+	<dl>
+		<dt>Here is a short description of the evening:</dt>
+		<dd>{NIGHT_DESC}</dd> 
+	</dl>
+
+	<p {VIS_CLASS_TXT}>My story for this day is in the post: <span><a href="?page=txt&type=wpid&key={WPID}#{DATE}">{STORY}</a></span></p>
 	
 </article>        
 
@@ -28,11 +32,18 @@
 
 <style type="text/css" media="screen">
 
+article.jumbotron	{
+  padding-bottom: 1em;
+}
+
 #navcollect div:nth-child(1) {	text-align: left;	}
 #navcollect div:nth-child(2) {	text-align: right;	}
 
-blockquote {
+dl { margin-bottom: .5em; }
+dt { font-weight: normal; }
+dd {
 	font-style: italic;
+	padding: .5em 1.5em;
 }
 
 span {

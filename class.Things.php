@@ -194,6 +194,30 @@
 		function hasGoogleMap()	{	return ($this->mapboxId() == 'kml');	}
 		
 		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
+		function getGeocode($name)
+		{
+			$geocode_pending = true;
+			$delay = 1;
+			$res = array('stat' => 'none', 'name' => $name);
+
+	// June 2013, try new url
+		    $request_url = sprintf("http://maps.google.com/maps/api/geocode/json?address=%s&sensor=false", urlencode($name));
+				$raw=@file_get_contents($request_url);
+	dumpVar($raw, "file_get_contents($request_url)");	// exit;
+				$json_data=json_decode($raw, true);
+				if ($json_data['status'] == "OK")
+				{
+					$jres = $json_data['results'][0]['geometry'];
+	dumpVar($jres['location'], "res");
+
+					$res['lat'] = $jres['location']['lat'];
+					$res['lon'] = $jres['location']['lng'];
+					$res['stat'] = "yes";
+				}
+	dumpVar($res, "result");
+	exit;
+			return $res;
+		}
 	}
 	class WhuTrips extends WhuTrip 
 	{
@@ -431,7 +455,7 @@
 			if ($this->isSpotRecord($key))
 				return $key;
 
-			return $this->getOne("select * from wf_spots where wf_spots_id=$key");	
+			return $this->getOne($q = "select * from wf_spots where wf_spots_id=$key");	
 		}
 		function id()				{ return $this->dbValue('wf_spots_id'); }
 		function name()			{ return $this->massageDbText($this->dbValue('wf_spots_name')); }
@@ -439,6 +463,24 @@
 		function partof()		{ return $this->dbValue('wf_spots_partof'); }
 		function types()		{ return $this->dbValue('wf_spots_types'); }
 		function status()		{ return $this->dbValue('wf_spots_status'); }
+		
+		function shortName() 
+		{
+			$name = $this->name();
+			// $n0 = $name;
+			$name = str_ireplace(" and campground", '', $name);
+			$name = str_ireplace(" campground", '', $name);
+			$name = str_ireplace(" camping", '', $name);
+			$name = str_ireplace(" state park", '', $name);
+			$name = str_ireplace(" state beach", '', $name);
+			$name = str_ireplace(" county park", '', $name);
+			$name = str_ireplace(" rv park", '', $name);
+			$name = str_ireplace(" state recreation area", '', $name);
+			$name = str_ireplace(" recreation area", '', $name);
+			$name = str_ireplace(" and", '', $name);
+			// dumpVar($name, "name in=$n0, oty=");
+			return $name;
+		}
 		
 		function prettyTypes()		// an array of types, suitable for printing
 		{
@@ -508,7 +550,7 @@
 			$lat = $this->lat();
 			$lon = $this->lon();
 			
-			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' AND $this->excludeString ORDER BY distance ASC";
+			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' AND WhuDbSpot::excludeString ORDER BY distance ASC";
 			$items = $this->getAll($q);
 
 			// NOTE, the spot we searched for is the first item here, with distance = 0
@@ -534,9 +576,8 @@
 			if (is_string($searchterms))												// for text search
 			{
 				$q = "SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE '$searchterms' OR d.wf_spot_days_desc LIKE '$searchterms' GROUP BY s.wf_spots_id";
-				dumpVar($q, "q");
+				// dumpVar($q, "q");
 				return $this->getAll($q);
-				// return $this->getAll("SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE $searchterms OR d.wf_spot_days_desc LIKE $searchterms GROUP BY s.wf_spots_id");
 			}
 			
 			// assume this is an array of search terms
@@ -550,24 +591,24 @@
 			}
 			else
 			{
-				for ($i = 0, $where = ""; $i < sizeof($searchterms); $i++) 
+				$where = "WHERE ";
+				foreach ($searchterms as $k => $v) 
 				{
-				 $where .= ($i == 0) ? "WHERE " : " OR ";
-				 $where .= "wf_spots_types LIKE '%{$searchterms[$i]}%'";
+				 $where .= "$v LIKE '%$k%' OR ";
 				}
-			}
-	 
+			 $where = substr($where, 0, -3);
+			}	 
 			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
+			// dumpVar($searchterms, "$q - st");
 			return $this->getAll($q);
 
 			// $props = new Properties(array())
-
-			for ($i = 0, $wherestr = ''; $i < sizeof($deflts['where']); $i++) 
-			{
-				$wherestr .= sprintf('%s %s', ($i == 0) ? 'WHERE' : "AND", $deflts['where'][$i]);
-				dumpVar($wherestr, "$i wherestr");
-			}
-			dumpVar($wherestr, "wherestr");
+			// for ($i = 0, $wherestr = ''; $i < sizeof($deflts['where']); $i++)
+			// {
+			// 	$wherestr .= sprintf('%s %s', ($i == 0) ? 'WHERE' : "AND", $deflts['where'][$i]);
+			// 	dumpVar($wherestr, "$i wherestr");
+			// }
+			// dumpVar($wherestr, "wherestr");
 		}
 	}	
 	class WhuDbSpotDay extends WhuThing 
