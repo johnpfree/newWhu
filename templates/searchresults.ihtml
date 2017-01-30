@@ -1,0 +1,15 @@
+
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<h2>Search Results for "{SEARCHTERM}"</h2>
+	
+	<dl>
+	  <dt>Spots:</dt>
+	  <dd>{SPOTLIST}</dd>
+	  <dt>Days:</dt>
+	  <dd>{DAYLIST}</dd>
+	</dl>
+	
+</div>
+
+<style type="text/css" media="screen">
+</style>
