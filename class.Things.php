@@ -826,6 +826,59 @@
 			// }
 			WhuThing::getRecord($parm);		// FAIL
 		}
+		function favored()					// returns a picture object for a favored picture
+		{	
+			$faves = $this->favorites();
+
+			if (sizeof($faves) > 0)
+				$one = $faves[array_rand($faves)];
+			else
+				$one = $this->data[array_rand($this->data)];
+
+			return $this->build('Pic', $one);
+		}
+		function choose($num)					// returns a picture collection of $num favored pictures 
+		{	
+			$faves = $this->favorites();		
+			$ret = array_rand($faves, $num);
+			
+			if (sizeof($ret) < $num)		// still need pics
+			{
+				$ids = array_column('wf_images_id');
+				$fids = array_flip($ids);
+				dumpVar($fids, "fids");
+				for ($i = 0; $i < sizeof($ret); $i++) 
+				{
+					unset($fids[$ret[$i]]);
+					dumpVar(sizeof($fids), "$i Nfids");
+				}
+				exit;
+			}
+
+			if (sizeof($faves) > 0)
+				$one = $faves[array_rand($faves)];
+			else
+				$one = $this->data[array_rand($this->data)];
+
+				return $this->build('Pics', $one);
+			return $this->build('Pic', $one);
+		}
+		function favorites()
+		{
+			for ($i = 0, $idlist = ''; $i < sizeof($this->data); $i++) {
+				$idlist .= $this->data[$i]['wf_images_id'] . ',';
+			}
+			$idlist = substr($idlist, 0, -1);
+			// dumpVar($idlist, "idlist");
+			
+			$items = $this->getAll("select * from wf_favepics where wf_images_id IN($idlist)");
+			for ($i = 0, $faves = array(); $i < sizeof($items); $i++) 
+			{
+				$faves[] = $items[$i]['wf_images_id'];
+			}
+			// dumpVar($faves, "faves");
+			return $faves;
+		}
 	}
 	
 	class WhuPicKeyword extends WhuThing 

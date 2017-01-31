@@ -363,14 +363,22 @@ class TripPictures extends ViewWhu
 		$trip = $this->build('Trip', $this->key);
 		$this->template->set_var('GAL_TITLE', $trip->name());
 		
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		$days = $this->build('DbDays', $this->key);	
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
-			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $day->pics()->size());
+			$pics = $day->pics();
+			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $pics->size());
 			if ($dc == 0)
 				continue;
+			
 			$row['nice_date'] = Properties::prettyShortest($date);
+			$pic = $pics->favored();		// returns one picture
+
+			$row['pic_name'] = $pic->filename();
+	 		$row['wf_images_path'] = $pic->folder();
+			
 			$rows[] = $row;
 			$count += $dc;
 		}
@@ -404,10 +412,13 @@ class Gallery extends ViewWhu
 
 		$pics = $this->getPictures($key);
 		$this->template->set_var('GAL_KEY', $key);
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
 
 		for ($i = 0, $rows = array(); $i < $pics->size(); $i++) 
 		{
 			$pic = $pics->one($i);
+			if ($i == 0)
+		 		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
 			$row = array('PIC_ID' => $pic->id(), 'PIC_name' => $pic->filename(), 'PIC_CAPTION' => $pic->caption());
 			$rows[] = $row;
 			// if ($i > 4) break;
@@ -439,7 +450,7 @@ class DateGallery extends Gallery
 		parent::showPage();
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }	
-	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
+	function getCaption()				{	return "Pictures for " . $this->props->get('key');	}
 	function galleryTitle($key)	{	return Properties::prettyDate($key); }
 }
 

@@ -8,8 +8,6 @@
 	<div id='map'></div>
 {LINK_BAR}
 </div>
-<div id="the_content">
-</div>
 
 <style type="text/css" media="screen">
 h2 {

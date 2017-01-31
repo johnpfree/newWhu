@@ -1,56 +1,56 @@
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 
-<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
-	<hr>
-	<table id="navcollect" border="0">
-		<tr>
-			<td><a {VIS_CLASS1} href="?page=pics&type=date&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></td>
-			<td>{GAL_COUNT} Pictures for: {GAL_TITLE}</td>
-			<td><a {VIS_CLASS2} href="?page=pics&type=date&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></td>
-		</tr>
-	</table>
+	<div class="row" id="navcollect">
+			<div class="col-xs-4"><a {VIS_CLASS1} href="?page=pics&type=date&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
+			<div class="col-xs-4">{GAL_COUNT} Pictures for: {GAL_TITLE}</div>
+			<div class="col-xs-4"><a {VIS_CLASS2} href="?page=pics&type=date&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></div>
+	</div> 
 
-<!-- <h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2> -->
-<div id="thegal">
-	<!-- BEGIN rows -->
-	<p>
-		<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
-				{PIC_NAME} &bull; {PIC_ID}<br />{PIC_CAPTION}
-		</a>		
-	</p>
-	<!-- END rows -->
-</div>
-<hr class="clear_all" />
+	<!-- <h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2> -->
+	<div class="clearfix" id="thegal">
+		<!-- BEGIN rows -->
+		<p>
+			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
+				<img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+			</a>		
+		</p>
+		<!-- END rows -->
+	</div>
 {LINK_BAR}
+</div>
 
 
 <style type="text/css" media="screen">
-#navcollect {
-	width: 100%;
-}
-#navcollect td:nth-child(1) {	text-align: left;	 padding-left: 8px; }
-#navcollect td:nth-child(2) {	text-align: center; font-weight: bold; font-size: 130%;}
-#navcollect td:nth-child(3) {	text-align: right; padding-right: 8px; }
 
-#thegal {
-	margin: 0 auto;
+#navcollect div:nth-child(1) {	text-align: left;	}
+#navcollect div:nth-child(2) {	text-align: center;	}
+#navcollect div:nth-child(3) {	text-align: right;	}
+#navcollect {
+	margin-bottom: 1em;
 }
+
 #thegal>p {
 	float: left;
-	width: 146px; 
-/*	width: 170px;*/
-	height: 190px; 
 	text-align: center;
-	margin: 12px;
-	margin-bottom: 20px;
-	border: 3px solid #44f855;		
 }
-img {
-	border: 3px solid #e6f8cc;		
+#thegal>p img {
+	border: 1px solid #3A5950;		
 }
-.squareme {
-	width: 160px;
-	height: 160px;
-	object-fit: cover;
+.squareme {	object-fit: cover; }
+
+@media (max-width: 785px)  {	
+	#thegal>p { width: 78px; }
+	.squareme {
+		width: 76px;
+		height: 76px;
+	}
 }
-	
+@media (min-width: 701px)  {	
+	#thegal>p { width: 166px; }
+	.squareme {
+		width: 160px;
+		height: 160px;
+	}
+}
 </style>

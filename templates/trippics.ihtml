@@ -1,18 +1,47 @@
-
-<h2>Pictures for: {GAL_TITLE}</h2>
-<div class="note1">{NUM_DAYS} days, {NUM_PICS} pictures</div>
-<div id="daylist">
-	&bull; 
-	<!-- BEGIN rows -->
-		<a href="?page=pics&type=date&key={GAL_DATE}">{NICE_DATE} ({DATE_COUNT})</a>		
-	&bull; 
-		<!-- END rows -->	
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<h1><span>Pictures for:</span> {GAL_TITLE}</h1>
+	<p>{NUM_DAYS} days, {NUM_PICS} pictures</p>
+	
+	<div class="clearfix" id="thegal">
+		<!-- BEGIN rows -->
+		<p>
+			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
+				<img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+			</a>		
+			<a href="?page=pics&type=date&key={GAL_DATE}">{NICE_DATE} ({DATE_COUNT})</a>		
+		</p>
+		<!-- END rows -->
+	</div>
+{LINK_BAR}
 </div>
 
-{LINK_BAR}
-
 <style type="text/css" media="screen">
-#daylist {
-	margin: 20px 0;
+h1>span { 
+	font-size: 80%;
+	font-weight: light;
 }
+#thegal>p {
+	float: left;
+	text-align: center;
+}
+#thegal>p img {
+	border: 1px solid #3A5950;		
+}
+.squareme {	object-fit: cover; }
+
+@media (max-width: 785px)  {	
+	#thegal>p { width: 78px; height: 128px; }
+	.squareme {
+		width: 76px;
+		height: 76px;
+	}
+}
+@media (min-width: 701px)  {	
+	#thegal>p { width: 166px; }
+	.squareme {
+		width: 160px;
+		height: 160px;
+	}
+}
+
 </style>
