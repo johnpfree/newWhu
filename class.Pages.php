@@ -447,17 +447,6 @@ class Gallery extends ViewWhu
 	}
 	function galleryTitle($key)				{	return "Undefined!";	}
 }
-	function showPage()	
-	{
-		parent::showPage();
-	}
-// class TripGallery extends Gallery
-// {
-// 	var $galtype = "trip";
-// 	function getPictures($key)	{ return $this->build('Pics', (array('tripid' => $key))); }
-// 	function getCaption()				{	return "tripid=" . $this->props->get('key');	}
-// 	function galleryTitle($key)	{	$trip = $this->build('Trip', $key);  return $trip->name(); }
-// }
 class DateGallery extends Gallery
 {
 	var $galtype = "date";   
@@ -485,13 +474,7 @@ class OneMap extends ViewWhu
 
 		$tripid = $this->key;
  	 	$trip = $this->build('Trip', $tripid);		
-
 		$this->template->set_var('MAP_NAME', $trip->name());
-		
-// dumpVar($trip->mapboxId(), "trip->");
-// dumpVar(boolStr($trip->hasMapboxMap()), "trip->hasMapboxMap()");
-// dumpVar(boolStr($trip->hasGoogleMap()), "trip->hasGoogleMap()");
-// exit;
 		
 		if ($trip->hasMapboxMap())
 		{
@@ -890,21 +873,21 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
-		// $opts = array();			// assume show all
-		// if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
-		// {
-		// 	$chkopts = array(
-		// 		'chkcamp' => 'CAMP',
-		// 		'chklodg' => 'LODGE',
-		// 		'chkhspr' => 'HOTSPR',
-		// 		'chknwrf' => 'NWR',
-		// 		);
-		// 	foreach ($srch as $k => $v)
-		// 	{
-		// 		$opts[] = $chkopts[$v];
-		// 		$this->template->set_var("CHK_$v", 'checked');
-		// 	}
-		// }
+		$opts = array();			// assume show all
+		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
+		{
+			$chkopts = array(
+				'chkcamp' => 'CAMP',
+				'chklodg' => 'LODGE',
+				'chkhspr' => 'HOTSPR',
+				'chknwrf' => 'NWR',
+				);
+			foreach ($srch as $k => $v)
+			{
+				$opts[] = $chkopts[$v];
+				$this->template->set_var("CHK_$v", 'checked');
+			}
+		}
 
 		$opts = array(
 			'chk_stti', 

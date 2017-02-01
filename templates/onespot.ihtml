@@ -8,7 +8,7 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<p>Number of visits: {SPOT_NUM}</p>
-			<div class="">Days visited (posted cost|senior cost):</div>
+			<div class="">Days visited (posted cost | senior cost):</div>
 			<div id="linklist">
 				<!-- BEGIN rows -->
 					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE} ({SPCOSTS})</a></span>
