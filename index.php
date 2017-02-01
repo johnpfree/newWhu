@@ -153,9 +153,12 @@ switch ("$curpage$curtype")
 	
 	case 'tripshome':		$page = new AllTrips($props);			break;	
 	case 'spotshome':		$page = new SpotsHome($props);		break;
-	case 'abouthome':		$page = new About($props);				break;	
+	case 'spotstype':		$page = new SpotsTable($props);		break;
+	
 	case 'searchhome':	$page = new Search($props);				break;
 	case 'searchtext':	$page = new SearchResults($props);	break;
+
+	case 'abouthome':		$page = new About($props);				break;	
 	case 'contacthome':	$page = new ContactForm($props);	break;	
 	
 	default: 

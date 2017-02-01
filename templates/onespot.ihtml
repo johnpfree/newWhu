@@ -8,16 +8,22 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<p>Number of visits: {SPOT_NUM}</p>
-			<div class="note1">Days visited:</div>
+			<div class="">Days visited (posted cost|senior cost):</div>
 			<div id="linklist">
-				&bull; 
 				<!-- BEGIN rows -->
-					<a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a>		
+					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE} ({SPCOSTS})</a></span>
 				&bull; 
 					<!-- END rows -->	
 			</div>
 
-			<div class="note1">Spot keywords:</div>
+			<hr />
+			<p><i>gps: </i><a href="?page=map&type=spot&key={SPOT_ID}">{SPLAT},{SPLON}</a></p>
+			<p>
+				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
+			</p>
+
+			<hr />
+			<div class="">Spot keywords:</div>
 			<div id="linklist">
 				&bull; 
 				<!-- BEGIN keyrows -->
@@ -26,24 +32,29 @@
 					<!-- END keyrows -->	
 			</div>
 		</div>
-		<div class="col-sm-4" id="formbox">
-			<h4>Find Spots near here:</h4>
-		  <form role="form" id="nearform" method="get" data-toggle="validator">
-		    <div class="form-group row">
-		      <label for="search_radius" class="col-sm-12 col-form-label">Show all spots within:</label>
-		    </div>
-		    <div class="form-group row">
-		      <div class="col-sm-6">
-		        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
-		      </div>
-		      <div class="col-sm-6" id="search_near">         
-		        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
-		      </div>
-		    </div>
-				<input type="hidden" name="page" value="map" />
-				<input type="hidden" name="type" value="spot" />
-				<input type="hidden" name="key" value="{SPOT_ID}" />
-		  </form>
+		<div class="col-sm-4">
+			
+			<div id="mapinsert">{MAP_INSET}</div>
+			
+			<div id="formbox">
+			  <form role="form" id="nearform" method="get" data-toggle="validator">
+					<h4>Find Spots near here:</h4>
+			    <div class="form-group row">
+			      <label for="search_radius" class="col-sm-12 col-form-label">Show all spots within:</label>
+			    </div>
+			    <div class="form-group row">
+			      <div class="col-sm-6">
+			        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
+			      </div>
+			      <div class="col-sm-6" id="search_near">         
+			        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+			      </div>
+			    </div>
+					<input type="hidden" name="page" value="map" />
+					<input type="hidden" name="type" value="spot" />
+					<input type="hidden" name="key" value="{SPOT_ID}" />
+			  </form>
+			</div>
 		</div>
 	</div>	
 </article>
@@ -54,7 +65,12 @@
 	<br />
 
 <style type="text/css" media="screen">
+#mapinsert {
+	border: 1px solid #3A5950;
+	padding-bottom: 90%;
+}
 #formbox {
-	border: 1px solid #999;
+	padding: .8em 1em .8em;
+	border: 1px solid #3A5950;
 }
 </style>

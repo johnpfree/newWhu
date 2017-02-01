@@ -5,10 +5,10 @@
 	<div class="clearfix" id="thegal">
 		<!-- BEGIN rows -->
 		<p>
-			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
+			<a href="?page=pics&type=date&key={GAL_DATE}">
 				<img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+				<span>{NICE_DATE} ({DATE_COUNT})</span>
 			</a>		
-			<a href="?page=pics&type=date&key={GAL_DATE}">{NICE_DATE} ({DATE_COUNT})</a>		
 		</p>
 		<!-- END rows -->
 	</div>

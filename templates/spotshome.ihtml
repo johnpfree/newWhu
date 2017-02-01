@@ -1,12 +1,12 @@
 <div class="jumbotron jumbotron-fluid" id="main_item_sm">
-	<h2>A Random Selection of Spots</h2>
+	<h2>{TITLE}</h2>
 <!-- BEGIN rows -->
 	<button class="btn btn-outline-success" type="button"><a href="?page=spot&type=id&key={SPOT_ID}" title="Spot Name">{SPOT_SHORT}</a></button>
 <!-- END rows -->
 </div>
 
 <div class="jumbotron jumbotron-fluid" id="main_item_lg">
-	<h2>A Random Selection of Spots</h2>
+	<h2>{TITLE}</h2>
 	<table class="table table-hover" id="spotstable">
 		<thead>
 			<tr>

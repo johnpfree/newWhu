@@ -7,7 +7,6 @@
 	</div> 
 	
 	<h2>{POST_TITLE}</h2>
-	<hr />
 
 	<div class=entry-content>{POST_CONTENT}</div>
 
@@ -20,16 +19,22 @@
 
 <style type="text/css" media="screen">
 
+.jumbotron {
+	padding-bottom: 0px;
+}
+
 #navcollect div:nth-child(1) {	text-align: left;	}
 #navcollect div:nth-child(2) {	text-align: right;	}
 
 .entry-content {  
-	padding: 0 10px;
+	padding: 10px;
 	overflow: scroll;
 	overflow-x: hidden;
 	width: 100%;
-	height: 100vw;
+	height: 70vw;
+	border: 1px solid {BOLDCOLOR};
 }
+
 	/* ----------------------- from Wordpress ----------------------------- */
 .entry-content img {
 	max-width: 100%; /* Fluid images for posts, comments, and widgets */
@@ -71,7 +76,7 @@ h5 {
 }
 
 .entry-content {
-	margin: 18px 0 0;
+	margin: 18px 0 20px;
 	line-height: 1.714285714;
 }
 .entry-content h3 {

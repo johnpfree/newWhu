@@ -249,7 +249,7 @@
 		function getRecord($key)
 		{
 			// dumpVar($key, "key");
-			// dumpBool(is_array($key), "arr");
+			// APCIteratordumpBool(is_array($key), "arr");
 			if (is_array($key))					// $key == the record?
 				return $key;
 
@@ -377,6 +377,7 @@
 		function nightNameUrl()			// No Spot => no URL
 		{	
 			$name = $this->nightName();
+
 			if ($this->hasSpot())
 				return sprintf("<a href='?page=spot&type=id&key=%s'>%s</a>", $this->spotId(), $name);
 			return $name;
@@ -526,7 +527,6 @@
 			dumpVar($ndays, "vfld = $vfld, day recs=" . $this->lazyDays->size() . "RESULT");
 			return $ndays;
 		}
-		
 		function keywords()
 		{
 			if ($this->lazyDays == NULL)
@@ -535,7 +535,7 @@
 			for ($i = 0, $allkeys = array(); $i < $this->lazyDays->size(); $i++)
 			{
 				$spotDay = $this->lazyDays->one($i);
-				$allkeys = array_merge(array_flip($spotDay->keywords()), $allkeys);
+				$allkeys = array_merge(array_flip($spotDay->keywords()), $allkeys);		// flipping makes duplicates disappear
 				// dumpVar($spotDay->keywords(), "spotDay->keywords()");
 				// dumpVar($allkeys, "$i keys");
 			}
@@ -544,6 +544,8 @@
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
 		function lon()		{ return $this->dbValue('wf_spots_lon'); }
+		function bath()		{ return $this->dbValue('wf_spots_bath'); }
+		function water()	{ return $this->dbValue('wf_spots_water'); }
 
 		function getInRadius($dist = 100.)		// returns an array of spot records, suitable for creating a DbSpots collection
 		{
@@ -627,6 +629,8 @@
 		function id()			{ return $this->dbValue('wf_spots_id'); }
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
 		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
+		function cost()		{ return $this->dbValue('wf_spot_days_cost'); }
+		function senior()		{ return $this->dbValue('wf_spot_days_senior'); }
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
@@ -721,6 +725,7 @@
 					'content' => $this->the_content(),						// the_content does NOT, so copy/modify below to do so
 				);
 			endwhile;
+			// dumpVar(sizeof($posts), "N posts");
 			return $posts;
 		}
 		// straight outta Wordpress:
@@ -734,8 +739,13 @@
 	class WhuPosts extends WhuPost 
 	{
 		var $isCollection = true;
-		function getRecord($key)	// key = trip id
+		function getRecord($parm)	// key = trip id
 		{
+			if ($this->isTextSearch($parm))						// for text search
+			{
+				return $this->doWPQuery("s={$parm['searchterm']}");
+			}
+
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}
@@ -796,6 +806,14 @@
 		var $isCollection = true;
 		function getRecord($parm)	//  tripid. folder, date
 		{
+			if ($this->isTextSearch($parm))						// for text search
+			{
+				$qterm = $parm['searchterm'];
+				$q = "SELECT * FROM wf_images WHERE wf_images_text LIKE '$qterm' OR wf_images_desc LIKE '$qterm' OR wf_images_filename LIKE '$qterm'";
+				dumpVar($q, "q");
+				return $this->getAll($q);
+			}
+
 			if (isset($parm['date'])) 
 			{				
 				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
@@ -828,8 +846,7 @@
 		}
 		function favored()					// returns a picture object for a favored picture
 		{	
-			$faves = $this->favorites();
-
+			$faves = $this->favorites();			
 			if (sizeof($faves) > 0)
 				$one = $faves[array_rand($faves)];
 			else
@@ -863,7 +880,7 @@
 				return $this->build('Pics', $one);
 			return $this->build('Pic', $one);
 		}
-		function favorites()
+		private function favorites()					// returns an array, NOT an object, of ids of favorites in this collection
 		{
 			for ($i = 0, $idlist = ''; $i < sizeof($this->data); $i++) {
 				$idlist .= $this->data[$i]['wf_images_id'] . ',';

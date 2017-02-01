@@ -11,9 +11,10 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"map" => 		array('boldcolor' => '#47894B', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
 			"log" =>		array('boldcolor' => '#2d4976', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
 			"txt" => 		array('boldcolor' => '#59463A', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'), 
-			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#a5a345', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
-			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#d4946c', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
-			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
+			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
+			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
+			// "search" => array('boldcolor' => '#B96936', 'linkcolor' => '#d4946c', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'),
+			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
 	
@@ -157,6 +158,25 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$i++;
 		}		
 	}
+	function addDollarSign($s)	{ return "&#36;$s"; }
+	
+	// 	array('zoom' => 7, 'lat' => $center->lat, 'lon' => $center->lon, 'name' => 'Center of the area for this story');
+	function setLittleMap($coords)
+	{
+// dumpVar($coords, "setLittleMap");
+		if (sizeof($coords) == 0)
+		{
+			$this->template->set_var("MAP_INSET", 
+					"<i class=smaller><br />Apparently the iPhone<br /> couldn't geolocate<br /> this pic.</i>");
+			return;
+		}
+		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
+		foreach ($coords as $k => $v) 
+		{
+			$this->template->set_var("VAL_$k", addslashes($v));
+		}
+	}
+	
 	
 	function build ($type = '', $key = '') 
 	{
@@ -213,32 +233,21 @@ class HomeBrowse extends ViewWhu
 
 class SpotsHome extends ViewWhu
 {
-	var $file = "spotshome.ihtml";   
+	var $file = "spotshome.ihtml";
+	var $searchterms = array('CAMP' => 'wf_spots_types', 'usfs' => 'wf_spots_status', 'usnp' => 'wf_spots_status');
+	var $title = "A Random Selection of Spots";
 	function showPage()	
 	{
 		parent::showPage();
 		
-		$opts = array();			// assume show all
-		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
-		{
-			$chkopts = array(
-				'chkcamp' => 'CAMP', 
-				'chklodg' => 'LODGE', 
-				'chkhspr' => 'HOTSPR', 
-				'chknwrf' => 'NWR', 
-				);
-			foreach ($srch as $k => $v) 
-			{
-				$opts[] = $chkopts[$v];
-				$this->template->set_var("CHK_$v", 'checked');
-			}
-		}
-
-		$spots = $this->build('DbSpots', array('CAMP' => 'wf_spots_types', 'usfs' => 'wf_spots_status', 'usnp' => 'wf_spots_status'));
-		// dumpVar(sizeof($spots->data), "spots->data");
-		shuffle($spots->data);
+		$this->template->set_var("TITLE", $this->title);
+		$spots = $this->build('DbSpots', $this->searchterms);
 		
-		for ($i = 0, $rows = array(); $i < 60 /*$spots->size()*/; $i++)
+		$maxrows = 60;
+		if ($spots->size() > $maxrows)
+			shuffle($spots->data);
+		
+		for ($i = 0, $rows = array(); $i < min($maxrows, $spots->size()); $i++)
 		{
 			$spot = $spots->one($i);
 			$row = array(
@@ -256,10 +265,18 @@ class SpotsHome extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true, 'one' =>'lg_row'));
-		$loop->do_loop($rows);
-		
+		$loop->do_loop($rows);		
 	}
 	function getCaption()	{	return "Browse Spots";	}
+}
+class SpotsTable extends SpotsHome
+{
+	function showPage()	
+	{
+		$this->title = ($this->key == "NWR") ? "Wildlife Refuges" : "Hot Springs";
+		$this->searchterms = array($this->key => 'wf_spots_types');
+		parent::showPage();
+	}
 }
 
 class AllTrips extends ViewWhu
@@ -665,10 +682,19 @@ class OneDay extends ViewWhu
 	
 		// do next|prev nav - as long as I have yesterday, show where I woke up today
 		$navday = $this->build('DbDay', $d = $day->yesterday());
-		$this->template->set_var('AM_STOP', $this->build('DayInfo', $d)->nightNameUrl());
 
-		$this->template->set_var('PRV_DATE', $d);
-		$this->template->set_var('PRV_LABEL', $navday->hasData ? 'yesterday' : '');
+		if ($navday->hasData)			// for the first day of the trip, there is no yesterday
+		{
+			$this->template->set_var('AM_STOP', $this->build('DayInfo', $d)->nightNameUrl());
+			$this->template->set_var('PRV_DATE', $d);
+			$this->template->set_var('PRV_LABEL', 'yesterday');
+			$this->template->set_var('PRV_LABEL', 'yesterday');
+		}
+		else {
+			$this->template->set_var('AM_STOP', 'home');
+			$this->template->set_var('PRV_LABEL', '');
+		}
+		
 		$navday = $this->build('DbDay', $d = $day->tomorrow());
 		$this->template->set_var('NXT_DATE', $d);
 		$this->template->set_var('NXT_LABEL', $navday->hasData ? 'tomorrow' : '');
@@ -692,6 +718,14 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_PARTOF', $spot->partof());
 		$this->template->set_var('SPOT_NUM',  	$spot->visits());
 		
+		$this->template->set_var('SPLAT',  	$spot->lat());
+		$this->template->set_var('SPLON',  	$spot->lon());
+
+		// $spot->dump('spott');
+		
+		$this->template->set_var('SPBATH',  	$spot->bath());
+		$this->template->set_var('SPWATER',  	$spot->water());
+
 		$types = $spot->prettyTypes();
 		// dumpVar($types, "types"); exit;
 		$str = '';
@@ -715,13 +749,27 @@ class OneSpot extends ViewWhu
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
+			// $day->dump($i);
 			$row = array('stay_date' => $date = $day->date());
 			$row['nice_date'] = Properties::prettyDate($date);
+
+			if (($cost = $day->cost()) > 0)
+			{
+				$costs = $this->addDollarSign($cost);
+				if ($day->senior() > 0 && $day->senior() != $cost)
+					$costs .= ' | '.$this->addDollarSign($day->senior());
+			}
+			else
+				$costs = "free!";
+			$row['spcosts'] = $costs;
+
 			$rows[] = $row;
 		}
 		// dumpVar($rows, "rows $count");
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
+		
+		$this->setLittleMap(array('zoom' => 7, 'lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name()));
 
 		parent::showPage();
 	}
@@ -842,6 +890,22 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
+		// $opts = array();			// assume show all
+		// if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
+		// {
+		// 	$chkopts = array(
+		// 		'chkcamp' => 'CAMP',
+		// 		'chklodg' => 'LODGE',
+		// 		'chkhspr' => 'HOTSPR',
+		// 		'chknwrf' => 'NWR',
+		// 		);
+		// 	foreach ($srch as $k => $v)
+		// 	{
+		// 		$opts[] = $chkopts[$v];
+		// 		$this->template->set_var("CHK_$v", 'checked');
+		// 	}
+		// }
+
 		$opts = array(
 			'chk_stti', 
 			'chk_stst', 
@@ -892,44 +956,24 @@ class SearchResults extends ViewWhu
 			$str .= sprintf("<a href='?page=day&type=id&key=%s'>%s</a> &bull;", $day->date(), $day->date());
 		}	
 		$this->template->set_var('DAYLIST', $str);
+		
+		$days = $this->build('Pics', array('searchterm' => $qterm));
+		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $days->size(); $i++)
+		{
+			$day = $days->one($i);
+			$str .= sprintf("<a href='?page=day&type=id&key=%s'>%s</a> &bull;", $day->date(), $day->date());
+		}	
+		$this->template->set_var('PICLIST', $str);
 
-// 		// $ret['txts'] = array_merge($this->wpdbOld->search($term), $this->wpdbNew->search($term));
-// 		$ret['txts'] = $this->wpdbNew->search($term);
-// // dumpVar($ret['txts'], "search $term");
-// // exit;
-//
-// 		$q = "SELECT * FROM wf_categories WHERE wf_categories_text LIKE $term";
-// 		$ret['cats'] = $this->getAll($q);
-//
-// 		// save spots - search spot names and spot_days desc
-// 		$ret['spots'] = $this->getAll("SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE $term OR d.wf_spot_days_desc LIKE $term GROUP BY s.wf_spots_id");
-//
-// 		// which trips to save?
-// 		// 1. whiffle spots, look for their stops, save the trip_id of those stops
-// 		for ($i = 0, $trips = array(); $i < sizeof($ret['spots']); $i++)
-// 		{
-// 			$q = "SELECT * from wf_days WHERE wf_spots_id={$ret['spots'][$i]['wf_spots_id']}";
-// 			$stops = $this->getAll($q);
-// // dumpVar($stops, "stops $i. $q");
-// 			for ($j = 0; $j < sizeof($stops); $j++)
-// 			{
-// 				$trips[$stops[$j]['wf_trips_id']] = 1;
-// 			}
-// 		}
-// 		// also... whiffle spots without a stop, save their trip_ids
-// 		$q = "SELECT * from wf_days WHERE wf_spots_id = 0 AND (wf_stop_name LIKE $term OR wf_stop_desc LIKE $term)";
-// 		$stops = $this->getAll($q);
-// 		// whiffle spots without a stop, save their trip_id
-// 		for ($i = 0; $i < sizeof($stops); $i++)
-// 		{
-// 			$trips[$stops[$i]['wf_trips_id']] = 1;
-// 		}
-// 		// save the trip records for the ids collected above
-// 		foreach ($trips as $k => $v)
-// 		{
-// 			$ret['trips'][] = $this->getTrip($k);
-// 		}
+		$txts = $this->build('Posts', array('searchterm' => $this->key));
+		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $txts->size(); $i++)
+		{
+			$txt = $txts->one($i);
+			$str .= sprintf("<a href='?page=txt&type=wpid&key=%s'>%s</a> &bull;", $txt->wpid(), $txt->title());
+		}	
+		$this->template->set_var('TXTLIST', $str);
 
+		// $q = sprintf("select * from %sposts where post_status='publish' AND post_title LIKE %s OR post_content LIKE %s and post_type='post'", $this->tablepref, $term, $term);
 		parent::showPage();
 	}
 }
