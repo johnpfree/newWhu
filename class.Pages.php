@@ -7,13 +7,13 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $file = "UNDEF";
 	var $curpal = NULL;
 	var $pals =	array(
-			"deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#659a8b', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'), 
+			"deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'), 
+			// "deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#659a8b', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'),
 			"map" => 		array('boldcolor' => '#47894B', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
 			"log" =>		array('boldcolor' => '#2d4976', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
 			"txt" => 		array('boldcolor' => '#59463A', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'), 
 			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
 			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
-			// "search" => array('boldcolor' => '#B96936', 'linkcolor' => '#d4946c', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'),
 			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
@@ -928,7 +928,7 @@ class SearchResults extends ViewWhu
 		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $spots->size(); $i++)
 		{
 			$spot = $spots->one($i);
-			$str .= sprintf("<a href='?page=spot&type=id&key=%s'>%s</a> &bull;", $spot->id(), $spot->name());
+			$str .= sprintf("<a href='?page=spot&type=id&key=%s'>%s</a> &bull; ", $spot->id(), $spot->name());
 		}	
 		$this->template->set_var('SPOTLIST', $str);
 		
@@ -936,15 +936,15 @@ class SearchResults extends ViewWhu
 		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
-			$str .= sprintf("<a href='?page=day&type=id&key=%s'>%s</a> &bull;", $day->date(), $day->date());
+			$str .= sprintf("<a href='?page=day&type=date&key=%s'>%s</a> &bull; ", $day->date(), Properties::prettyDate($day->date()));
 		}	
 		$this->template->set_var('DAYLIST', $str);
 		
-		$days = $this->build('Pics', array('searchterm' => $qterm));
-		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $days->size(); $i++)
+		$pics = $this->build('Pics', array('searchterm' => $qterm));
+		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $pics->size(); $i++)
 		{
-			$day = $days->one($i);
-			$str .= sprintf("<a href='?page=day&type=id&key=%s'>%s</a> &bull;", $day->date(), $day->date());
+			$pic = $pics->one($i);
+			$str .= sprintf("<a href='?page=pic&type=date&key=%s&id=%s'>%s</a> &bull; ", $day->date(), $pic->id(), Properties::prettyDate($day->date()));
 		}	
 		$this->template->set_var('PICLIST', $str);
 
@@ -952,7 +952,7 @@ class SearchResults extends ViewWhu
 		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $txts->size(); $i++)
 		{
 			$txt = $txts->one($i);
-			$str .= sprintf("<a href='?page=txt&type=wpid&key=%s'>%s</a> &bull;", $txt->wpid(), $txt->title());
+			$str .= sprintf("<a href='?page=txt&type=wpid&key=%s'>%s</a> &bull; ", $txt->wpid(), $txt->title());
 		}	
 		$this->template->set_var('TXTLIST', $str);
 

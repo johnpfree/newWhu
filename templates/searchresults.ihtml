@@ -7,10 +7,11 @@
 	  <dd>{SPOTLIST}</dd>
 	  <dt>Days:</dt>
 	  <dd>{DAYLIST}</dd>
-	  <dt>Pictures:</dt>
-	  <dd>{PICLIST}</dd>
 	  <dt>Stories:</dt>
 	  <dd>{TXTLIST}</dd>
+		
+	  <dt>Pictures:</dt>
+	  <dd>{PICLIST}</dd>
 	</dl>
 	
 </div>

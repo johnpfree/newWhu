@@ -27,7 +27,8 @@ $(document).ready(function()
 <div class="jumbotron jumbotron-fluid" id="main_item">
 	<div class="row" id="navcollect">
 			<div class="col-xs-4"><a {VIS_CLASS1} href="?page=pic&type=date&key={PRV_KEY}&id={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
-			<div class="col-xs-4"><a href=?page=pics&type=date&key={THIS_KEY}>{COLLECTION_NAME}</a></div>
+			<div class="col-xs-4"><a href=?page=pics&type=date&key={THIS_KEY}>&uarr;&uarr;</a></div>
+			<div class="col-xs-4"><a href=?page=pics&type=date&key={THIS_KEY}>&uarr; {COLLECTION_NAME} &uarr;</a></div>
 			<div class="col-xs-4"><a {VIS_CLASS2} href="?page=pic&type=date&key={NXT_KEY}&id={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></div>
 	</div> 
          
@@ -66,15 +67,18 @@ $(document).ready(function()
 		margin: 0 auto 20px;
 	}
 	#navcollect div:nth-child(1) {	text-align: left;	 padding-left: 8px; }
-	#navcollect div:nth-child(2) {	text-align: center; font-weight: bold; font-size: 130%;}
-	#navcollect div:nth-child(3) {	text-align: right; padding-right: 8px; }
+	#navcollect div:nth-child(4) {	text-align: right; padding-right: 8px; }
+	
 	@media (max-width: 544px)  {	
-		#navcollect div:nth-child(2) {	
-			visibility: hidden;	
-		}	
+		#navcollect div:nth-child(2) {	display: visible; text-align: center; font-weight: bold; font-size: 130%;}
+		#navcollect div:nth-child(3) {	display: none;}
 		#navcollect {
-			margin: 0 auto;
+			margin: 0 auto 1em;
 		}
+	}
+	@media (min-width: 545px)  {	
+		#navcollect div:nth-child(2) {	display: none; }
+		#navcollect div:nth-child(3) {	text-align: center; font-weight: bold; font-size: 130%;}
 	}
 
 	#pic_label {

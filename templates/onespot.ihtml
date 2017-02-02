@@ -34,7 +34,7 @@
 		</div>
 		<div class="col-sm-4">
 			
-			<div id="mapinsert">{MAP_INSET}</div>
+			{MAP_INSET}
 			
 			<div id="formbox">
 			  <form role="form" id="nearform" method="get" data-toggle="validator">
@@ -67,6 +67,7 @@
 <style type="text/css" media="screen">
 #mapinsert {
 	border: 1px solid #3A5950;
+	width: 100%;
 	padding-bottom: 90%;
 }
 #formbox {

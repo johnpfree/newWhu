@@ -346,7 +346,7 @@
 							WHERE d.wf_stop_name LIKE '$qterm' OR d.wf_stop_desc LIKE '$qterm'
 							OR d.wf_route_name LIKE '$qterm' OR d.wf_route_desc LIKE '$qterm'
 							OR s.wf_spots_name LIKE '$qterm' OR sd.wf_spot_days_desc LIKE '$qterm'";
-				dumpVar($q, "q");
+				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}
 
@@ -810,7 +810,7 @@
 			{
 				$qterm = $parm['searchterm'];
 				$q = "SELECT * FROM wf_images WHERE wf_images_text LIKE '$qterm' OR wf_images_desc LIKE '$qterm' OR wf_images_filename LIKE '$qterm'";
-				dumpVar($q, "q");
+				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}
 

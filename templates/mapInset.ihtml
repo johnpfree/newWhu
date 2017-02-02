@@ -1,3 +1,5 @@
+<div id="mapinsert"></div>
+
 <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
@@ -6,7 +8,7 @@
 L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
 
 var map = L.mapbox.map('mapinsert', 'mapbox.streets')
-		.setView([{SPLAT}, {SPLON}], 6);
+		.setView([{SPLAT}, {SPLON}], 8);
 
 console.log(map);
 
@@ -15,7 +17,7 @@ var markers = [
 		type: 'Feature',
 		geometry: {
 				type: 'Point',
-				coordinates: [{SPLAT}, {SPLON}]
+				coordinates: [{SPLON}, {SPLAT}]
 		},
 		properties: {
 				title: '{SPOT_NAME}',
@@ -25,10 +27,6 @@ var markers = [
 		}
 	},
 ];
-
-for (var i = 0; i < markers.length; i++) {
-	var pt = L.latLng(markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]);
-}
 
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);

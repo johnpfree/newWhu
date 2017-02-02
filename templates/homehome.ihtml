@@ -12,10 +12,10 @@
 			<hr />
 			<p>It's all organized around trips.  A trip has:</p>
 			<ul>
-				<li>a <i>map</i>, </li>
-				<li>a <i>triplog</i> of the days of the trip, </li>
-				<li><i>stories</i>, </li>
-				<li>and a bunch of <i>pictures</i>. </li>	
+				<li>a <a href="?page=map&type=id&key=26"><i>map</i></a>, </li>
+				<li>a <a href="?page=log&type=id&key=26"><i>triplog</i></a> of the days of the trip, </li>
+				<li><a href="?page=txts&type=id&key=26"><i>stories</i></a>, </li>
+				<li>and a bunch of <a href="?page=pics&type=id&key=26"><i>pictures</i></a>. </li>	
 			</ul>
 			<p>There is almost sure to be something interesting for you here, the trick is finding it and convincing you that you want to find it!</p>
 			<hr />
