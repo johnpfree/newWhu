@@ -75,10 +75,18 @@
 				padding: 1rem 0;
 				text-align: center;
 			}
-/*			#contactlink { text-align: right; }*/
-/*			.col-sm-2,.col-sm-3 {
-				border: 1px solid red;
-			}*/
+
+			/* ================================= 
+			 CSS for Bootstrap widgets that use tokens.
+			==================================== */
+			.panel-default>.panel-heading { 
+				background-color: {BOLDCOLOR};
+				color: white;
+			}
+			.panel-default>.panel-heading:hover { 
+				background-color: {LINKHOVER};
+				color: {BOLDCOLOR};
+			}
 		</style>				
 	</head>
 	<body>
