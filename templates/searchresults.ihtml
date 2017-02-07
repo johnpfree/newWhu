@@ -17,4 +17,7 @@
 </div>
 
 <style type="text/css" media="screen">
+dt {
+	margin-top: .6em;
+}
 </style>

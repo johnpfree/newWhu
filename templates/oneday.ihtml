@@ -1,11 +1,8 @@
 <article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 
-	<div class="row" id="navcollect">
-			<div class="col-xs-6"><a href="?page=day&type=date&key={PRV_DATE}">{PRV_LABEL}</a></div>
-			<div class="col-xs-6"><a href="?page=day&type=date&key={NXT_DATE}">{NXT_LABEL}</a></div>
-	</div> 
-	
+{PAGER_BAR}
+
 	<h2>{PRETTY_DATE}</h2>
 	
 	<hr />
@@ -35,9 +32,6 @@
 article.jumbotron	{
   padding-bottom: 1em;
 }
-
-#navcollect div:nth-child(1) {	text-align: left;	}
-#navcollect div:nth-child(2) {	text-align: right;	}
 
 dl { margin-bottom: .5em; }
 dt { font-weight: normal; }

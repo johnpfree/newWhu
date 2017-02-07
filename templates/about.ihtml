@@ -1,28 +1,68 @@
-
 <div class="jumbotron jumbotron-fluid" id="main_item">
 	<h2>W H U F U ~ "Where the f--- is that?"</h2>
-	<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's. But it was in the early 2000's when I started travelling with my laptop and a digital camera that I got the notion to put together an app to try to convey the experiences. </p>		
-		<li>Here is the <a href="http://cloudyhands.com/fall00/fall00.php">first try</a>.</li>
-		<li>Here is the <a href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a>.</li>
-		<li>Here is the massive <a href="http://www.whufu.com/">third try</a>.</li>
-	<p>This is the third try re-designed to be more mobile friendly and I hope, more people friendly.</p>
-	<hr>
-	<li>What is this?</li>
-	<li>Where didit come from?</li>
-	<li>How do I plan trips</li>
-	<li>How do I find stuff?</li>
-	<li>Nerd stuff 
-		<br />- what technology is used
-		<br />- how do I enter all this stuff?
-	</li>
-	<li></li>
-	<hr>
+	
+	<div class="container">
+	  <div class="panel-group" id="accordion">
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Previous Whufus</a>
+	        </h4>
+	      </div>
+	      <div id="collapse1" class="panel-collapse collapse in">
+	        <div class="panel-body">
+						<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's. But it was in the early 2000's when I started travelling with my laptop and a digital camera that I got the notion to put together an app to try to convey the experiences. </p>		
+						<ul>
+							<li>Here is the <a target="_blank" href="http://cloudyhands.com/fall00/fall00.php">first try</a>.</li>
+							<li>Here is the <a target="_blank" href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a>.</li>
+							<li>Here is the massive <a target="_blank" href="http://www.whufu.com/">third try</a>.</li>
+						</ul>
+						<p>This is the fourth try ... really the third try gutted and re-written to be more mobile-friendly and I hope, more people-friendly.</p>
+					</div>
+	      </div>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">How (why?) do I do this?</a>
+	        </h4>
+	      </div>
+	      <div id="collapse2" class="panel-collapse collapse">
+	        <div class="panel-body">
+						<li>What is this?</li>
+						<li>Where didit come from?</li>
+						<li>How do I plan trips</li>
+						<li>How do I find stuff?</li>
+						
+					</div>
+	      </div>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Nerd stuff - tools used, methods</a>
+	        </h4>
+	      </div>
+	      <div id="collapse3" class="panel-collapse collapse">
+	        <div class="panel-body">
+						- what technology is used
+						<br />- how do I enter all this stuff?
 	Tools used - find us on github, Mapbox, Wordpress, Fonts?, Bootstrap? ...
+						
+					</div>
+	      </div>
+	    </div>
+	  </div> 
+	</div>
+	
 </div>
 
 <style type="text/css" media="screen">
-#main_item hr {
-	background-color: #3a5950;
-	height:4px;
+.panel { 
+	background-color: transparent; 
+}
+.panel-default>.panel-heading { 
+	background-color: {BOLDCOLOR};
+	color: white;
 }
 </style>

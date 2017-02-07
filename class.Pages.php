@@ -107,7 +107,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
 				default:			$gotSome = TRUE;
 			}
-			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
+			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='hidden'");
 
 // dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
 			$this->template->set_var("PAGE$i", $k);
@@ -147,7 +147,8 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 				case 'day':		$paltag = 'log'; 	break;
 				default:			$gotSome = TRUE;
 			}
-			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='vis_hidden'");
+			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "style='visibility:hidden;'");
+			// $this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='hidden'");
 
 // dumpVar(boolStr($gotSome), "linkBar($page, $date) $k, $v");
 			$this->template->set_var("PAGE$i", $k);
@@ -157,6 +158,47 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("BACK$i", $this->pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
+	}
+	function pagerBar($page, $type, $settings = array())
+	{
+		$props = array_merge(array('prev' => true, 'next' => true, 'middle' => false, 'pkey' => 0, 'nkey' => 0, 'plab' => "previous", 'nlab' => "next"), $settings);
+		// dumpVar($props, "pager props");
+		
+		$ok = $this->template->setFile('PAGER_BAR', 'pagerbar.ihtml');
+
+		$this->template->set_var("PAGER_PAGE", $page);
+		$this->template->set_var("PAGER_TYPE", $type);
+		if ($props['prev'])
+		{
+			$this->template->set_var("P_VIS", "");
+			$this->template->set_var("P_KEY", $props['pkey']);
+			$this->template->set_var("P_LAB", $props['plab']);
+		}
+		else 
+			$this->template->set_var("VIS_CLASS1", "class='hidden'");
+		if ($props['next'])
+		{
+			$this->template->set_var("N_VIS", "");
+			$this->template->set_var("N_KEY", $props['nkey']);
+			$this->template->set_var("N_LAB", $props['nlab']);
+		}
+		else 
+			$this->template->set_var("VIS_CLASS3", "class='hidden'");
+		
+		// single picture nav needs an id parm, hack it into the key parm
+		if (isset($props['nid']))
+		{
+			$this->template->set_var("P_KEY", sprintf("%s&id=%s", $props['pkey'], $props['pid']));
+			$this->template->set_var("N_KEY", sprintf("%s&id=%s", $props['nkey'], $props['nid']));
+		}
+			
+		if ($props['middle'])
+		{
+			$this->template->set_var("M_VIS", "");
+			$this->template->set_var("M_LAB", $props['mlab']);
+		}
+		else 
+			$this->template->set_var("M_VIS", "class='hidden'");
 	}
 	function addDollarSign($s)	{ return "&#36;$s"; }
 	
@@ -294,9 +336,9 @@ class AllTrips extends ViewWhu
 			$trip = $trips->one($i);
 			$row = array('TRIP_DATE' => $trip->startDate(), 'TRIP_ID' => $trip->id(), 'TRIP_FOLDER' => $trip->folder());
 			$row['TRIP_NAME'] = $trip->name();
-			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='vis_hidden'";		// everybody gets a map!
-			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='vis_hidden'";
-			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='vis_hidden'";
+			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='hidden'";		// everybody gets a map!
+			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='hidden'";
+			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='hidden'";
 			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
 			// dumpVar($row, "row");exit;
 			// dumpVar($row['MAP_CLASS'], "row['MAP_CLASS']");
@@ -343,7 +385,7 @@ class OneTripLog extends ViewWhu
 
 			$row['day_pics'] = $npics = $day->pics()->size();
 			$row['pics_msg'] = $npics;
-			$row['PIC_CLASS'] = $npics > 0 ? '' : "class='vis_hidden'";
+			$row['PIC_CLASS'] = $npics > 0 ? '' : "class='hidden'";
 			
 			$row['wp_id'] = $day->postId();
 // $day->postCatId();
@@ -358,7 +400,7 @@ class OneTripLog extends ViewWhu
 				$row['POST_CLASS'] = '';
 			}
 			else
-				$row['POST_CLASS'] = "class='vis_hidden'";
+				$row['POST_CLASS'] = "class='hidden'";
 				
 			$nodeList[] = $row;		
 		}
@@ -416,8 +458,9 @@ class Gallery extends ViewWhu
 	function showPage()	
 	{
 		$this->template->set_var('GAL_TYPE', $this->galtype);
-		$this->template->set_var('GAL_TITLE', $this->galleryTitle($key = $this->props->get('key')));
+		$this->template->set_var('GAL_TITLE', $this->galleryTitle($key = $this->key));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
+		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
 		
 		// do nav
 		$date = $this->build('DbDay', $key);
@@ -426,6 +469,12 @@ class Gallery extends ViewWhu
 		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
 		$this->template->set_var('NXT_ID', $navd = $date->nextDayGal());
 		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
+		
+		$pageprops = array();
+		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal());
+		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal());
+		$pageprops['mlab'] = $this->galleryTitle($this->key);
+		$this->pagerBar('pics', 'date', $pageprops);		
 
 		$pics = $this->getPictures($key);
 		$this->template->set_var('GAL_KEY', $key);
@@ -452,7 +501,7 @@ class DateGallery extends Gallery
 	var $galtype = "date";   
 	function showPage()	
 	{
-		$this->dayLinkBar('pics', $this->key);		
+		$this->dayLinkBar('pics', $this->key);
 		parent::showPage();
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }	
@@ -525,7 +574,7 @@ class OneMap extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		$this->tripLinkBar('map', $tripid);		
+		$this->tripLinkBar('map', $tripid);	
 		parent::showPage();
 	}
 }
@@ -559,7 +608,7 @@ class SpotMap extends OneMap
 										
 			$types = $spot->prettyTypes();
 			foreach ($types as $k => $v)	{
-				$row['marker_val'] = $markers[$k];			// effectively, the larker is whichever TYPE was last in that field.
+				$row['marker_val'] = $markers[$k];			// effectively, the marker is whichever TYPE was last in that field.
 			}
 			// $row['marker_val'] = $markers[($i % sizeof($markers))];
 
@@ -607,17 +656,14 @@ class OnePic extends ViewWhu
 		// $this->template->set_var('REL_PICPATH', REL_PICPATH);
 		
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $pic->date()));
-		$this->template->set_var('THIS_KEY', $date);
-		$this->template->set_var('VIS_CLASS1', '');
-		$this->template->set_var('VIS_CLASS2', '');
+		
 
-		$this->template->set_var('NXT_TXT', 'next');
-		$this->template->set_var('NXT_KEY', $pic->next()->date());
-		$this->template->set_var('NXT_ID' , $pic->next()->id());
-
-		$this->template->set_var('PRV_TXT', 'previous');
-		$this->template->set_var('PRV_KEY', $pic->prev()->date());
-		$this->template->set_var('PRV_ID' , $pic->prev()->id());
+		$pageprops = array();
+		$pageprops['pkey'] = $pic->next()->date();
+		$pageprops['pid' ] = $pic->next()->id();
+		$pageprops['nkey'] = $pic->prev()->date();
+		$pageprops['nid' ] = $pic->prev()->id();
+		$this->pagerBar('pic', 'date', $pageprops);		
 
 		// pic info
 		$this->template->set_var('DATE', $date);
@@ -657,30 +703,28 @@ class OneDay extends ViewWhu
 		$this->template->set_var('WPID', $wpid = $day->postId());
 		if ($wpid > 0)
 			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
-		$this->template->set_var("VIS_CLASS_TXT", $day->hasStory() ? '' : "class='vis_hidden'");
+		$this->template->set_var("VIS_CLASS_TXT", $day->hasStory() ? '' : "class='hidden'");
 		
 		$this->template->set_var('DAY_DESC', $day->dayDesc());
 		$this->template->set_var('NIGHT_DESC', $day->nightDesc());
 		$this->template->set_var('PM_STOP', $day->nightNameUrl());
 	
 		// do next|prev nav - as long as I have yesterday, show where I woke up today
+		$pageprops = array();
 		$navday = $this->build('DbDay', $d = $day->yesterday());
-
 		if ($navday->hasData)			// for the first day of the trip, there is no yesterday
 		{
 			$this->template->set_var('AM_STOP', $this->build('DayInfo', $d)->nightNameUrl());
-			$this->template->set_var('PRV_DATE', $d);
-			$this->template->set_var('PRV_LABEL', 'yesterday');
-			$this->template->set_var('PRV_LABEL', 'yesterday');
+			$pageprops['plab'] = 'yesterday';
+			$pageprops['pkey'] = $d;
 		}
 		else {
 			$this->template->set_var('AM_STOP', 'home');
-			$this->template->set_var('PRV_LABEL', '');
-		}
-		
-		$navday = $this->build('DbDay', $d = $day->tomorrow());
-		$this->template->set_var('NXT_DATE', $d);
-		$this->template->set_var('NXT_LABEL', $navday->hasData ? 'tomorrow' : '');
+			$pageprops['prev'] = false;
+		}		
+		$pageprops['nlab'] = 'tomorrow';
+		$pageprops['nkey'] = $d;
+		$this->pagerBar('day', 'date', $pageprops);		
 
 		$this->dayLinkBar('day', $dayid);		
 		parent::showPage();
@@ -819,12 +863,21 @@ class TripStory extends ViewWhu
 		$this->template->set_var('POST_TITLE', $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());
 		
+		//  	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previous()));
+		// $this->template->set_var('PRV_TXT', $navpost->title());
+		// $this->template->set_var('PRV_ID', $navid);
+		//
+		// $this->template->set_var('NXT_TXT', $navpost->title());
+		// $this->template->set_var('NXT_ID', $navid);
+		
+		$pageprops = array();
  	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previous()));			
-		$this->template->set_var('PRV_TXT', $navpost->title());
-		$this->template->set_var('PRV_ID', $navid);
+		$pageprops['plab'] = $navpost->title();
+		$pageprops['pkey'] = $navid;
  	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->next()));			
-		$this->template->set_var('NXT_TXT', $navpost->title());
-		$this->template->set_var('NXT_ID', $navid);
+		$pageprops['nlab'] = $navpost->title();
+		$pageprops['nkey'] = $navid;
+		$this->pagerBar('txt', 'wpid', $pageprops);		
 
 		// $dates = $post->dates();
 		// $days = $this->build('DbDays', $dates);
@@ -941,11 +994,19 @@ class SearchResults extends ViewWhu
 		$this->template->set_var('DAYLIST', $str);
 		
 		$pics = $this->build('Pics', array('searchterm' => $qterm));
-		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $pics->size(); $i++)
+		for ($i = 0, $days = array(); $i < $pics->size(); $i++)
 		{
 			$pic = $pics->one($i);
-			$str .= sprintf("<a href='?page=pic&type=date&key=%s&id=%s'>%s</a> &bull; ", $day->date(), $pic->id(), Properties::prettyDate($day->date()));
+			if (isset($days[$date = $pic->date()]))
+				$days[$date]++;
+			else
+				$days[$date] = 1;
 		}	
+		$str = '&bull;';
+		foreach ($days as $k => $v) 
+		{
+			$str .= sprintf("<a href='?page=pics&type=date&key=%s'>%s(%s)</a> &bull; ", $k, Properties::prettyDate($k), $v);
+		}
 		$this->template->set_var('PICLIST', $str);
 
 		$txts = $this->build('Posts', array('searchterm' => $this->key));

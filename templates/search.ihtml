@@ -1,155 +1,136 @@
 
 <div class="container"id="main_item">
-	<h2>Find Spots near a location</h2>
-  <form role="form" id="loc_srch" data-toggle="validator">
-    <div class="form-group row">
-      <label for="search_term" class="col-sm-1 col-form-label">Location:</label>
-      <div class="col-sm-5">
-        <input type="text" class="form-control" name="search_term" id="search_term" placeholder="City, State or ZIP" required>
-      </div>
-      <label for="search_radius" class="col-sm-1 col-form-label">Radius:</label>
-      <div class="col-sm-2">
-        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
-      </div>
-      <div class="col-sm-2" id="search_near">         
-        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
-      </div>
-    </div>
+  <h2>Finding Spots</h2>
+	
+	<form role="form" id="spot_srch" data-toggle="validator">
+	  <div class="panel-group">
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse1">Find Spots near a location</a>
+	        </h4>
+	      </div>
+	      <div id="collapse1" class="panel-collapse collapse.show">
+	        <div class="panel-body">
+				    <div class="form-group row">
+				      <label for="search_term" class="col-sm-1 col-form-label">Location:</label>
+				      <div class="col-sm-5">
+				        <input type="text" class="form-control" name="search_term" id="search_term" placeholder="City, State or ZIP" required>
+				      </div>
+				      <label for="search_radius" class="col-sm-1 col-form-label">Radius:</label>
+				      <div class="col-sm-2">
+				        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
+				      </div>
+				      <div class="col-sm-2" id="search_near">         
+				        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+				      </div>
+				    </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse5">State / Region</a>
+	        </h4>
+	      </div>
+	      <div id="collapse5" class="panel-collapse collapse">
+	        <div class="panel-body">
+				    <div class="form-group row">
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">North Cali</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon Coast</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Nevada</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Utah</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Idaho</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">New Mexico</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Oklahoma</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Corn Belt</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">East</label>
+								<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">South</label>
+				    </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse2">Type of campground</a>
+	        </h4>
+	      </div>
+	      <div id="collapse2" class="panel-collapse collapse">
+	        <div class="panel-body">
+				    <div class="form-group row">
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; 
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">National Park</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Army Corp of Engineers</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; 
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid5"> <label for="fid5">State Park</label> &nbsp; 
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid6"> <label for="fid6">City/County Park</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid7"> <label for="fid7">Private Campground</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid8"> <label for="fid8">just a place to park</label>
+				    </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse3">Campground features:</a>
+	        </h4>
+	      </div>
+	      <div id="collapse3" class="panel-collapse collapse">
+	        <div class="panel-body">
+						<p>cost:
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label>
+							<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5> 
+						</p>                
+						<p class="indented">amenities:
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">hot water</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">quiet</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shady</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">electricity</label>
+							<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">swimming</label>
+						</p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
   </form>
-	<hr />		
-	<h2>Find Overnights by feature</h2>
-  <form role="form" id="feat_srch" data-toggle="validator">
-
-<!-- FROM spots home -->
-		<!-- Show only: &nbsp; &nbsp;
-		<input type="checkbox" {CHK_chkcamp} name="search_fld[]" value="chkcamp" id="chkcamp"> <label for="">camping</label> &nbsp; &nbsp;
-		<input type="checkbox" {CHK_chklodg} name="search_fld[]" value="chklodg" id="chklodg"> <label for="">lodging</label> &nbsp; &nbsp;
-		<input type="checkbox" {CHK_chkhspr} name="search_fld[]" value="chkhspr" id="chkhspr"> <label for="">hot springs</label> &nbsp; &nbsp;
-		<input type="checkbox" {CHK_chknwrf} name="search_fld[]" value="chknwrf" id="chknwrf"> <label for="">wildlife refuges</label> &nbsp; &nbsp;
-		<input type="submit" name="submit" value="Show"> -->
-
-		<h4>Type of Spot</h4>
-    <div class="form-group row">
-      <div class="col-sm-2">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">campground</label>
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse4">Direct Links to Non-Camping Spots</a>
+        </h4>
       </div>
-      <div class="col-sm-2">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">lodging</label>
-      </div>
-      <div class="col-sm-2">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">parking lot</label>
+      <div id="collapse4" class="panel-collapse collapse">
+        <div class="panel-body">
+					<div class="row">
+						<div class="col-xs-4"><a href="?page=home&type=spot&key=HOTSPR">Hot Springs</a></div>
+						<div class="col-xs-4"><a href="?page=home&type=spot&key=NWR">Wildlife Refuges</a></div>
+						<div class="col-xs-4"><a href="?page=home&type=spot&key=LODGE">Lodging</a></div>
+					</div>
+        </div>
       </div>
     </div>
-		<h4>Type of Campground</h4>
-    <div class="form-group row">
-      <div class="col-sm-4">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; 
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">National Park</label>
-      </div>
-      <div class="col-sm-4">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid5"> <label for="fid5">State Park</label> &nbsp; 
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Army Corp of Engineers</label>
-      </div>
-      <div class="col-sm-4">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; 
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid6"> <label for="fid6">City/County Park</label>
-      </div>
-      <div class="col-sm-6">
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid7"> <label for="fid7">Private Campground</label>
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid8"> <label for="fid8">just a parking lot</label>
-				<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid9"> <label for="fid9">City/County Park</label>
-      </div>
-    </div>
-  </form>
-	<hr />		
 </div>
 	
-<div>	
-
-		<p>cost:
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label>
-			<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5> 
-		</p>                
-	
-		<p class="indented">amenities:
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">hot water</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">quiet</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shady</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">electricity</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">swimming</label>
-		</p>                
-
-		<p class="indented">area:
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">North Cali</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">Oregon Coast</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Nevada</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Utah</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Idaho</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">New Mexico</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Oklahoma</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">Corn Belt</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">East</label>
-			<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">South</label>
-		</p>                
-	
-		<p><input type="submit" name="search_for_spots" value="Search for Spots"></p>
-	</form>
 
 <style type="text/css" media="screen">
-
-#Xloc_srch .col-sm-* {
-	margin: 1em 0;
+.panel-default>.panel-heading { 
+	background-color: {BOLDCOLOR};
+	color: white;
 }
-#search_near {
+
+.collapse4.col-xs-4 {
 	text-align: center;
 }
-xdiv[class^='col-sm-'] {
-	border: 1px solid red;
-}
-
-label {
-	text-align: right;
-}
-button {
-	text-align: center;
-}
-
-Xform {
-	width: 100%;
-	padding: 4px 12px;
-/*}
-#txt_srch {*/
-		border: 1px solid {BORDERCOLOR};
-}
-#Xspot_srch p {
-	padding-bottom: 6px;
-	margin-bottom: 12px;
-	border-bottom: 1px solid {BORDERCOLOR};
-}   
-#main_panel {
-	padding: 0px 30px 20px;
-	margin: 0 auto;
-	width: 100%;
-}
-#main_panel p {
-	font-weight: bold;
-	font-size: 140%;
-}
-#main_panel form p {
-	font-weight: normal;
-	font-size: 100%;
-}
-.indented {
-	text-indent: -40px;
-	padding-left: 40px;
-}}
 </style>

@@ -1,3 +1,4 @@
+<!-- Linkbar -->
 <div class="row" id="linkbar">
 	<div class="col-xs-4" style="background-color: {BACK1}"><a {VIS_CLASS1} href="?page={PAGE1}&type={TYPE1}&key={KEY1}">{LABEL1}</a></div>
 	<div class="col-xs-4" style="background-color: {BACK2}"><a {VIS_CLASS2} href="?page={PAGE2}&type={TYPE2}&key={KEY2}">{LABEL2}</a></div>
@@ -14,3 +15,9 @@
 		border: 1px solid #3a5950;
 	}
 </style>
+
+<!-- <ul class="nav nav-pills nav-justified" role="tablist" id="linkbar">
+  <li style="background-color: {BACK1}"><a {VIS_CLASS1} href="?page={PAGE1}&type={TYPE1}&key={KEY1}">{LABEL1}</li>
+  <li style="background-color: {BACK2}"><a {VIS_CLASS2} href="?page={PAGE2}&type={TYPE2}&key={KEY2}">{LABEL2}</li>
+  <li style="background-color: {BACK3}"><a {VIS_CLASS3} href="?page={PAGE3}&type={TYPE3}&key={KEY3}">{LABEL3}</li>
+</ul> -->

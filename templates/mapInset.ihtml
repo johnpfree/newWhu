@@ -10,6 +10,8 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N
 var map = L.mapbox.map('mapinsert', 'mapbox.streets')
 		.setView([{SPLAT}, {SPLON}], 8);
 
+map._onResize();			// force window to completely render
+
 console.log(map);
 
 var markers = [
@@ -22,7 +24,7 @@ var markers = [
 		properties: {
 				title: '{SPOT_NAME}',
 				description: '{SPOT_TOWN}',
-				'marker-symbol': '7',
+				'marker-symbol': 'star',
 				'marker-color': '#8c54ba'
 		}
 	},

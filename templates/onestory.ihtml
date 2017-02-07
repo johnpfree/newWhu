@@ -1,20 +1,13 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
 	<h1><a href="?page=txts&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 
-	<div class="row" id="navcollect">
-			<div class="col-xs-6"><a {VIS_CLASS1} href="?page=txt&type=wpid&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
-			<div class="col-xs-6"><a {VIS_CLASS2} href="?page=txt&type=wpid&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></div>
-	</div> 
+{PAGER_BAR}
 	
 	<h2>{POST_TITLE}</h2>
 
 	<div class=entry-content>{POST_CONTENT}</div>
 
-	<div class="row" id="navcollect">
-			<div class="col-xs-6"><a {VIS_CLASS1} href="?page=txt&type=wpid&key={PRV_ID}"> <span class="meta-nav">&larr;</span>{PRV_TXT}</a></div>
-			<div class="col-xs-6"><a {VIS_CLASS2} href="?page=txt&type=wpid&key={NXT_ID}">{NXT_TXT} <span class="meta-nav">&rarr;</span></a></div>
-	</div> 
-</div>
+{PAGER_BAR}
 {LINK_BAR}
 
 <style type="text/css" media="screen">
@@ -22,9 +15,6 @@
 .jumbotron {
 	padding-bottom: 0px;
 }
-
-#navcollect div:nth-child(1) {	text-align: left;	}
-#navcollect div:nth-child(2) {	text-align: right;	}
 
 .entry-content {  
 	padding: 10px;

@@ -30,6 +30,7 @@
 		    margin: 0;
 				color: {BODYCOLOR};
 				background-color: {BBACKCOLOR};
+			  font: 16px/26px Roboto, Arial, sans-serif;
 			}
 			.boxborder {
 				border: 2px solid {BORDERCOLOR};
@@ -119,7 +120,9 @@
 	</header>
 
 
-	<div id="the_content" class="container">{THE_CONTENT}</div> <!-- #the_content -->
+	<div id="the_content" class="container">
+{THE_CONTENT}
+	</div> <!-- #the_content -->
 
 	<footer>
 	  <div class="container">
