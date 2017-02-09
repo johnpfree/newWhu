@@ -120,8 +120,14 @@ else if ($props->isProp('comment_form')) {		// comment form
 	// user_id	=> 6
 	
 }
-else if ($props->isProp('search_near')) {		// comment form
+else if ($props->isProp('search_near')) {
 	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
+}
+else if ($props->isProp('search_places')) {	
+	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
+}
+else if ($props->isProp('search_types')) {	
+	$props->pagetypekey('map', 'near', $props->get('search_types'));	
 }
 
 $curpage = $props->get('page');
@@ -146,14 +152,17 @@ switch ("$curpage$curtype")
 	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'mapspot':			$page = new SpotMap($props);			break;	
 	case 'mapnear':			$page = new NearMap($props);			break;	
+	case 'mapplace':		$page = new PlaceMap($props);			break;	
 	
 	case 'txtsid':			$page = new TripStories($props);			break;	
 	case 'txtwpid':			$page = new TripStory($props);				break;
 	case 'txtdate':			$page = new TripStoryByDate($props);	break;
 	
-	case 'tripshome':		$page = new AllTrips($props);			break;	
-	case 'spotshome':		$page = new SpotsHome($props);		break;
-	case 'spotstype':		$page = new SpotsTable($props);		break;
+	case 'tripshome':		$page = new AllTrips($props);				break;	
+	case 'spotshome':		$page = new SpotsHome($props);			break;
+	case 'spotstype':		$page = new SpotsTypes($props);			break;
+	case 'spotskey':		$page = new SpotsKeywords($props);	break;
+	case 'spotsplace':	$page = new SpotsPlaces($props);		break;
 	
 	case 'searchhome':	$page = new Search($props);				break;
 	case 'searchtext':	$page = new SearchResults($props);	break;

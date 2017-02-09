@@ -5,23 +5,27 @@
 	  <div class="panel-group" id="accordion">
 	    <div class="panel panel-default">
 	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-	        <h4 class="panel-title">Previous Whufus</h4>
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse1">Previous Whufus</a>
+	        </h4>
 	      </div>
 	      <div id="collapse1" class="panel-collapse collapse in">
 	        <div class="panel-body">
-						<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's. But it was in the early 2000's when I started travelling with my laptop and a digital camera that I got the notion to put together an app to try to convey the experiences. </p>		
+						<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's, but it wasn't the technology developments of the early 2000's, when I started travelling with my laptop and a digital camera, that I got the notion to put together an app to try to convey the experiences. </p>		
 						<ul>
 							<li>Here is the <a target="_blank" href="http://cloudyhands.com/fall00/fall00.php">first try</a>.</li>
 							<li>Here is the <a target="_blank" href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a>.</li>
 							<li>Here is the massive <a target="_blank" href="http://www.whufu.com/">third try</a>.</li>
 						</ul>
-						<p>This is the fourth try ... really the third try gutted and re-written to be more mobile-friendly and I hope, more people-friendly.</p>
+						<p>This website is the fourth try ... really the third try gutted and re-written to be more mobile-friendly and I hope, more people-friendly.</p>
 					</div>
 	      </div>
 	    </div>
 	    <div class="panel panel-default">
 	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-	        <h4 class="panel-title">How (why?) do I do this?</h4>
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse2">How (why?) do I do this?</a>
+	        </h4>
 	      </div>
 	      <div id="collapse2" class="panel-collapse collapse">
 	        <div class="panel-body">
@@ -29,20 +33,58 @@
 						<li>Where didit come from?</li>
 						<li>How do I plan trips</li>
 						<li>How do I find stuff?</li>
-						
 					</div>
 	      </div>
 	    </div>
 	    <div class="panel panel-default">
 	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-	        <h4 class="panel-title">Nerd stuff - tools used, methods</h4>
-	      </div>
+	        <h4 class="panel-title">
+	          <a data-toggle="collapse" href="#collapse3">Nerd stuff - tools used, methods</a>
+	        </h4>
+	      </div>				
 	      <div id="collapse3" class="panel-collapse collapse">
 	        <div class="panel-body">
-						- what technology is used
-						<br />- how do I enter all this stuff?
-	Tools used - find us on github, Mapbox, Wordpress, Fonts?, Bootstrap? ...
-						
+						<ul>
+							<li>
+								<dl>
+									<dt>maps:</dt>
+									<dd>I now use Mapbox to render all the maps.  The overnight spots are always rendered from GPS information in the WHUFU database. The routes are drawn by hand using Google Maps.  Some trips have route maps, and some don't. For the ones that don't I connect the overnight spots with straight lines.</dd>
+								</dl>
+							</li>
+							<li>
+								<dl>
+									<dt>stories:</dt>
+									<dd>I write my stories as Wordpress blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
+										To display a story in WHUFU I actually crank up Wordpress to rendersthe content into a <strong>div</strong>.<br />
+										Doing it this way means I have to export them from my laptop Wordpress and import them to my server Wordpress, one of the least satisfying parts of this process, since any updates I do need to be made both places.
+									</dd>
+								</dl>
+							</li>
+							<li>
+								<dl>
+									<dt>Internal techie stuff:</dt>
+									<dd>
+										<ul>
+											<li>I use an ancient templating class called <strong>template.inc</strong>. I’ve built my own set of classes around it, mostly to encapsulate it's non-user-friendly looping conventions. It does pretty much everything I need.</li>
+											<li>All the responsive behavior is from <strong>Bootstrap</strong>. It's pretty cool.</li>
+											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here.</li>
+											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there.</li>
+											<li>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Back home I export that as CSV, then run a little PHP program to read the CSV and create day records in the database. Basically everything interconnects using the Trips table and the Days table.</li>
+											<li>
+												I have quite an extensive set of backend tools for entering all the data for WHUFU:
+												<ul>
+													<li>the mileage spreadsheet reader mentinoed above</li>
+													<li>A Spot manager app for entering and editing Spots</li>
+													<li>After I have winnowed down all the pictures to the ones I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data.</li>
+													<li>Then I run a Picture entry app which reads a folder of image names and creates database records for them</li>
+													<li>Then I run a Picture captioning app, to label each one and assign keywords.</li>
+												</ul>
+											</li>
+										</ul>
+									</dd>
+								</dl>
+							</li>
+						</ul>
 					</div>
 	      </div>
 	    </div>

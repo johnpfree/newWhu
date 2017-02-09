@@ -87,6 +87,9 @@
 				background-color: {LINKHOVER};
 				color: {BOLDCOLOR};
 			}
+			.panel-default>.panel-heading a:hover { 
+				color: {BOLDCOLOR};
+			}
 		</style>				
 	</head>
 	<body>
@@ -136,7 +139,7 @@
 	  <div class="container">
 			<div class="row" id="main-footer">
 				<div class="col-sm-3">
-					&copy; 2010-201 John P Freeman
+					&copy; 2010-2017 John P Freeman
 				</div>
 				<div class="col-sm-2">
 					<a href="http://www.cloudyhands.com/">cloudyhands.com</a> 

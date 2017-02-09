@@ -8,22 +8,13 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<p>Number of visits: {SPOT_NUM}</p>
-			<div class="">Days visited (posted cost | senior cost):</div>
-			<div id="linklist">
-				<!-- BEGIN rows -->
-					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE} ({SPCOSTS})</a></span>
-				&bull; 
-					<!-- END rows -->	
-			</div>
 
-			<hr />
-			<p><i>gps: </i><a href="?page=map&type=spot&key={SPOT_ID}">{SPLAT},{SPLON}</a></p>
+			<p><i>gps: </i>{SPLAT},{SPLON}</p>
 			<p>
 				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
-
 			<hr />
-			<div class="">Spot keywords:</div>
+			<div>Spot keywords:</div>
 			<div id="linklist">
 				&bull; 
 				<!-- BEGIN keyrows -->
@@ -31,6 +22,17 @@
 				&bull; 
 					<!-- END keyrows -->	
 			</div>
+
+			<hr />
+
+			<div id="day_head">Days visited (posted cost | senior cost):</div>
+			<div id="linklist">
+				<!-- BEGIN rows -->
+					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
+					<p class="day_desc">{SPDESC}</p>
+					<!-- END rows -->	
+			</div>
+
 		</div>
 		<div class="col-sm-4">
 			
@@ -58,13 +60,15 @@
 		</div>
 	</div>	
 </article>
-	<hr />
-	Where is it? Show me a map.<br />
-	Other details - cost, gps<br />
-	description of my visits	<br />
-	<br />
 
 <style type="text/css" media="screen">
+#day_head {
+	margin-bottom: 1em;
+	border-bottom: 1px solid #3A5950;
+}
+.day_desc:first-letter {
+  text-transform: uppercase;
+}
 #mapinsert {
 	border: 1px solid #3A5950;
 	width: 100%;

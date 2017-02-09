@@ -277,17 +277,21 @@ class SpotsHome extends ViewWhu
 {
 	var $file = "spotshome.ihtml";
 	var $searchterms = array('CAMP' => 'wf_spots_types', 'usfs' => 'wf_spots_status', 'usnp' => 'wf_spots_status');
-	var $title = "A Random Selection of Spots";
+	var $title = "Spots";
 	function showPage()	
 	{
 		parent::showPage();
 		
-		$this->template->set_var("TITLE", $this->title);
 		$spots = $this->build('DbSpots', $this->searchterms);
 		
 		$maxrows = 60;
 		if ($spots->size() > $maxrows)
+		{
 			shuffle($spots->data);
+			$this->template->set_var("TITLE", "A Random Selection of " . $this->title);
+		}
+		else
+			$this->template->set_var("TITLE", $this->title);
 		
 		for ($i = 0, $rows = array(); $i < min($maxrows, $spots->size()); $i++)
 		{
@@ -311,12 +315,37 @@ class SpotsHome extends ViewWhu
 	}
 	function getCaption()	{	return "Browse Spots";	}
 }
-class SpotsTable extends SpotsHome
+class SpotsTypes extends SpotsHome
 {
 	function showPage()	
 	{
-		$this->title = ($this->key == "NWR") ? "Wildlife Refuges" : "Hot Springs";
+		$spottypes = array(
+					'LODGE'		=> 'Lodging',
+					'HOTSPR'	=> 'Hot Springs',
+					'NWR'			=> 'Wildlife Refuges',
+					);
+		$this->title = $spottypes[$this->key];
+		// $this->title = ($this->key == "NWR") ? "Wildlife Refuges" : "Hot Springs";
 		$this->searchterms = array($this->key => 'wf_spots_types');
+		parent::showPage();
+	}
+}
+class SpotsKeywords extends SpotsHome
+{
+	function showPage()	
+	{
+		$this->title = sprintf("Spots with keyword: <i>%s</i>", $this->key);
+		$this->searchterms = array('wf_spot_days_keywords' => $this->key);
+		parent::showPage();
+	}
+}
+class SpotsPlaces extends SpotsHome
+{
+	function showPage()	
+	{
+		$cat = $this->build('Category', $this->key);	
+		$this->title = sprintf("Spots in: <i>%s</i>", $cat->name());
+		$this->searchterms = array('wf_categories_id' => $this->key);
 		parent::showPage();
 	}
 }
@@ -659,10 +688,10 @@ class OnePic extends ViewWhu
 		
 
 		$pageprops = array();
-		$pageprops['pkey'] = $pic->next()->date();
-		$pageprops['pid' ] = $pic->next()->id();
-		$pageprops['nkey'] = $pic->prev()->date();
-		$pageprops['nid' ] = $pic->prev()->id();
+		$pageprops['pkey'] = $pic->prev()->date();
+		$pageprops['pid' ] = $pic->prev()->id();
+		$pageprops['nkey'] = $pic->next()->date();
+		$pageprops['nid' ] = $pic->next()->id();
 		$this->pagerBar('pic', 'date', $pageprops);		
 
 		// pic info
@@ -671,7 +700,7 @@ class OnePic extends ViewWhu
 		$this->template->set_var('PIC_TIME', $pic->time());
 		$this->template->set_var('PIC_CAMERA', $pic->cameraDesc());
 		// keywords
-		$keys = $this->build('PicKeywords', array('picid' => $picid));
+		$keys = $this->build('Categorys', array('picid' => $picid));
 		for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
 		{
 			$key = $keys->one($i);	
@@ -779,6 +808,7 @@ class OneSpot extends ViewWhu
 			// $day->dump($i);
 			$row = array('stay_date' => $date = $day->date());
 			$row['nice_date'] = Properties::prettyDate($date);
+			$row['spdesc'] = $day->desc();
 
 			if (($cost = $day->cost()) > 0)
 			{
@@ -926,6 +956,26 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
+		$placeCats = array(-106, 109, -113, 70, 110, 111, 120, 121, 112, 108, 107, 105, 103, 173, 91, 83, 80, 128);
+		// $addKids = array(105 => array(64), 91 => array(170), 83 => array(87, 77, 76, 88), 80 => array(81, 85, 86, 90, 92), 128 => array(131, 132));
+		
+		for ($i = 0, $rows = array(); $i < sizeof($placeCats); $i++) 
+		{
+			$parms = array('wf_categories_id' => ($id = abs($placeCats[$i])));
+			$parms['kids'] = ($placeCats[$i] > 0);		// little hack, negative number above means do NOT loop through children
+			
+			$spots = $this->build('DbSpots', $parms);
+			$cat = $this->build('Category', $id);
+			$row = array('spid' =>$id, 'spcount' => $spots->size(), 'spname' => $cat->name());
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
+		
+		
+		
+
+		
 		$opts = array();			// assume show all
 		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
 		{

@@ -53,9 +53,11 @@
 		function isSpotRecord($key)				{	return (is_array($key) && isset($key['wf_spots_id']));	}
 		function isSpotDayRecord($key)		{	return (is_array($key) && isset($key['wf_spot_days_date']));	}
 		function isSpotDayParmsArray($key){	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
+		function isSpotCatSearch($key)		{	return (is_array($key) && isset($key['wf_categories_id']));	}
+		function isSpotKeySearch($key)		{	return (is_array($key) && isset($key['wf_spot_days_keywords']));	}
 		function isTripRecord($key)				{	return (is_array($key) && isset($key['wf_trips_id']));	}
 		function isPicRecord($key)				{	return (is_array($key) && isset($key['wf_images_id']));	}
-		function isPicCatRecord($key)			{	return (is_array($key) && isset($key['wf_categories_id']));	}
+		function isCategoryRecord($key)		{	return (is_array($key) && isset($key['wf_categories_parent']));	}		// spots also have a cat id
 		function isDayRecord($key)				{	return (is_array($key) && isset($key['wf_days_date']));	}
 		function isTextSearch($key)				{	return (is_array($key) && isset($key['searchterm']));	}
 
@@ -539,7 +541,7 @@
 				// dumpVar($spotDay->keywords(), "spotDay->keywords()");
 				// dumpVar($allkeys, "$i keys");
 			}
-			return array_flip($allkeys);
+			return array_merge(array_flip($allkeys));			// flipped there may be holes in the array, merge reorders it with no holes
 		}
 
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
@@ -589,7 +591,34 @@
 			);
 			if (sizeof($searchterms) == 0)			// show all
 			{
-				$where = " WHERE " . $this->excludeString;				
+				$where = " WHERE " . $this->excludeString;
+			}
+			else if ($this->isSpotCatSearch($searchterms))
+			{
+				$q = sprintf("select * FROM wf_spots WHERE wf_categories_id=%s", ($id = $searchterms['wf_categories_id']));
+				$ret = $this->getAll($q);
+				// dumpVar(sizeof($ret), "$q -> ret=");	
+				
+				if (isset($searchterms['kids']) && $searchterms['kids']) 
+				{
+					$q = sprintf("select * FROM wf_categories WHERE wf_categories_parent=%s", $id);
+					$items = $this->getAll($q);
+					// dumpVar(sizeof($items), "$q -> items=");
+					for ($i = 0; $i < sizeof($items); $i++) 		// just do one level search, haven't implemented recursive
+					{
+						$q = sprintf("select * FROM wf_spots WHERE wf_categories_id=%s", $items[$i]['wf_categories_id']);
+						// dumpVar(sizeof($ret), "$q -> ret $i =");
+						$ret = array_merge($ret, $this->getAll($q));
+					}
+				}
+				return $ret;
+			}
+			else if ($this->isSpotKeySearch($searchterms))
+			{
+				$clean = $this->real_escape_string($key = $searchterms['wf_spot_days_keywords']);
+				$q = "select s.* from wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE d.wf_spot_days_keywords LIKE '%$clean%'";
+				// dumpVar($searchterms, "$q, searchterms");
+				return $this->getAll($q);	
 			}
 			else
 			{
@@ -603,14 +632,6 @@
 			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
 			// dumpVar($searchterms, "$q - st");
 			return $this->getAll($q);
-
-			// $props = new Properties(array())
-			// for ($i = 0, $wherestr = ''; $i < sizeof($deflts['where']); $i++)
-			// {
-			// 	$wherestr .= sprintf('%s %s', ($i == 0) ? 'WHERE' : "AND", $deflts['where'][$i]);
-			// 	dumpVar($wherestr, "$i wherestr");
-			// }
-			// dumpVar($wherestr, "wherestr");
 		}
 	}	
 	class WhuDbSpotDay extends WhuThing 
@@ -898,11 +919,11 @@
 		}
 	}
 	
-	class WhuPicKeyword extends WhuThing 
+	class WhuCategory extends WhuThing 
 	{
-		function getRecord($key)		// key = pic id
+		function getRecord($key)		// key = cat id
 		{
-			if ($this->isPicCatRecord($key))
+			if ($this->isCategoryRecord($key))
 				return $key;
 			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
 		}
@@ -910,7 +931,7 @@
 		function name()		{ return $this->dbValue('wf_categories_text'); }
 		function parent()	{ return $this->dbValue('wf_categories_parent'); }
 	}
-	class WhuPicKeywords extends WhuPicKeyword 
+	class WhuCategorys extends WhuCategory 
 	{
 		var $isCollection = true;
 		function getRecord($parm)	//  picid
