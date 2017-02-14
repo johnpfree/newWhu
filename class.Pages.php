@@ -206,16 +206,15 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	function setLittleMap($coords)
 	{
 // dumpVar($coords, "setLittleMap");
-		if (sizeof($coords) == 0)
+		if (!isset($coords['lat']))
 		{
 			$this->template->set_var("MAP_INSET", 
-					"<i class=smaller><br />Apparently the iPhone<br /> couldn't geolocate<br /> this pic.</i>");
+					"<i class=smaller><br />Apparently the camera<br /> couldn't geolocate<br /> this pic.</i>");
 			return;
 		}
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
 		foreach ($coords as $k => $v) 
 		{
-			// dumpVar($v, "v, VAL_$k");
 			$this->template->set_var("PT_$k", addslashes($v));
 		}
 	}
@@ -516,6 +515,8 @@ class Gallery extends ViewWhu
 			if ($i == 0)
 		 		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
 			$row = array('PIC_ID' => $pic->id(), 'PIC_name' => $pic->filename(), 'PIC_CAPTION' => $pic->caption());
+			
+			$row['binpic'] = $pic->thumbImage();
 			$rows[] = $row;
 			// if ($i > 4) break;
 		}
@@ -683,7 +684,7 @@ class OnePic extends ViewWhu
 	{
 		parent::showPage();
 
- 	 	$pic = $this->build('FilePic', $picid = $this->props->get('id'));
+ 	 	$pic = $this->build('Pic', $picid = $this->props->get('id'));
 		
 		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
 		$this->template->set_var('WF_IMAGES_FILENAME', $pic->filename());
@@ -718,7 +719,7 @@ class OnePic extends ViewWhu
 		$loop->do_loop($rows);
 		
 		$gps = $pic->latlon();
-		$this->setLittleMap(array('lat' => $gps['lat'], 'lon' => $gps['lon'], 'name' => Properties::prettyDate($date), 'desc' => $pic->caption()));
+		$this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($date), 'desc' => $pic->caption())));
 	}
 }
 

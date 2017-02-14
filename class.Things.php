@@ -830,6 +830,50 @@
 			$items = $this->getAll($q);
 			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
 		}
+		
+		// imapge FILE stuff - extract GPS, extract thumbnail
+		function latlon()
+		{
+			$fullpath = $this->fullpath();		
+			$exif = @exif_read_data($fullpath);
+		
+			if (isset($exif["GPSLongitude"]))
+			{
+				return array(
+					'lon'  => $this->getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']), 
+					'lat'  => $this->getGps($exif["GPSLatitude"], $exif['GPSLatitudeRef']),
+				);
+			}
+			return array();		// empty array == no latlon in the exif data
+		}
+		function getGps($exifCoord, $hemi) 
+		{
+			$degrees = count($exifCoord) > 0 ? $this->gps2Num($exifCoord[0]) : 0;
+			$minutes = count($exifCoord) > 1 ? $this->gps2Num($exifCoord[1]) : 0;
+			$seconds = count($exifCoord) > 2 ? $this->gps2Num($exifCoord[2]) : 0;
+
+			$flip = ($hemi == 'W' or $hemi == 'S') ? -1 : 1;
+			return $flip * ($degrees + $minutes / 60 + $seconds / 3600);
+		}
+		function gps2Num($coordPart) 
+		{
+			$parts = explode('/', $coordPart);
+			if (count($parts) <= 0)		return 0;
+			if (count($parts) == 1)		return $parts[0];
+			return floatval($parts[0]) / floatval($parts[1]);
+		}
+		function fullpath() { return sprintf("%s%s/%s", iPhotoPATH, $this->folder(), $this->filename());	}
+	
+		function thumbImage()
+		{
+			$fullpath = $this->fullpath();		
+			$xb = exif_thumbnail($fullpath, $xw, $xh, $xm);
+	// dumpVar(($xb ? "yes" : "no"), "$j={$pic['wf_images_id']} exif_thumbnail({$pic['wf_images_id']}, $xw, $xh, $xm)");
+			// $tmb = array("wid" => $this->scale($xw), "hgt" => $this->scale($xh));
+			// $tmb["binpic"]		= base64_encode($xb);
+			// return $tmb;
+			return base64_encode($xb);
+		}
 	}
 	class WhuPics extends WhuPic 
 	{

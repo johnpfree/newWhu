@@ -8,14 +8,14 @@
 		<!-- BEGIN rows -->
 		<p>
 			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
-				<img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+				<!-- <img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" /> -->
+				<img class="img-rounded img-responsive squareme" src="data:image/jpg;base64,{BINPIC}">
 			</a>		
 		</p>
 		<!-- END rows -->
 	</div>
 {LINK_BAR}
 </div>
-
 
 <style type="text/css" media="screen">
 
