@@ -649,9 +649,19 @@
 		}
 		function id()			{ return $this->dbValue('wf_spots_id'); }
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
-		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
 		function cost()		{ return $this->dbValue('wf_spot_days_cost'); }
 		function senior()		{ return $this->dbValue('wf_spot_days_senior'); }
+		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
+		function htmldesc()	
+		{ 
+			$stuff = explode("\n\r\n", $this->desc());
+			// dumpVar($stuff, "stuff nrn, char=" . ord($stuff[1][0]));
+			for ($i = 0, $html = "\n"; $i < sizeof($stuff); $i++) 
+			{
+				$html .= sprintf("<p>%s</p>\n", $stuff[$i]);
+			}
+			return $html;
+		}
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
@@ -770,7 +780,6 @@
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}
-
 	class WhuPic extends WhuThing 
 	{
 		var $prvnxt = NULL;

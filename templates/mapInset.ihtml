@@ -8,7 +8,7 @@
 L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
 
 var map = L.mapbox.map('mapinsert', 'mapbox.streets')
-		.setView([{SPLAT}, {SPLON}], 8);
+		.setView([{PT_lat}, {PT_lon}], 8);
 
 map._onResize();			// force window to completely render
 
@@ -19,11 +19,11 @@ var markers = [
 		type: 'Feature',
 		geometry: {
 				type: 'Point',
-				coordinates: [{SPLON}, {SPLAT}]
+				coordinates: [{PT_lon}, {PT_lat}]
 		},
 		properties: {
-				title: '{SPOT_NAME}',
-				description: '{SPOT_TOWN}',
+				title: '{PT_name}',
+				description: '{PT_desc}',
 				'marker-symbol': 'star',
 				'marker-color': '#8c54ba'
 		}
@@ -33,3 +33,10 @@ var markers = [
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);
 </script>
+<style type="text/css" media="screen">
+#mapinsert {
+	border: 1px solid #3A5950;
+	width: 100%;
+	padding-bottom: 90%;
+}
+</style>

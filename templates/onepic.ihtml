@@ -8,7 +8,7 @@
 	
 	<div class="panel-group">
 	  <div class="panel panel-default">
-	    <div class="panel-heading">
+	    <div class="panel-heading" data-toggle="collapse" href="#collapse1">
 	      <h4 class="panel-title">
 	        <a data-toggle="collapse" href="#collapse1">Picture Details</a>
 	      </h4>
@@ -20,7 +20,7 @@
 							<i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> at <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
 						</div>
 						<div class="col-xs-4">
-							map
+							{MAP_INSET}
 						</div>
 						<div class="col-xs-4">
 							<i>keywords for this picture:</i><br />

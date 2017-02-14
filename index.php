@@ -7,7 +7,7 @@ include_once(INCPATH . "class.DBBase.php");
 
 include_once("class.Things.php");
 include_once("class.Pages.php");
-// include_once("class.Geo.php");				// after Pages
+include_once("class.Geo.php");				// after Pages
 
 include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;

@@ -30,14 +30,18 @@
 		    margin: 0;
 				color: {BODYCOLOR};
 				background-color: {BBACKCOLOR};
-			  font: 16px/26px Roboto, Arial, sans-serif;
+/*			  font: 16px/26px Roboto, Arial, sans-serif;*/
+			  font: 16px/26px skolar-1, skolar-2, Georgia, "Times New Roman", serif;
 			}
 			.boxborder {
 				border: 2px solid {BORDERCOLOR};
 				background-color: {BACKCOLOR};
 				padding: 12px;
 			}
-			h1,h2,h3,h4,h5,h6,b,strong {	color: {BOLDCOLOR};	}
+			h1,h2,h3,h4,h5,h6,b,strong {	
+				color: {BOLDCOLOR};
+				font-family: Roboto, Arial, sans-serif;
+			}
 			a {	color: {LINKCOLOR}	}
 			a:hover {	color: {LINKHOVER};	}
 			
@@ -66,14 +70,21 @@
 			.navbar-brand img { height: 50px; }
 	    .navbar,footer {  
 				background-color: #3A5950;
-				color: #f75035;
+				font-family: Roboto, Arial, sans-serif;
 			}
 	    .navbar a {  
 				color: #f75035;
 			}
 			footer {
+				color: #a7c5bc;
 				padding: 1rem 0;
 				text-align: center;
+			}
+			#my_name {
+				color: #f75035;				
+			}
+	    footer a {  
+				color: #a7c5bc;
 			}
 
 			/* ================================= 
@@ -138,7 +149,7 @@
 	<footer>
 	  <div class="container">
 			<div class="row" id="main-footer">
-				<div class="col-sm-3">
+				<div class="col-sm-3" id="my_name">
 					&copy; 2010-2017 John P Freeman
 				</div>
 				<div class="col-sm-2">
@@ -149,7 +160,7 @@
 		      <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>
 				</div>
 				<div class="col-sm-3">
-					design with <a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
+					design with &nbsp;<a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
 				</div>
 				<div class="col-sm-2" id="contactlink">
 					<a href="?page=contact&fromp={FROM_P}&fromt={FROM_T}&fromk={FROM_K}"><button type="button" class="btn btn-primary btn-sm">feedback</button></a>

@@ -215,7 +215,8 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
 		foreach ($coords as $k => $v) 
 		{
-			$this->template->set_var("VAL_$k", addslashes($v));
+			// dumpVar($v, "v, VAL_$k");
+			$this->template->set_var("PT_$k", addslashes($v));
 		}
 	}
 	
@@ -543,6 +544,7 @@ class OneMap extends ViewWhu
 	var $file = "onemap.ihtml";   
 	function showPage()	
 	{
+		$eventLog = array();
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		$this->template->set_var('PAGE_VAL', 'day');
 		$this->template->set_var('TYPE_VAL', 'date');
@@ -584,15 +586,17 @@ class OneMap extends ViewWhu
 			$day = $this->build('DayInfo', $days->one($i));
 
 			$row = array('marker_val' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
-										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 'link_text' => Properties::prettyDate($day->date()));
+										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 
+										'link_text' => Properties::prettyDate($day->date()));
 										
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
-				dumpVar($row, "NO POSITION! $i row");
+				$eventLog[] = "NO POSITION! $i row";
+				$eventLog[] = $row;
 				continue;
 			}
 			if ($row['point_name'] == $prevname) {											// skip if I'm at the same place as yesterday
-				dumpVar($row['point_name'], "skipping same $i");
-				continue;
+				$eventLog[] = "skipping same $i: {$row['point_name']}";
+				continue;                       
 			}
 			$prevname = $row['point_name'];
 
@@ -604,6 +608,9 @@ class OneMap extends ViewWhu
 		$loop->do_loop($rows);
 		
 		$this->tripLinkBar('map', $tripid);	
+		
+		// if (sizeof($eventLog))
+		// 	dumpVar($eventLog, "Event Log");
 		parent::showPage();
 	}
 }
@@ -676,7 +683,7 @@ class OnePic extends ViewWhu
 	{
 		parent::showPage();
 
- 	 	$pic = $this->build('Pic', $picid = $this->props->get('id'));
+ 	 	$pic = $this->build('FilePic', $picid = $this->props->get('id'));
 		
 		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
 		$this->template->set_var('WF_IMAGES_FILENAME', $pic->filename());
@@ -710,6 +717,8 @@ class OnePic extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
+		$gps = $pic->latlon();
+		$this->setLittleMap(array('lat' => $gps['lat'], 'lon' => $gps['lon'], 'name' => Properties::prettyDate($date), 'desc' => $pic->caption()));
 	}
 }
 
@@ -808,7 +817,7 @@ class OneSpot extends ViewWhu
 			// $day->dump($i);
 			$row = array('stay_date' => $date = $day->date());
 			$row['nice_date'] = Properties::prettyDate($date);
-			$row['spdesc'] = $day->desc();
+			$row['spdesc'] = $day->htmldesc();
 
 			if (($cost = $day->cost()) > 0)
 			{
@@ -826,7 +835,7 @@ class OneSpot extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		$this->setLittleMap(array('zoom' => 7, 'lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name()));
+		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
 
 		parent::showPage();
 	}
@@ -969,7 +978,7 @@ class Search extends ViewWhu
 			$row = array('spid' =>$id, 'spcount' => $spots->size(), 'spname' => $cat->name());
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 		

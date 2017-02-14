@@ -162,14 +162,12 @@
 	white-space: nowrap;
 	padding: .2em .8em;
 }
-/*a:visited {
-    color: green;
+=======
+.collapse4.col-xs-4 {
+	text-align: center;
+=======
+.onecheck {
+	white-space: nowrap;
+	padding: .2em .8em;
 }
-a:hover {
-    color: red;
-}
-a:active {
-    color: blue;
-}
-*/
 </style>

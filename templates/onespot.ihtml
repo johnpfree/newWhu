@@ -13,8 +13,8 @@
 			<p>
 				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
-			<hr />
-			<div>Spot keywords:</div>
+
+			<div class="list_head">Spot keywords:</div>
 			<div id="linklist">
 				&bull; 
 				<!-- BEGIN keyrows -->
@@ -23,21 +23,17 @@
 					<!-- END keyrows -->	
 			</div>
 
-			<hr />
-
-			<div id="day_head">Days visited (posted cost | senior cost):</div>
-			<div id="linklist">
+			<div class="list_head">Days visited (posted cost | senior cost):</div>
+			<div id="day_list">
 				<!-- BEGIN rows -->
 					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
-					<p class="day_desc">{SPDESC}</p>
+					<div class="day_desc">{SPDESC}</div>
 					<!-- END rows -->	
 			</div>
 
 		</div>
-		<div class="col-sm-4">
-			
+		<div class="col-sm-4">			
 			{MAP_INSET}
-			
 			<div id="formbox">
 			  <form role="form" id="nearform" method="get" data-toggle="validator">
 					<h4>Find Spots near here:</h4>
@@ -62,17 +58,21 @@
 </article>
 
 <style type="text/css" media="screen">
-#day_head {
-	margin-bottom: 1em;
+.list_head {
+	margin: 1em 0 0;
+	border-bottom: 2px solid {BOLDCOLOR};
+}
+#day_list {
+	padding: 1em 1em;
+}
+.day_desc {
 	border-bottom: 1px solid #3A5950;
 }
 .day_desc:first-letter {
   text-transform: uppercase;
+	xcolor: red;
 }
-#mapinsert {
-	border: 1px solid #3A5950;
-	width: 100%;
-	padding-bottom: 90%;
+.day_desc>p {
 }
 #formbox {
 	padding: .8em 1em .8em;

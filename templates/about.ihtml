@@ -24,22 +24,38 @@
 	    <div class="panel panel-default">
 	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
 	        <h4 class="panel-title">
-	          <a data-toggle="collapse" href="#collapse2">How (why?) do I do this?</a>
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">How (why?) do I do this?</a>
 	        </h4>
 	      </div>
 	      <div id="collapse2" class="panel-collapse collapse">
 	        <div class="panel-body">
-						<li>What is this?</li>
-						<li>Where didit come from?</li>
-						<li>How do I plan trips</li>
-						<li>How do I find stuff?</li>
+						<ul>
+							<li>
+								<dl>
+									<dt>planning a trip:</dt>
+									<dd>
+										For short, familiar trips, I just "go". But for longer trips to unfamiliar places I rely on three tools:
+										<ol>
+											<li>Google Maps - mostly the directions feature which tells me miles and hours to get from one spot to another</li>
+											<li>a spreadsheet - just three columns really - place, miles, hours</li>
+											<li>My trusty <a href="http://www.allstays.com/Campgrounds/" title="Campgrounds for Camping">Allstays</a> camping app</li>
+										</ol>
+										I decide where I want to go, use the maps directions feature to determine what a 150 mile (2-3 hour) chunk of that trip is. On a well-run trip, that's how I want to roll - sleep late, take my time over coffee/breakfast, then do a little travelling from 1-ish to 5-ish, then stop early with enough time to enjoy whatever palce I've driven to.<br />
+										I use Allstays to confirm that there is a plausible place to camp around there, and adjust according until I do find a plausible looking place. Enter into the spreadsheet where I started and where I think I'll end up and the miles and hours.<br />
+										Repeat, with that endpoint as the next day's starting point.
+									</dd>
+								</dl>
+							</li>
+							<li>How do I plan trips</li>
+							<li>How do I find stuff?</li>							
+						</ul>
 					</div>
 	      </div>
 	    </div>
 	    <div class="panel panel-default">
 	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
 	        <h4 class="panel-title">
-	          <a data-toggle="collapse" href="#collapse3">Nerd stuff - tools used, methods</a>
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Nerd stuff - tools used, methods</a>
 	        </h4>
 	      </div>				
 	      <div id="collapse3" class="panel-collapse collapse">
@@ -55,8 +71,9 @@
 								<dl>
 									<dt>stories:</dt>
 									<dd>I write my stories as Wordpress blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
-										To display a story in WHUFU I actually crank up Wordpress to rendersthe content into a <strong>div</strong>.<br />
-										Doing it this way means I have to export them from my laptop Wordpress and import them to my server Wordpress, one of the least satisfying parts of this process, since any updates I do need to be made both places.
+										This means I have to export them from my laptop Wordpress and import them to my server Wordpress, one of the least satisfying parts of this process, since any updates or corrections have to be done manually in both places.<br />
+										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. Also the day name headers in the posts are done by a shortcode which generates a "name" anchor tag so one msay link directly to that day in a post.<br />
+										To display a story in WHUFU I crank up Wordpress to render the content into a <strong>div</strong>, so I get all those shortcode renderings exactly as in the actual blog..
 									</dd>
 								</dl>
 							</li>
@@ -69,15 +86,14 @@
 											<li>All the responsive behavior is from <strong>Bootstrap</strong>. It's pretty cool.</li>
 											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here.</li>
 											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there.</li>
-											<li>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Back home I export that as CSV, then run a little PHP program to read the CSV and create day records in the database. Basically everything interconnects using the Trips table and the Days table.</li>
+											<li>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Along with odometer readings and place names and nots it has columns for the blog post id for that day and the id of the Spot where I stayed if any. Back home I export that as CSV, then run a little PHP program to read the CSV and create day records in the database. Basically everything interconnects using the Trips table and the Days table.</li>
 											<li>
-												I have quite an extensive set of backend tools for entering all the data for WHUFU:
+												I have an extensive set of backend tools for entering all the data for WHUFU:
 												<ul>
-													<li>the mileage spreadsheet reader mentinoed above</li>
-													<li>A Spot manager app for entering and editing Spots</li>
-													<li>After I have winnowed down all the pictures to the ones I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data.</li>
-													<li>Then I run a Picture entry app which reads a folder of image names and creates database records for them</li>
-													<li>Then I run a Picture captioning app, to label each one and assign keywords.</li>
+													<li>A Spot manager app for entering and editing Spots and the different times I have been to a spot.</li>
+													<li>I upload all my pictures with iPhoto or the Canon app, then use Preview for the initial winnowing. After I am down to just the pictures I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data. The pictures for each trip go into a separate folder.</li>
+													<li>Then I run a Picture entry app which reads all the image names in a folder and creates database records for them</li>
+													<li>Once they're in the database I run a Picture captioning app, to label each one and assign keywords.</li>
 												</ul>
 											</li>
 										</ul>

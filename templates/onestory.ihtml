@@ -25,6 +25,16 @@
 	border: 1px solid {BOLDCOLOR};
 }
 
+.whuspotdesc {
+	border: 2px solid {BOLDCOLOR};
+	background-color: {BACKCOLOR};
+	padding: .8em;
+}
+
+@media (max-width: 700px)  {	
+	.pager:nth-of-type(1) { display: none; }
+}
+
 	/* ----------------------- from Wordpress ----------------------------- */
 .entry-content img {
 	max-width: 100%; /* Fluid images for posts, comments, and widgets */
@@ -47,11 +57,12 @@ img.wp-post-image {
 	padding: 8px 3px 3px 3px;
 	margin: 6px;
 	text-align: center;
-	border: 2px solid #4D804C;
+	border: 2px solid {BOLDCOLOR};
+/*	border: 2px solid #4D804C;*/
 }
 .wp-caption .wp-caption-text {
 	font-style: italic;
-	font-size: 12px;
+	font-size: 90%;
 	text-align: center;
 	line-height: 1.5;
 	color: #757575;
