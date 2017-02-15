@@ -101,6 +101,15 @@
 		}
 		function size() { return sizeof($this->data);  }
 		function isEmpty() { return $this->size() == 0;  }
+		
+		function random($num)						// chops the data array down to a maximum of $num items (unchanged if there aren't $num items)
+		{	
+			shuffle($this->data);
+			dumpVar(sizeof($this->data), "this->data0");
+			$this->data = array_slice($this->data, 0, $num);
+			dumpVar(sizeof($this->data), "this->data1");
+		}
+		
 	
 		// --------- factory
 		function build ($type = '', $key) 
@@ -866,12 +875,7 @@
 	
 		function thumbImage()
 		{
-			$fullpath = $this->fullpath();		
-			$xb = exif_thumbnail($fullpath, $xw, $xh, $xm);
-	// dumpVar(($xb ? "yes" : "no"), "$j={$pic['wf_images_id']} exif_thumbnail({$pic['wf_images_id']}, $xw, $xh, $xm)");
-			// $tmb = array("wid" => $this->scale($xw), "hgt" => $this->scale($xh));
-			// $tmb["binpic"]		= base64_encode($xb);
-			// return $tmb;
+			$xb = exif_thumbnail($this->fullpath(), $xw, $xh, $xm);
 			return base64_encode($xb);
 		}
 	}
@@ -893,6 +897,15 @@
 				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
 			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
+			}
+			if (isset($parm['cat'])) 
+			{
+				$q = sprintf("select i.* from wf_images i join wf_idmap im on i.wf_images_id=im.wf_id_1 where wf_type_1='pic' and wf_type_2='cat' and wf_id_2=%s", $parm['cat']);
+			dumpVar($parm, "parm $q");
+				$ret = $this->getAll($q);
+				if (isset($parm['max']))
+					return $this->random($parm['max']);
+				return $ret;
 			}
 			
 			if (isset($parm['folder'])) 
@@ -928,7 +941,7 @@
 
 			return $this->build('Pic', $one);
 		}
-		function choose($num)					// returns a picture collection of $num favored pictures 
+		function xxchoose($num)					// returns a picture collection of $num favored pictures 
 		{	
 			$faves = $this->favorites();		
 			$ret = array_rand($faves, $num);

@@ -22,8 +22,8 @@ var markers = [
 				coordinates: [{PT_lon}, {PT_lat}]
 		},
 		properties: {
-				title: '{PT_name}',
-				description: '{PT_desc}',
+				title: '<div class="title">{PT_name}</div>',
+				description: '<div class="desc">{PT_desc}</div>',
 				'marker-symbol': 'star',
 				'marker-color': '#8c54ba'
 		}
@@ -32,11 +32,17 @@ var markers = [
 
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);
+
 </script>
+
 <style type="text/css" media="screen">
 #mapinsert {
 	border: 1px solid #3A5950;
 	width: 100%;
 	padding-bottom: 90%;
 }
+.desc:first-letter {
+  text-transform: uppercase;
+}
+
 </style>

@@ -6,7 +6,8 @@
 		<!-- BEGIN rows -->
 		<p>
 			<a href="?page=pics&type=date&key={GAL_DATE}">
-				<img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+				<!-- <img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" /> -->
+				<img class="img-rounded img-responsive squareme" src="data:image/jpg;base64,{BINPIC}">
 				<span>{NICE_DATE} ({DATE_COUNT})</span>
 			</a>		
 		</p>

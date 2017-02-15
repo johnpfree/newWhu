@@ -146,6 +146,7 @@ switch ("$curpage$curtype")
 
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
+	case 'picscat':			$page = new CatGallery($props);		break;	
 	case 'picdate':			$page = new OnePic($props);					break;	
 	
 	case 'logid':				$page = new OneTripLog($props);		break;	

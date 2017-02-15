@@ -15,18 +15,17 @@
 	    <div id="collapse1" class="panel-collapse collapse">
 	      <div class="panel-body">
 					<div class="row" id="infotable">
-						<div class="col-xs-4">
+						<div class="col-sm-8">
 							<i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> at <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
-						</div>
-						<div class="col-xs-4">
-							{MAP_INSET}
-						</div>
-						<div class="col-xs-4">
+							<hr />
 							<i>keywords for this picture:</i><br />
 							&bull; 
 				<!-- BEGIN rows -->
 							<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 
 				<!-- END rows -->			
+						</div>
+						<div class="col-sm-4">
+							{MAP_INSET}
 						</div>
 					</div>	      	
 	      </div>
@@ -40,7 +39,6 @@
 		margin: 0 auto;
 		width: 100%;
 	}
-
 	#pic_label {
 		margin-top: 20px;
 		text-align: center;
@@ -52,3 +50,9 @@
 		color: white;
 	}
 </style>
+<script type="text/javascript">
+$('#collapse1').on('shown.bs.collapse', function () {
+	console.log('shown.bs.collapse');
+	map._onResize();			// force window to completely render
+})
+</script>

@@ -466,6 +466,7 @@ class TripPictures extends ViewWhu
 
 			$row['pic_name'] = $pic->filename();
 	 		$row['wf_images_path'] = $pic->folder();
+			$row['binpic'] = $pic->thumbImage();
 			
 			$rows[] = $row;
 			$count += $dc;
@@ -483,30 +484,19 @@ class TripPictures extends ViewWhu
 class Gallery extends ViewWhu
 {
 	var $file = "gallery.ihtml";   
-	var $galtype = "UNDEF";   
+	var $galtype = "UNDEF";  
+	var $maxGal = 30; 
 	function showPage()	
 	{
 		$this->template->set_var('GAL_TYPE', $this->galtype);
-		$this->template->set_var('GAL_TITLE', $this->galleryTitle($key = $this->key));
+		$this->template->set_var('GAL_TITLE', $this->galleryTitle($this->key));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
 		
-		// do nav
-		$date = $this->build('DbDay', $key);
+		$this->doNav();			// do nav (or not)
 
-		$this->template->set_var('PRV_ID', $navd = $date->previousDayGal());
-		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
-		$this->template->set_var('NXT_ID', $navd = $date->nextDayGal());
-		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
-		
-		$pageprops = array();
-		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal());
-		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal());
-		$pageprops['mlab'] = $this->galleryTitle($this->key);
-		$this->pagerBar('pics', 'date', $pageprops);		
-
-		$pics = $this->getPictures($key);
-		$this->template->set_var('GAL_KEY', $key);
+		$pics = $this->getPictures($this->key);
+		$this->template->set_var('GAL_KEY', $this->key);
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 
 		for ($i = 0, $rows = array(); $i < $pics->size(); $i++) 
@@ -536,8 +526,51 @@ class DateGallery extends Gallery
 		parent::showPage();
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }	
-	function getCaption()				{	return "Pictures for " . $this->props->get('key');	}
+	function getCaption()				{	return "Pictures for " . $this->key;	}
 	function galleryTitle($key)	{	return Properties::prettyDate($key); }
+	function doNav()
+	{
+		$date = $this->build('DbDay', $this->key);
+
+		$this->template->set_var('PRV_ID', $navd = $date->previousDayGal());
+		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
+		$this->template->set_var('NXT_ID', $navd = $date->nextDayGal());
+		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
+		
+		$pageprops = array();
+		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal());
+		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal());
+		$pageprops['mlab'] = $this->galleryTitle($this->key);
+		$this->pagerBar('pics', 'date', $pageprops);		
+	}
+}
+class CatGallery extends Gallery
+{
+	var $galtype = "cat";
+	var $message = '';
+	function showPage()	
+	{
+		$cat = $this->build('Category', $this->key);
+		
+		$this->template->set_var("TRIP_ID", $this->key);
+		$this->template->set_var("TRIP_NAME", $this->name = $cat->name());		// save name for caption call below
+		$this->template->set_var("TODAY", '');
+		$this->template->set_var('LINK_BAR', '');
+		
+		// do stuff below so I can create the message before the call
+		$this->pics = $this->build('Pics', (array('cat' => $this->key))); 
+		if (($size = $this->pics->size()) > $this->maxGal)
+		{
+			$this->message = sprintf("A random selection of %s out of %s.", $this->maxGal, $size);
+			$this->pics->random($this->maxGal);
+		}
+		
+		parent::showPage();
+	}
+	function getCaption()				{	return "Pictures for category: " . $this->name;	}
+	function galleryTitle($key)	{	return ''; }
+	function getPictures($key)	{ return $this->pics; }	
+	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
 }
 
 class OneMap extends ViewWhu

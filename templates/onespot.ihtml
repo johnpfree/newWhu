@@ -15,7 +15,7 @@
 			</p>
 
 			<div class="list_head">Spot keywords:</div>
-			<div id="linklist">
+			<div id="list_item">
 				&bull; 
 				<!-- BEGIN keyrows -->
 					<a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
@@ -24,7 +24,7 @@
 			</div>
 
 			<div class="list_head">Days visited (posted cost | senior cost):</div>
-			<div id="day_list">
+			<div id="list_item">
 				<!-- BEGIN rows -->
 					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
 					<div class="day_desc">{SPDESC}</div>
@@ -62,15 +62,14 @@
 	margin: 1em 0 0;
 	border-bottom: 2px solid {BOLDCOLOR};
 }
-#day_list {
-	padding: 1em 1em;
+#list_item {
+	padding: .5em 1em 1em;
 }
 .day_desc {
 	border-bottom: 1px solid #3A5950;
 }
 .day_desc:first-letter {
   text-transform: uppercase;
-	xcolor: red;
 }
 .day_desc>p {
 }
