@@ -1,5 +1,5 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a> <i class="small">&ndash; {TODAY}</i></h1>
+	<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a> <i class="small {VIS_CLASS_SML}">&ndash; {TODAY}</i></h1>
 
 {PAGER_BAR}
 

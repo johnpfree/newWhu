@@ -486,12 +486,14 @@ class Gallery extends ViewWhu
 	var $file = "gallery.ihtml";   
 	var $galtype = "UNDEF";  
 	var $maxGal = 30; 
+	var $smallVis = '';
 	function showPage()	
 	{
 		$this->template->set_var('GAL_TYPE', $this->galtype);
 		$this->template->set_var('GAL_TITLE', $this->galleryTitle($this->key));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
+		$this->template->set_var('VIS_CLASS_SML', $this->smallVis);
 		
 		$this->doNav();			// do nav (or not)
 
@@ -547,6 +549,7 @@ class DateGallery extends Gallery
 class CatGallery extends Gallery
 {
 	var $galtype = "cat";
+	var $smallVis = 'hidden';
 	var $message = '';
 	function showPage()	
 	{
@@ -727,7 +730,6 @@ class OnePic extends ViewWhu
 		
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $pic->date()));
 		
-
 		$pageprops = array();
 		$pageprops['pkey'] = $pic->prev()->date();
 		$pageprops['pid' ] = $pic->prev()->id();
