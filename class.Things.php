@@ -7,7 +7,7 @@
 		var $hasData = true;
 		function __construct($p, $key = NULL)
 		{
-			// new hack!  Single parameter means am casting to a child class
+			// new hack!  Single parameter means I'm casting to a child class
 			if (is_null($key))
 			{
 				parent::__construct($p->props);
@@ -834,7 +834,6 @@
 			$q = sprintf("select * from wf_images where wf_images_localtime > '%s' order by wf_images_localtime ASC LIMIT 3", $dt = $this->datetime());
 			$items = $this->getAll($q);			
 			$this->prvnxt['next'] = $this->build('Pic', $items[0]);
-			
 			$q = sprintf("select * from wf_images where wf_images_localtime < '%s' order by wf_images_localtime DESC LIMIT 3", $dt);
 			$items = $this->getAll($q);
 			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);

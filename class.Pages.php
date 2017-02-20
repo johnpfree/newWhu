@@ -55,9 +55,18 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		}
 		
 		// set "from" values for contact page
-		$this->template->set_var('FROM_P', $page);
-		$this->template->set_var('FROM_T', $this->props->get('type'));
-		$this->template->set_var('FROM_K', $this->props->get('key'));
+		// DUH, do NOT set them when this IS the contach page
+		if ($page == 'contact') {
+			$this->template->set_var('FROM_I', $this->props->get('fromp'));
+			$this->template->set_var('FROM_T', $this->props->get('fromt'));
+			$this->template->set_var('FROM_K', $this->props->get('fromk'));
+			$this->template->set_var('FROM_I', $this->props->get('fromi'));
+		} else {
+			$this->template->set_var('FROM_P', $page);
+			$this->template->set_var('FROM_T', $this->props->get('type'));
+			$this->template->set_var('FROM_K', $this->props->get('key'));
+			$this->template->set_var('FROM_I', $this->props->get('id'));
+		}
 	}
 	function getCaption()	
 	{
@@ -209,7 +218,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		if (!isset($coords['lat']))
 		{
 			$this->template->set_var("MAP_INSET", 
-					"<i class=smaller><br />Apparently the camera<br /> couldn't geolocate<br /> this pic.</i>");
+					"<i class=smaller><br />Apparently the camera couldn't <br />geolocate this pic.</i>");
 			return;
 		}
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
@@ -739,7 +748,7 @@ class OnePic extends ViewWhu
 
 		// pic info
 		$this->template->set_var('DATE', $date);
-		$this->template->set_var('PRETTIEST_DATE', Properties::prettiestDate($date));
+		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
 		$this->template->set_var('PIC_TIME', $pic->time());
 		$this->template->set_var('PIC_CAMERA', $pic->cameraDesc());
 		// keywords
@@ -768,7 +777,7 @@ class OneDay extends ViewWhu
 
 		$this->caption = Properties::prettyDate($date = $day->date());
 		$this->template->set_var('DATE', $date);
-		$this->template->set_var('PRETTY_DATE', Properties::prettiestDate($date));
+		$this->template->set_var('PRETTY_DATE', WhuProps::verboseDate($date));
 		
 		$this->template->set_var('ORDINAL', $day->day());
 		$this->template->set_var('MILES', $day->miles());
@@ -1126,10 +1135,10 @@ class ContactForm extends ViewWhu
 		$this->template->set_var('MATH_Q', "$x1 * $x2");
 		$this->template->set_var('MATH_A', $x1 * $x2);
 
-$this->props->dump('contact');
 		$this->template->set_var('FROM_P', $this->props->get('fromp'));
 		$this->template->set_var('FROM_T', $this->props->get('fromt'));
 		$this->template->set_var('FROM_K', $this->props->get('fromk'));
+		$this->template->set_var('FROM_I', $this->props->get('fromi'));
 
 		parent::showPage();
 	}

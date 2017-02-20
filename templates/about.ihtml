@@ -40,14 +40,12 @@
 											<li>a spreadsheet - just three columns really - place, miles, hours</li>
 											<li>My trusty <a href="http://www.allstays.com/Campgrounds/" title="Campgrounds for Camping">Allstays</a> camping app</li>
 										</ol>
-										I decide where I want to go, use the maps directions feature to determine what a 150 mile (2-3 hour) chunk of that trip is. On a well-run trip, that's how I want to roll - sleep late, take my time over coffee/breakfast, then do a little travelling from 1-ish to 5-ish, then stop early with enough time to enjoy whatever palce I've driven to.<br />
-										I use Allstays to confirm that there is a plausible place to camp around there, and adjust according until I do find a plausible looking place. Enter into the spreadsheet where I started and where I think I'll end up and the miles and hours.<br />
-										Repeat, with that endpoint as the next day's starting point.
+										I decide where I want to go, use the maps directions feature to determine what a 150 mile (2-3 hour) chunk of that trip is. On a well-run trip, that's how I want to roll - sleep late, take my time over coffee/breakfast, then do a little travelling from 1-ish to 5-ish, then stop early with enough time to enjoy whatever place I find myself in.<br />
+										I use Allstays to find a plausible place to camp around there. If there is none, I adjust widen the search until I do find a plausible looking place. Enter into the spreadsheet where I started and where I think I'll end up and the miles and hours to get there.<br />
+										Repeat, with that endpoint as the next day's starting point, for as many days into the future as I need.
 									</dd>
 								</dl>
 							</li>
-							<li>How do I plan trips</li>
-							<li>How do I find stuff?</li>							
 						</ul>
 					</div>
 	      </div>
@@ -64,15 +62,15 @@
 							<li>
 								<dl>
 									<dt>maps:</dt>
-									<dd>I now use Mapbox to render all the maps.  The overnight spots are always rendered from GPS information in the WHUFU database. The routes are drawn by hand using Google Maps.  Some trips have route maps, and some don't. For the ones that don't I connect the overnight spots with straight lines.</dd>
+									<dd>I now use <a href="https://www.mapbox.com/">Mapbox</a> to render all the maps.  The overnight spots are always rendered from GPS information in the WHUFU database. The routes are drawn by hand using Google Maps.  Some trips have route maps, and some don't. For the ones that don't I connect the overnight spots with straight lines.</dd>
 								</dl>
 							</li>
 							<li>
 								<dl>
 									<dt>stories:</dt>
-									<dd>I write my stories as Wordpress blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
+									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
 										This means I have to export them from my laptop Wordpress and import them to my server Wordpress, one of the least satisfying parts of this process, since any updates or corrections have to be done manually in both places.<br />
-										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. Also the day name headers in the posts are done by a shortcode which generates a "name" anchor tag so one msay link directly to that day in a post.<br />
+										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. Also the day name headers in the posts are done by a shortcode which generates a "name" anchor tag so one may link directly to that day in a post.<br />
 										To display a story in WHUFU I crank up Wordpress to render the content into a <strong>div</strong>, so I get all those shortcode renderings exactly as in the actual blog..
 									</dd>
 								</dl>

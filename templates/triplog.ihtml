@@ -25,7 +25,7 @@
 			<td>{CUM_MILES}</td>
 			<td class="dropout">{DAY_NAME}</td>
 			<td><a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a></td>
-			<td><a {POST_CLASS} href="?page=txt&type=wpid&key={WP_ID}">Story {DAY_POST}</a></td>
+			<td><a {POST_CLASS} href="?page=txt&type=wpid&key={WP_ID}">{DAY_POST}</a></td>
 		</tr>
 		<!-- END rows -->
 	</tbody>

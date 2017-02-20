@@ -1,8 +1,6 @@
 <article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1><a href="?page=log&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
 
-{PAGER_BAR}
-
 	<h2>{PRETTY_DATE}</h2>
 	
 	<hr />
@@ -21,7 +19,9 @@
 		<dd>{NIGHT_DESC}</dd> 
 	</dl>
 
-	<p {VIS_CLASS_TXT}>My story for this day is in the post: <span><a href="?page=txt&type=wpid&key={WPID}#{DATE}">{STORY}</a></span></p>
+	<p {VIS_CLASS_TXT}>My story for this day is in the post: <span><a href="?page=txt&type=wpid&key={WPID}#{DATE}">{STORY}</a></span>.</p>
+
+{PAGER_BAR}
 	
 </article>        
 

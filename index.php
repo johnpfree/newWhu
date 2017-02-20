@@ -23,6 +23,8 @@ class WhuProps extends Properties
 		parent::__construct(array_merge($props, $over));
 	}
 	
+	static function verboseDate($str)				{	return date("l F j, Y", strtotime($str));	}
+	
 	function pagetypekey($page, $type = NULL, $key = NULL, $id = NULL)
 	{
 		$this->set('page', $page);
@@ -107,18 +109,18 @@ $props->dump('props');
 
 // grab form requests and package them for the factory below
 if ($props->isProp('do_text_search'))	{				// text search
-	$props->pagetypekey('search', 'text', $props->get('search_text'));
+	$props->pagetypekey('results', 'text', $props->get('search_text'));
 }
 else if ($props->isProp('comment_form')) {		// comment form
-	$props->pagetypekey('search', 'text', $props->get('search_text'));	
-
-	// choose_purpose	=> chk_sugg
-	// f_name	=> 66
-	// f_email	=> aaa@bbb.ccc
-	// f_comment	=> asdfafdsaf
-	// comment_form	=>
-	// user_id	=> 6
-	
+	$formkeys = array(
+		'choose_purpose' => 'Purpose', 
+		'f_name'		 		=> 'Name', 
+		'f_email' 			=> 'Email', 
+		'f_Topic' 			=> 'Topic', 
+		'f_comment' 		=> 'Comment', 
+		'f_url' 				=> 'Url', 
+	 );	
+	$props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));	
 }
 else if ($props->isProp('search_near')) {
 	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
@@ -147,7 +149,9 @@ switch ("$curpage$curtype")
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
-	case 'piccat':
+	case 'picid':
+		$props->set('id', $props->get('key'));			// Wordpress likes to send pic/id/i#. NOT pic/cat/c#/i#, so fake it
+	case 'piccat':	
 	case 'picdate':			$page = new OnePic($props);					break;	
 	
 	case 'logid':				$page = new OneTripLog($props);		break;	
@@ -167,7 +171,7 @@ switch ("$curpage$curtype")
 	case 'spotsplace':	$page = new SpotsPlaces($props);		break;
 	
 	case 'searchhome':	$page = new Search($props);				break;
-	case 'searchtext':	$page = new SearchResults($props);	break;
+	case 'results	text':	$page = new SearchResults($props);	break;
 
 	case 'abouthome':		$page = new About($props);				break;	
 	case 'contacthome':	$page = new ContactForm($props);	break;	
