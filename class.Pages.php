@@ -708,7 +708,7 @@ class SpotMap extends OneMap
 	function getSpotsandTitle() 
 	{ 
  	 	$spot = $this->build('DbSpot', $this->key);		
-		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad = $this->props->get('id'), $spot->name()));
+		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad = $this->props->get('search_radius'), $spot->name()));
 		return $spot->getInRadius($rad);
 	}
 }
@@ -716,8 +716,9 @@ class NearMap extends SpotMap
 {
 	function getSpotsandTitle() 
 	{ 
-		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of \"%s\"", $rad = $this->props->get('search_radius'), $this->props->get('search_radius')));
-		exit;
+ 	 	$spot = $this->build('DbSpot', $this->key);		
+		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of \"%s\"", $rad = $this->props->get('search_radius'), $spot->name()));
+		dumpVar($t, "t");
 		return $spot->getInRadius($rad);
 	}
 }
@@ -875,13 +876,32 @@ class OneSpot extends ViewWhu
 			$row['spcosts'] = $costs;
 
 			$rows[] = $row;
+
+			// collect evening and morning pictures for each day
+			if ($i == 0) {
+				$pics = $this->build('Pics', array('night' => $date));
+			}
+			else {
+				$more = $this->build('Pics', array('night' => $date));
+				$pics->add($more);
+			}
 		}
-		// dumpVar($rows, "rows $count");
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
+		$pics->random(7);
+		for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
+		{
+			$pic = $pics->one($i);
+			
+			$row = array('gal_date' => $day->date(), 'wf_images_path' => $pic->folder(), 'pic_name' => $pic->filename());
+			$row['binpic'] = $pic->thumbImage();
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
+		$loop->do_loop($rows);
 
+		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
 		parent::showPage();
 	}
 }
@@ -916,7 +936,6 @@ class TripStories extends ViewWhu
 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
 		{ 
 			$post = $this->build('Post', $wpids[$i]);
-			// $post->dump();exit;
 			$row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
 			
 			$str = Properties::prettyDate($wpdates[$i][0]);
@@ -1025,10 +1044,6 @@ class Search extends ViewWhu
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
-		
-		
-		
-
 		
 		$opts = array();			// assume show all
 		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)

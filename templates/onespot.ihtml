@@ -30,7 +30,6 @@
 					<div class="day_desc">{SPDESC}</div>
 					<!-- END rows -->	
 			</div>
-
 		</div>
 		<div class="col-sm-4">			
 			{MAP_INSET}
@@ -45,7 +44,7 @@
 			        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
 			      </div>
 			      <div class="col-sm-6" id="search_near">         
-			        <button type="submit" name="search_near" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+			        <button type="submit" name="search_near_spot" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
 			      </div>
 			    </div>
 					<input type="hidden" name="page" value="map" />
@@ -55,6 +54,18 @@
 			</div>
 		</div>
 	</div>	
+	<div class="col-sm-12">	
+		<div class="clearfix" id="thegal">
+			<!-- BEGIN picrows -->
+			<p>
+				<a href="?page=pics&type=date&key={GAL_DATE}">
+					<!-- <img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" /> -->
+					<img class="img-rounded img-responsive squareme" src="data:image/jpg;base64,{BINPIC}">
+				</a>		
+			</p>
+			<!-- END picrows -->
+		</div>
+	</div>
 </article>
 
 <style type="text/css" media="screen">
@@ -77,4 +88,31 @@
 	padding: .8em 1em .8em;
 	border: 1px solid #3A5950;
 }
+
+#thegal>p {
+	float: left;
+	text-align: center;
+}
+#thegal>p img {
+	border: 1px solid #3A5950;		
+}
+.squareme {	object-fit: cover; }
+
+@media (max-width: 785px)  {	
+	#thegal>p { width: 78px; }
+	.squareme {
+		width: 76px;
+		height: 76px;
+	}
+}
+@media (min-width: 701px)  {	
+	#thegal>p { width: 126px; }
+	.squareme {
+		width: 120px;
+		height: 120px;
+/*		width: 160px;
+		height: 160px;
+*/	}
+}
+
 </style>

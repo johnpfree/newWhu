@@ -109,7 +109,9 @@
 			$this->data = array_slice($this->data, 0, $num);
 			dumpVar(sizeof($this->data), "this->data1");
 		}
-		
+		// add more items to the collection
+		function add($more) { $this->data = array_merge($this->data, $more->data); }
+
 	
 		// --------- factory
 		function build ($type = '', $key) 
@@ -562,8 +564,9 @@
 		{
 			$lat = $this->lat();
 			$lon = $this->lon();
-			
-			$q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' AND WhuDbSpot::excludeString ORDER BY distance ASC";
+		
+			// $q = "SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS($lat * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + $lon) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' ORDER BY distance ASC";
+			$q = sprintf("SELECT *, ((ACOS(SIN($lat * PI() / 180) * SIN(wf_spots_lat * PI() / 180) + COS(%s * PI() / 180) * COS(wf_spots_lat * PI() / 180) * COS((-wf_spots_lon + %s) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM wf_spots WHERE wf_spots_lon != '' AND %s ORDER BY distance ASC", $this->lat(), $this->lon(), $this->excludeString);
 			$items = $this->getAll($q);
 
 			// NOTE, the spot we searched for is the first item here, with distance = 0
@@ -660,7 +663,7 @@
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
 		function cost()		{ return $this->dbValue('wf_spot_days_cost'); }
 		function senior()		{ return $this->dbValue('wf_spot_days_senior'); }
-		function desc()		{ return $this->dbValue('wf_spot_days_desc'); }
+		function desc()		{ return $this->massageDbText($this->dbValue('wf_spot_days_desc')); }
 		function htmldesc()	
 		{ 
 			$stuff = explode("\n\r\n", $this->desc());
@@ -674,7 +677,6 @@
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
-// dumpVar($foo, "foo");			exit;
 		}
 	}
 	class WhuDbSpotDays extends WhuDbSpotDay			//  So far this can be a collection of days for a date, or of days for a Spot
@@ -897,10 +899,21 @@
 			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
 			}
+			
+			if (isset($parm['night'])) 			// night = evening pics and morning pics - for a spot
+			{
+				$tonight = $parm['night'];
+			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) > SEC_TO_TIME(3600 * %s)", $tonight, 17);
+				$pmpics = $this->getAll($q);
+
+			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' 
+							and TIME(wf_images_localtime) < SEC_TO_TIME(3600 * %s)", Properties::sqlDate("$tonight +1 day"), 11);
+				return array_merge($pmpics, $this->getAll($q));
+			}
+			
 			if (isset($parm['cat'])) 
 			{
 				$q = sprintf("select i.* from wf_images i join wf_idmap im on i.wf_images_id=im.wf_id_1 where wf_type_1='pic' and wf_type_2='cat' and wf_id_2=%s", $parm['cat']);
-			dumpVar($parm, "parm $q");
 				$ret = $this->getAll($q);
 				if (isset($parm['max']))
 					return $this->random($parm['max']);
@@ -915,21 +928,9 @@
 				$folder = $trip->folder();
 			}			
 			return $this->getAll($q = "select * from wf_images where wf_images_path='$folder' order by wf_images_localtime");
-
-			// else if (isset($parm['folder']))
-			// switch ($parm) {
-			// 	case 'tripid':
-			// 		break;
-			// 	case 'folder':
-			// 	case 'date':
-			// 		break;
-			// 	case 'catid':
-			// 		break;
-			// 	case 'search':
-			// 		break;
-			// }
 			WhuThing::getRecord($parm);		// FAIL
 		}
+		
 		function favored()					// returns a picture object for a favored picture
 		{	
 			$faves = $this->favorites();			

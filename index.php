@@ -122,8 +122,7 @@ else if ($props->isProp('comment_form')) {		// comment form
 	 );	
 	$props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));	
 }
-else if ($props->isProp('search_near')) {
-	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
+else if ($props->isProp('search_near_spot')) {
 }
 else if ($props->isProp('search_places')) {	
 	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
@@ -150,7 +149,7 @@ switch ("$curpage$curtype")
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
 	case 'picid':
-		$props->set('id', $props->get('key'));			// Wordpress likes to send pic/id/i#. NOT pic/cat/c#/i#, so fake it
+		$props->set('id', $props->get('key'));			// Wordpress likes to send pic/id/i#. NOT pic/xxx/c#/i#, so add the id parm
 	case 'piccat':	
 	case 'picdate':			$page = new OnePic($props);					break;	
 	
@@ -171,7 +170,7 @@ switch ("$curpage$curtype")
 	case 'spotsplace':	$page = new SpotsPlaces($props);		break;
 	
 	case 'searchhome':	$page = new Search($props);				break;
-	case 'results	text':	$page = new SearchResults($props);	break;
+	case 'resultstext':	$page = new SearchResults($props);	break;
 
 	case 'abouthome':		$page = new About($props);				break;	
 	case 'contacthome':	$page = new ContactForm($props);	break;	
