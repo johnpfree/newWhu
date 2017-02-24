@@ -207,30 +207,6 @@
 		function hasGoogleMap()	{	return ($this->mapboxId() == 'kml');	}
 		
 		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
-		function getGeocode($name)
-		{
-			$geocode_pending = true;
-			$delay = 1;
-			$res = array('stat' => 'none', 'name' => $name);
-
-	// June 2013, try new url
-		    $request_url = sprintf("http://maps.google.com/maps/api/geocode/json?address=%s&sensor=false", urlencode($name));
-				$raw=@file_get_contents($request_url);
-	dumpVar($raw, "file_get_contents($request_url)");	// exit;
-				$json_data=json_decode($raw, true);
-				if ($json_data['status'] == "OK")
-				{
-					$jres = $json_data['results'][0]['geometry'];
-	dumpVar($jres['location'], "res");
-
-					$res['lat'] = $jres['location']['lat'];
-					$res['lon'] = $jres['location']['lng'];
-					$res['stat'] = "yes";
-				}
-	dumpVar($res, "result");
-	exit;
-			return $res;
-		}
 	}
 	class WhuTrips extends WhuTrip 
 	{
@@ -460,7 +436,9 @@
 					'nwr'			=> 'Campground on a Wildlife Refuge',
 					'county'	=> 'County Campground',
 					'private'	=> 'Private Campground',
-					'roadside'	=> 'Pullover when there\'s no place to camp',
+					'roadside'	=> 'pullover when there\'s no place to camp',
+					'walmart'	=> 'Walmart parking lot',
+					'parking'	=> 'parking lot',
 				);
 		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
 					

@@ -662,6 +662,7 @@ class OneMap extends ViewWhu
 }
 class SpotMap extends OneMap
 {
+	var $marker_color = '#8c54ba';
 	function showPage()	
 	{
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
@@ -670,59 +671,80 @@ class SpotMap extends OneMap
 		$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		$this->template->set_var('PAGE_VAL', 'spot');
 		$this->template->set_var('TYPE_VAL', 'id');
-		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
-		dumpVar($foo, "WHU_URL");				
+		$this->template->set_var('WHU_URL', $t = sprintf("http://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
+		// dumpVar($t, "WHU_URL");
 		
-		$items = $this->getSpotsandTitle();
+		$this->setTitle($rad = $this->props->get('search_radius'));
+		$items = $this->getSpots($rad);
 		
-		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 'shelter', 'dog-park', 'zoo'
-		// CAMP(286), HOTSPR(30) • LODGE(31) • NWR(19) •
-// dumpVar($markers, "markers");
-	
+		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 
+		
+		$rows = $this->initRows();
 		$spots = $this->build('DbSpots', $items);
-		for ($i = 0, $rows = array(); $i < $spots->size(); $i++)
+		for ($i = 0; $i < $spots->size(); $i++)
 		{
 			$spot = $spots->one($i);
 		
 			$row = array('point_lon' => $spot->lon(), 'point_lat' => $spot->lat(), 
-										'point_name' => addslashes($spot->name()), 'key_val' => $spot->id(), 'link_text' => addslashes($spot->town()));
-			$row['marker_color'] = ($i == 0) ? '#000' : '#8c54ba';
+										'point_name' => addslashes($spot->town()), 'key_val' => $spot->id(), 'link_text' => addslashes($spot->name()));
+
+			$row['marker_color'] = $this->markerColor($i);
 										
 			$types = $spot->prettyTypes();
+			// dumpVar($types, "types");
 			foreach ($types as $k => $v)	{
+				if ($k == 'CAMP' && $v == 'parking lot')
+					$k = 'PARK';
 				$row['marker_val'] = $markers[$k];			// effectively, the marker is whichever TYPE was last in that field.
 			}
-			// $row['marker_val'] = $markers[($i % sizeof($markers))];
 
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
 				dumpVar($row, "NO POSITION! $i row");
 				continue;
 			}
 			$rows[] = $row;
+			// if ($i == 1)	dumpVar($rows, "rows");
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
 		ViewWhu::showPage();
 	}
-	function getSpotsandTitle() 
+	function setTitle($rad) 
 	{ 
- 	 	$spot = $this->build('DbSpot', $this->key);		
-		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad = $this->props->get('search_radius'), $spot->name()));
-		return $spot->getInRadius($rad);
+ 	 	$this->spot = $this->build('DbSpot', $this->key);		
+		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad, $this->spot->name()));
 	}
+	function getSpots($rad) 
+	{ 
+		return $this->spot->getInRadius($rad);
+	}
+	function initRows() { return array(); }
+	function markerColor($i) { return ($i <= 0) ? '#000' : $this->marker_color; }
 }
 class NearMap extends SpotMap
 {
-	function getSpotsandTitle() 
+	function setTitle($rad) 
 	{ 
- 	 	$spot = $this->build('DbSpot', $this->key);		
-		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of \"%s\"", $rad = $this->props->get('search_radius'), $spot->name()));
-		dumpVar($t, "t");
-		return $spot->getInRadius($rad);
+		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of \"%s\"", $rad, $this->props->get('search_term')));
+		// dumpVar($t, "t");
 	}
+	function getSpots($rad) 
+	{ 
+		$this->loc = getGeocode($this->props->get('search_term'));
+		dumpVar($this->loc, "lox");
+		
+		$fakeSpot = $this->build('DbSpot', array('wf_spots_id' => 9999, 'wf_spots_lon' => $this->loc['lon'], 'wf_spots_lat' => $this->loc['lat']));
+		return $fakeSpot->getInRadius($rad);
+	}	
+	function initRows() 
+	{
+		$centerRow = array('point_lon' => $this->loc['lon'], 'point_lat' => $this->loc['lat'], 'key_val' => 0, 'link_text' => '', 'marker_val' => 'cross', 'marker_color' => '#000');
+		$centerRow['point_name'] = sprintf("Search from \"%s\"", addslashes($this->loc['name']));
+		return array($centerRow);
+	}
+	function markerColor($i) { return $this->marker_color; }
 }
-
 class OnePic extends ViewWhu
 {
 	var $file = "onepic.ihtml";   

@@ -122,7 +122,10 @@ else if ($props->isProp('comment_form')) {		// comment form
 	 );	
 	$props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));	
 }
-else if ($props->isProp('search_near_spot')) {
+else if ($props->isProp('search_near_spot')) {		// form has the correct parms as hidden data, nothing to do here
+}
+else if ($props->isProp('search_near_loc')) {	
+	$props->pagetypekey('map', 'near', 'location');	
 }
 else if ($props->isProp('search_places')) {	
 	$props->pagetypekey('map', 'near', $props->get('search_radius'));	
