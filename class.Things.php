@@ -296,20 +296,25 @@
 		}
 		function getPrvNxtDayGal()
 		{
+			
 			$items = $this->getAll("select * from wf_days order by wf_days_date");
 			$wps = array_column($items, 'wf_days_date');
 			$idx = array_search($id = $this->date(), $wps);
+// dumpVar($this->date(), "this->date(), id, idx  $id, $idx");
+
+			$this->prvnxt = array('prev' => FALSE, 'prevc' => FALSE, 'next' => FALSE, 'nextc' => FALSE, );
 			
-			$this->prvnxt = array();
-			for ($i = 1; $i < 10; $i++) 
-			{
-				$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx - $i]));
-				if ($dc = $prvpics->size() > 0)
-					break;
+			if ($idx > 0) {			// Skip this if this is the VERY first day (idx==0), so 'prev' remains its default of false
+				for ($i = 1; $i < 10; $i++) 
+				{
+					$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx - $i]));
+					if ($dc = $prvpics->size() > 0)
+						break;
+				}
+				$this->prvnxt['prev']  = $d0;
+				$this->prvnxt['prevc'] = $dc;
 			}
-			$this->prvnxt['prev']  = $d0;
-			$this->prvnxt['prevc'] = $dc;
-						
+
 			for ($i = 1; $i < 10; $i++) 
 			{
 				$prvpics = $this->build('WhuPics', array('date' => $d0 = $wps[$idx + $i]));
@@ -318,6 +323,7 @@
 			}
 			$this->prvnxt['next']  = $d0;
 			$this->prvnxt['nextc'] = $dc;
+			// dumpVar($this->prvnxt, "this->prvnxt");
 		}
 	}
 

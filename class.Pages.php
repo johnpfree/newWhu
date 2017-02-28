@@ -170,29 +170,30 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function pagerBar($page, $type, $settings = array())
 	{
-		$props = array_merge(array('prev' => true, 'next' => true, 'middle' => false, 'pkey' => 0, 'nkey' => 0, 'plab' => "previous", 'nlab' => "next"), $settings);
+		$props = array_merge(array('middle' => false, 'pkey' => 0, 'nkey' => 0, 'plab' => "previous", 'nlab' => "next"), $settings);
 		// dumpVar($props, "pager props");
 		
 		$ok = $this->template->setFile('PAGER_BAR', 'pagerbar.ihtml');
 
 		$this->template->set_var("PAGER_PAGE", $page);
 		$this->template->set_var("PAGER_TYPE", $type);
-		if ($props['prev'])
+		if ($props['pkey'] > 0)
 		{
 			$this->template->set_var("P_VIS", "");
 			$this->template->set_var("P_KEY", $props['pkey']);
 			$this->template->set_var("P_LAB", $props['plab']);
 		}
 		else 
-			$this->template->set_var("VIS_CLASS1", "class='hidden'");
-		if ($props['next'])
+			$this->template->set_var("P_VIS", "class='hidden'");
+		
+		if ($props['nkey'] > 0)
 		{
 			$this->template->set_var("N_VIS", "");
 			$this->template->set_var("N_KEY", $props['nkey']);
 			$this->template->set_var("N_LAB", $props['nlab']);
 		}
 		else 
-			$this->template->set_var("VIS_CLASS3", "class='hidden'");
+			$this->template->set_var("N_VIS", "class='hidden'");
 		
 		// single picture nav needs an id parm, hack it into the key parm
 		if (isset($props['nid']))
@@ -401,7 +402,7 @@ class OneTripLog extends ViewWhu
 		$days = $this->build('DbDays', $tripid);	
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
 
-		for ($i = $iPost = $prevPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
+		for ($i = $iPost = $iPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
 		{
 			// $day = new WhuDayInfo($days->one($i));
 			$day = $this->build('DayInfo', $days->one($i));
@@ -542,12 +543,6 @@ class DateGallery extends Gallery
 	function doNav()
 	{
 		$date = $this->build('DbDay', $this->key);
-
-		$this->template->set_var('PRV_ID', $navd = $date->previousDayGal());
-		$this->template->set_var('PRV_TXT', Properties::prettyDate($navd));
-		$this->template->set_var('NXT_ID', $navd = $date->nextDayGal());
-		$this->template->set_var('NXT_TXT', Properties::prettyDate($navd));
-		
 		$pageprops = array();
 		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal());
 		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal());
@@ -987,13 +982,6 @@ class TripStory extends ViewWhu
 
 		$this->template->set_var('POST_TITLE', $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());
-		
-		//  	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previous()));
-		// $this->template->set_var('PRV_TXT', $navpost->title());
-		// $this->template->set_var('PRV_ID', $navid);
-		//
-		// $this->template->set_var('NXT_TXT', $navpost->title());
-		// $this->template->set_var('NXT_ID', $navid);
 		
 		$pageprops = array();
  	 	$navpost = $this->build('Post', array('wpid' => $navid = $post->previous()));			
