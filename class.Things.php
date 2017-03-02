@@ -860,7 +860,7 @@
 	
 		function thumbImage()
 		{
-			$xb = exif_thumbnail($this->fullpath(), $xw, $xh, $xm);
+			$xb = @exif_thumbnail($this->fullpath(), $xw, $xh, $xm);
 			return base64_encode($xb);
 		}
 	}

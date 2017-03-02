@@ -8,8 +8,8 @@
 		<!-- BEGIN rows -->
 		<p>
 			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
-				<!-- <img class="img-rounded img-responsive squareme" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" /> -->
-				<img class="img-rounded img-responsive squareme" src="data:image/jpg;base64,{BINPIC}">
+				<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+				<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
 			</a>		
 		</p>
 		<!-- END rows -->
@@ -29,6 +29,7 @@ h1>i.small { color: {BOLDCOLOR}; }
 	border: 1px solid #3A5950;		
 }
 .squareme {	object-fit: cover; }
+.hideme { display: none; }
 
 @media (max-width: 785px)  {	
 	#thegal>p { width: 78px; }

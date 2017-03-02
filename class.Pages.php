@@ -477,7 +477,13 @@ class TripPictures extends ViewWhu
 			$row['pic_name'] = $pic->filename();
 	 		$row['wf_images_path'] = $pic->folder();
 			$row['binpic'] = $pic->thumbImage();
-			
+			if (strlen($row['binpic']) > 100) {			// hack to slow the slow image if the thumbnail fails on server
+				$row['use_binpic'] = '';
+				$row['use_image']  = 'hideme';
+			} else {
+				$row['use_binpic'] = 'hideme';
+				$row['use_image']  = '';
+			}			
 			$rows[] = $row;
 			$count += $dc;
 		}
@@ -519,6 +525,13 @@ class Gallery extends ViewWhu
 			$row = array('PIC_ID' => $pic->id(), 'PIC_name' => $pic->filename(), 'PIC_CAPTION' => $pic->caption());
 			
 			$row['binpic'] = $pic->thumbImage();
+			if (strlen($row['binpic']) > 100) {			// hack to slow the slow image if the thumbnail fails on server
+				$row['use_binpic'] = '';
+				$row['use_image']  = 'hideme';
+			} else {
+				$row['use_binpic'] = 'hideme';
+				$row['use_image']  = '';
+			}
 			$rows[] = $row;
 			// if ($i > 4) break;
 		}
@@ -913,6 +926,13 @@ class OneSpot extends ViewWhu
 			
 			$row = array('gal_date' => $day->date(), 'wf_images_path' => $pic->folder(), 'pic_name' => $pic->filename());
 			$row['binpic'] = $pic->thumbImage();
+			if (strlen($row['binpic']) > 100) {			// hack to slow the slow image if the thumbnail fails on server
+				$row['use_binpic'] = '';
+				$row['use_image']  = 'hideme';
+			} else {
+				$row['use_binpic'] = 'hideme';
+				$row['use_image']  = '';
+			}
 			$rows[] = $row;
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
