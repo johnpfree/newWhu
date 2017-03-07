@@ -402,7 +402,7 @@ class OneTripLog extends ViewWhu
 		$days = $this->build('DbDays', $tripid);	
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
 
-		for ($i = $iPost = $iPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
+		for ($i = $iPost = $prevPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
 		{
 			// $day = new WhuDayInfo($days->one($i));
 			$day = $this->build('DayInfo', $days->one($i));
@@ -557,8 +557,8 @@ class DateGallery extends Gallery
 	{
 		$date = $this->build('DbDay', $this->key);
 		$pageprops = array();
-		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal());
-		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal());
+		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal(), "M");
+		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal(), "M");
 		$pageprops['mlab'] = $this->galleryTitle($this->key);
 		$this->pagerBar('pics', 'date', $pageprops);		
 	}
@@ -604,9 +604,9 @@ class OneMap extends ViewWhu
 		$this->template->set_var('TYPE_VAL', 'date');
 		$this->template->set_var('MARKER_COLOR', '#8c54ba');
 		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
-		dumpVar($foo, "WHU_URL");				
+		// dumpVar($foo, "WHU_URL");
 
-		$tripid = $this->key;
+		$tripid = $this->trip();		// local function		
  	 	$trip = $this->build('Trip', $tripid);		
 		$this->template->set_var('MAP_NAME', $trip->name());
 		
@@ -666,6 +666,15 @@ class OneMap extends ViewWhu
 		// if (sizeof($eventLog))
 		// 	dumpVar($eventLog, "Event Log");
 		parent::showPage();
+	}
+	function trip()		{ return $this->key; }
+}
+class DateMap extends OneMap
+{
+	function trip()
+	{
+		$day = $this->build('DbDay', $this->key);		// get this day
+		return $day->tripId();
 	}
 }
 class SpotMap extends OneMap
@@ -836,8 +845,9 @@ class OneDay extends ViewWhu
 			$this->template->set_var('AM_STOP', 'home');
 			$pageprops['prev'] = false;
 		}		
-		$pageprops['nlab'] = 'tomorrow';
-		$pageprops['nkey'] = $d;
+
+		$pageprops['nlab'] = 'tomorrow';       
+		$pageprops['nkey'] = $day->tomorrow();               
 		$this->pagerBar('day', 'date', $pageprops);		
 
 		$this->dayLinkBar('day', $dayid);		
@@ -919,6 +929,7 @@ class OneSpot extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		$pics->random(7);
 		for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
 		{

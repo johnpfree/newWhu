@@ -79,7 +79,7 @@ if ({CONNECT_DOTS})
 var polyline = L.polyline(pline, { color: '#3A5950', 'weight' : 6 }).addTo(map);		// default weight = 5
 
 map.on('click', function(e) {
-    console.log(e.latlng);
+	console.log(e.latlng);
 });
 
 </script>

@@ -181,7 +181,6 @@
 			"johnpfree.02do91ob" => array('name' => "Eureka"		, 'file' => "multiEureka.js"), 
 			"johnpfree.pl58eik5" => array('name' => "395" 	  	, 'file' => "multi395.js"), 
 			"johnpfree.29opambf" => array('name' => "Louisville", 'file' => "mLouisvilleRtes.json"), 
-			// "johnpfree.0hb1fke9" => array('name' => "Louisville", 'file' => "mLouisville.js"   ),
 		);
 		function makeStoriesLink()
 		{}
