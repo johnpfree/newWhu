@@ -55,6 +55,7 @@
 		function isSpotDayParmsArray($key){	return (is_array($key) && isset($key['spotId']) && isset($key['date']));	}
 		function isSpotCatSearch($key)		{	return (is_array($key) && isset($key['wf_categories_id']));	}
 		function isSpotKeySearch($key)		{	return (is_array($key) && isset($key['wf_spot_days_keywords']));	}
+		function isSpotCampSearch($key)		{	return (is_array($key) && isset($key['camp_type']));	}
 		function isTripRecord($key)				{	return (is_array($key) && isset($key['wf_trips_id']));	}
 		function isPicRecord($key)				{	return (is_array($key) && isset($key['wf_images_id']));	}
 		function isCategoryRecord($key)		{	return (is_array($key) && isset($key['wf_categories_parent']));	}		// spots also have a cat id
@@ -152,27 +153,9 @@
 		function startDate()	{ return $this->dbValue('wf_trips_start'); }
 		function endDate()		{ return $this->dbValue('wf_trips_end'); }
 
-		// function name()				{ return $this->dbValue('wf_trips_odometer'); }
-		// function name()				{ return $this->dbValue('wf_trips_map_lat'); }
-		// function name()				{ return $this->dbValue('wf_trips_map_lon'); }
-
 		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		function isNewMap()		{ return (strlen($this->fid()) > 1); }
-
-		// function wpCatId()
-		// {
-		// 	if ($this->lazyWpCat)
-		// 		return $this->lazyWpCat;
-		//
-		// 	$day = $this->build('DbDay', $this->startDate());
-		// 	if ($day->hasData) {
-		// 		$cat = wp_get_post_categories($day->postId());
-		// 		return $this->lazyWpCat = $cat[0];
-		// 	}
-		// 	// NOTE! Our convention is that if the first day has no post, the whole thing hsa no posts
-		// 	return $this->lazyWpCat = 0;
-		// }
 	}
 	class WhuTrip extends WhuDbTrip 
 	{
@@ -272,6 +255,8 @@
 
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
+		function daystart()	{ return $this->dbValue('wf_days_daystart'); }
+		function dayend()  	{ return $this->dbValue('wf_days_dayend'); }
 		
 		function yesterday() {	return $this->anotherDate("-1");	}		// set of functions for getting the next and previous dates. Doesn't care if it's in a trip
 		function tomorrow()  {	return $this->anotherDate("1");	}
@@ -432,21 +417,20 @@
 					'HOUSE'		=> 'Somebody\'s house',
 					'NWR'			=> 'Wildlife Refuge',
 					);
-		var $camptypes = array(
-					'usfs'		=> 'Forest Service Campground',
-					'usnp'		=> 'National Park Campground',
-					'state'		=> 'State Park Campground',
-					'blm'			=> 'Bureau of Land Management Campground',
-					'ace'			=> 'Army Corps of Engineers Campground',
-					'nwr'			=> 'Campground on a Wildlife Refuge',
-					'county'	=> 'County Campground',
-					'private'	=> 'Private Campground',
-					'roadside'	=> 'pullover when there\'s no place to camp',
-					'walmart'	=> 'Walmart parking lot',
+		public static $CAMPTYPES = array(
+					'usfs'		=> 'Forest Service Campgrounds',
+					'usnp'		=> 'National Park Campgrounds',
+					'state'		=> 'State Park Campgrounds',
+					'blm'			=> 'Bureau of Land Management Campgrounds',
+					'ace'			=> 'Army Corps of Engineers Campgrounds',
+					'nwr'			=> 'Wildlife Refuge Campgrounds',
+					'county'	=> 'County Campgrounds',
+					'private'	=> 'private Campgrounds',
+					'roadside'			=> 'pullover when there\'s no place to camp',
 					'parking'	=> 'parking lot',
 				);
 		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
-					
+		
 		function getRecord($key)		// parm is spot id OR the record for iteration
 		{
 			if ($this->isSpotRecord($key))
@@ -491,9 +475,9 @@
 					foreach ($stats as $k1 => $v1) 
 					{
 						// dumpVar($v1, "v1 $k1");
-						if ($k1 == 'CAMP' && isset($this->camptypes[$v1]))
+						if ($k1 == 'CAMP' && isset($this->CAMPTYPES[$v1]))
 						{
-							$ret[$v] = $this->camptypes[$v1];
+							$ret[$v] = $this->CAMPTYPES[$v1];
 							// dumpVar($ret[$v], "Cret[$v]");
 							continue 2;
 						}
@@ -584,9 +568,17 @@
 				'order'	=> 'wf_spots_name',
 				'where'	=> array(),
 			);
+			
 			if (sizeof($searchterms) == 0)			// show all
 			{
 				$where = " WHERE " . $this->excludeString;
+			}
+			else if ($this->isSpotCampSearch($searchterms))
+			{
+				$q = sprintf("select * FROM wf_spots WHERE wf_spots_status LIKE '%%%s%%'", $searchterms['camp_type']);
+				$ret = $this->getAll($q);
+				// dumpVar(sizeof($ret), "$q -> ret=");
+				return $ret;
 			}
 			else if ($this->isSpotCatSearch($searchterms))
 			{
@@ -625,7 +617,7 @@
 			 $where = substr($where, 0, -3);
 			}	 
 			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
-			// dumpVar($searchterms, "$q - st");
+			dumpVar($searchterms, "$q - st");
 			return $this->getAll($q);
 		}
 	}	
@@ -701,6 +693,16 @@
 		{
 			return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");// order by wf_days_date");
 		}
+	}
+	class WhuSpotCat extends WhuThing 
+	{
+		function getRecord($key)		// key = cat id
+		{
+			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
+		}
+		function id()			{ return $this->dbValue('wf_categories_id'); }
+		function name()		{ return $this->dbValue('wf_categories_text'); }
+		function parent()	{ return $this->dbValue('wf_categories_parent'); }
 	}
 	
 	class WhuPost extends WhuThing 
@@ -886,11 +888,16 @@
 			if (isset($parm['night'])) 			// night = evening pics and morning pics - for a spot
 			{
 				$tonight = $parm['night'];
-			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) > SEC_TO_TIME(3600 * %s)", $tonight, 17);
+				$day = $this->build('WhuDbDay', $tonight);
+			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) > SEC_TO_TIME(3600 * %s)", $tonight, $day->dayend());
+				// dumpVar($q, "q pm");
 				$pmpics = $this->getAll($q);
 
+				$tomorrow = Properties::sqlDate("$tonight +1 day");
+				$day = $this->build('WhuDbDay', $tomorrow);
 			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' 
-							and TIME(wf_images_localtime) < SEC_TO_TIME(3600 * %s)", Properties::sqlDate("$tonight +1 day"), 11);
+							and TIME(wf_images_localtime) < SEC_TO_TIME(3600 * %s)", $tomorrow, $day->daystart());
+				// dumpVar($q, "q am");
 				return array_merge($pmpics, $this->getAll($q));
 			}
 			

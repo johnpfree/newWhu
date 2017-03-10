@@ -340,12 +340,20 @@ class SpotsTypes extends SpotsHome
 		parent::showPage();
 	}
 }
+class SpotsCamps extends SpotsHome
+{
+	function showPage()	
+	{
+		$this->title = WhuDbSpot::$CAMPTYPES[$this->key];
+		$this->searchterms = array('camp_type' => $this->key);
+		parent::showPage();
+	}
+}
 class SpotsKeywords extends SpotsHome
 {
 	function showPage()	
 	{
 		$this->title = sprintf("Spots with keyword: <i>%s</i>", $this->key);
-		$this->searchterms = array('wf_spot_days_keywords' => $this->key);
 		parent::showPage();
 	}
 }
@@ -843,11 +851,12 @@ class OneDay extends ViewWhu
 		}
 		else {
 			$this->template->set_var('AM_STOP', 'home');
-			$pageprops['prev'] = false;
 		}		
 
 		$pageprops['nlab'] = 'tomorrow';       
-		$pageprops['nkey'] = $day->tomorrow();               
+		$navday = $this->build('DbDay', $d = $day->tomorrow());
+		if ($navday->hasData)			// day after the last day has no data
+			$pageprops['nkey'] = $d;
 		$this->pagerBar('day', 'date', $pageprops);		
 
 		$this->dayLinkBar('day', $dayid);		
@@ -1070,9 +1079,9 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
+		// state / region
 		$placeCats = array(-106, 109, -113, 70, 110, 111, 120, 121, 112, 108, 107, 105, 103, 173, 91, 83, 80, 128);
-		// $addKids = array(105 => array(64), 91 => array(170), 83 => array(87, 77, 76, 88), 80 => array(81, 85, 86, 90, 92), 128 => array(131, 132));
-		
+		// $addKids = array(105 => array(64), 91 => array(170), 83 => array(87, 77, 76, 88), 80 => array(81, 85, 86, 90, 92), 128 => array(131, 132));		
 		for ($i = 0, $rows = array(); $i < sizeof($placeCats); $i++) 
 		{
 			$parms = array('wf_categories_id' => ($id = abs($placeCats[$i])));
@@ -1085,7 +1094,34 @@ class Search extends ViewWhu
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
+
+		// type of campground
+		$types = WhuDbSpot::$CAMPTYPES;
+		// dumpVar($types, "types");
+		$rows = array();
+		foreach ($types as $k => $v) 
+		{
+			$parms = array('camp_type' => $k);
+			$spots = $this->build('DbSpots', $parms);
+			$row = array('CAMPTYPE' =>$k, 'spcount' => $spots->size(), 'spname' => $v);
+			$rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'typerow', 'none_msg' => "no types", 'noFields' => true));
+		$loop->do_loop($rows);
 		
+		// all keywords
+		$spotkeys = getAllSpotKeys(new DbWhufu(new 	Properties(array())));
+		// dumpVar($spotkeys, "types");
+		$rows = array();
+		foreach ($spotkeys as $k => $v)
+		{
+			$rows[] = array('spname' =>$k, 'spcount' => sizeof($v));
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'none_msg' => "no keywords", 'noFields' => true));
+		$loop->do_loop($rows);
+		
+		// still using this?
+		//
 		$opts = array();			// assume show all
 		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
 		{

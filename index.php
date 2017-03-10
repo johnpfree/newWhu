@@ -171,8 +171,9 @@ switch ("$curpage$curtype")
 	case 'tripshome':		$page = new AllTrips($props);				break;	
 	case 'spotshome':		$page = new SpotsHome($props);			break;
 	case 'spotstype':		$page = new SpotsTypes($props);			break;
-	case 'spotskey':		$page = new SpotsKeywords($props);	break;
-	case 'spotsplace':	$page = new SpotsPlaces($props);		break;
+	case 'spotskey':		$page = new SpotsKeywords($props);	break;		// for a keyword (from a spot OR the search page)
+	case 'spotscamp':		$page = new SpotsCamps($props);			break;		// type of campground (usfs, usnp, state)
+	case 'spotsplace':	$page = new SpotsPlaces($props);		break;		// state/region
 	
 	case 'searchhome':	$page = new Search($props);				break;
 	case 'resultstext':	$page = new SearchResults($props);	break;

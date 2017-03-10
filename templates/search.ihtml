@@ -29,6 +29,7 @@
 				</form>
       </div>
     </div>
+		
     <div class="panel panel-default">
       <div class="panel-heading" data-toggle="collapse" href="#collapse5">
         <h4 class="panel-title">
@@ -36,20 +37,19 @@
         </h4>
       </div>
       <div id="collapse5" class="panel-collapse collapse">
-				<form role="form" id="place_srch" data-toggle="validator">
-	        <div class="panel-body">
-				    <div class="form-group row">
-	<!-- BEGIN rows -->
-				      <div class="col-md-2">
-								<a class="onecheck" href="?page=spots&type=place&key={SPID}">{SPNAME} ({SPCOUNT})</a>
-								<!-- <span class="onecheck"><input type="radio" name="choose_place" value="spid{SPID}" id="spid{SPID}"> <label for="spid{SPID}">{SPNAME} ({SPCOUNT})</label></span> -->
-				      </div>
-	<!-- END rows -->
-				    </div>
-	        </div>
-				</form>
+        <div class="panel-body">
+			    <div class="row">
+<!-- BEGIN rows -->
+			      <div class="col-md-2">
+							<a class="onecheck" href="?page=spots&type=place&key={SPID}">{SPNAME} ({SPCOUNT})</a>
+							<!-- <span class="onecheck"><input type="radio" name="choose_place" value="spid{SPID}" id="spid{SPID}"> <label for="spid{SPID}">{SPNAME} ({SPCOUNT})</label></span> -->
+			      </div>
+<!-- END rows -->
+			    </div>
+        </div>
       </div>
     </div>
+		
     <div class="panel panel-default">
       <div class="panel-heading" data-toggle="collapse" href="#collapse2">
         <h4 class="panel-title">
@@ -57,72 +57,38 @@
         </h4>
       </div>
       <div id="collapse2" class="panel-collapse collapse">
-				<form role="form" id="type_srch" data-toggle="validator">
-	        <div class="panel-body">
-				    <div class="form-group row">
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid1} name="spot_type[]" value="fid1" id="fid1"> <label for="fid1">Forest Service</label> &nbsp; 
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid2} name="spot_type[]" value="fid2" id="fid2"> <label for="fid2">National Park</label>
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid3} name="spot_type[]" value="fid3" id="fid3"> <label for="fid3">Army Corp of Engineers</label>
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid4} name="spot_type[]" value="fid4" id="fid4"> <label for="fid4">BLM, other Federal</label> &nbsp; 
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid5} name="spot_type[]" value="fid5" id="fid5"> <label for="fid5">State Park</label> &nbsp; 
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid6} name="spot_type[]" value="fid6" id="fid6"> <label for="fid6">City/County Park</label>
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid7} name="spot_type[]" value="fid7" id="fid7"> <label for="fid7">Private Campground</label>
-					    </div>
-				      <div class="col-md-3" id="">
-								<input type="checkbox" {CHK_fid8} name="spot_type[]" value="fid8" id="fid8"> <label for="fid8">just a place to park</label>
-					    </div>
-				      <div class="col-md-2" id="">
-				        <button type="submit" name="search_types" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
-				      </div>
-				    </div>
-	        </div>
-				</form>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading" data-toggle="collapse" href="#collapse3">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse3">Campground features:</a>
-        </h4>
-      </div>
-      <div id="collapse3" class="panel-collapse collapse">
         <div class="panel-body">
-					<p>cost:
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">free</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">senior discount</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">winter rates</label>
-						<label for="fid4">less than</label> $<input type="text" {CHK_} name="spot_typex" value="20" id="fid4" size=5> 
-					</p>                
-					<p class="indented">amenities:
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid1"> <label for="fid1">any toilet</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid2"> <label for="fid2">flush toilet</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">water</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">hot water</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shower</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">wifi</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">phone reception</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">quiet</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">shady</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">electricity</label>
-						<input type="checkbox" {CHK_} name="spot_type[]" value="" id="fid3"> <label for="fid3">swimming</label>
-					</p>
+			    <div class="row">
+<!-- BEGIN typerows -->
+			      <div class="col-md-4">
+							<a class="onecheck" href="?page=spots&type=camp&key={CAMPTYPE}">{SPNAME} ({SPCOUNT})</a>
+			      </div>
+<!-- END typerows -->
+			    </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" href="#collapse6">
+      <h4 class="panel-title">
+				<a data-toggle="collapse" href="#collapse6">All Spot Keywords:</a>
+			</h4>
+    </div>
+    <div id="collapse6" class="panel-collapse collapse">
+      <div class="panel-body">
+				<div class="row">
+<!-- BEGIN keyrows -->
+			      <div class="col-md-2">
+							<a class="onecheck" href="?page=spots&type=keyword&key={SPNAME}">{SPNAME} ({SPCOUNT})</a>
+			      </div>
+<!-- END keyrows -->
+				</div>
+      </div>
+    </div>
+  </div>
+	
   <div class="panel panel-default">
     <div class="panel-heading" data-toggle="collapse" href="#collapse4">
       <h4 class="panel-title">

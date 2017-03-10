@@ -1,5 +1,11 @@
 <?php
+/* Orphans that don't fit into the class structure
+-- mostly because I don't need to instantiate a WhuThing to use them
 
+-- getGeocode()				uses Google location services to get the GPS of a place
+
+-- getAllSpotKeys()		returns an array of all spot keywords. It does need the database, which I hack up in the call.
+*/
 	function getGeocode($name)
 	{
 		$geocode_pending = true;
@@ -22,5 +28,40 @@
 		}
 		return $res;
 	}
+	
+	function getAllSpotKeys($db)
+	{
+		$items = $db->getAll("select * from wf_spot_days");
+
+		$singlekeys = array();
+		$keypairs = array();
+		$allkeys = array();
+		for ($i = 0, $str = ''; $i < sizeof($items); $i++) 
+		{
+			$vals = explode(',', $str = $items[$i]['wf_spot_days_keywords']);
+// dumpVar($vals, "explode($str)");
+			for ($j = 0; $j < sizeof($vals); $j++) 
+			{
+				$val = explode('=', trim($vals[$j]));
+				// dumpVar($val, "i,j $i,$j");
+				if (sizeof($val) == 1)
+				{
+					if (empty($singlekeys[$val[0]]))
+						$singlekeys[$val[0]] = array($items[$i]['wf_spots_id']);
+					else
+						$singlekeys[$val[0]][] = $items[$i]['wf_spots_id'];
+				}
+				else if (sizeof($val) >= 1)
+					$keypairs[trim($val[0])] = trim($val[1]);
+				else
+					jfdie("parsed poorly: $val");
+			}
+		}
+		unset($singlekeys['']);		// a SpotDay with no keywords shows up as a blank, remove that bunch
+		// dumpVar($singlekeys, "singlekeys");
+		ksort($singlekeys);
+		return $singlekeys;
+	}
+	
 
 ?> 
