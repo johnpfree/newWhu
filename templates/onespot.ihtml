@@ -14,7 +14,7 @@
 				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
 
-			<div class="list_head">Spot keywords:</div>
+			<div class="list_head"  title="keywords can be contradictory, for example noisy in the summer and quiet in the winter!">Spot keywords:</div>
 			<div id="list_item">
 				&bull; 
 				<!-- BEGIN keyrows -->

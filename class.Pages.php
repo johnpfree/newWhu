@@ -354,6 +354,7 @@ class SpotsKeywords extends SpotsHome
 	function showPage()	
 	{
 		$this->title = sprintf("Spots with keyword: <i>%s</i>", $this->key);
+		$this->searchterms = array('wf_spot_days_keywords' => $this->key);
 		parent::showPage();
 	}
 }
@@ -363,7 +364,6 @@ class SpotsPlaces extends SpotsHome
 	{
 		$cat = $this->build('Category', $this->key);	
 		$this->title = sprintf("Spots in: <i>%s</i>", $cat->name());
-		$this->searchterms = array('wf_categories_id' => $this->key);
 		parent::showPage();
 	}
 }
@@ -931,6 +931,7 @@ class OneSpot extends ViewWhu
 				$pics = $this->build('Pics', array('night' => $date));
 			}
 			else {
+				// dumpVar($date, "$i date");
 				$more = $this->build('Pics', array('night' => $date));
 				$pics->add($more);
 			}

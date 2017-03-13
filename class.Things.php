@@ -519,6 +519,7 @@
 				// dumpVar($spotDay->keywords(), "spotDay->keywords()");
 				// dumpVar($allkeys, "$i keys");
 			}
+			unset($allkeys['']);		// a SpotDay with no keywords shows up as a blank, remove that one
 			return array_merge(array_flip($allkeys));			// flipped there may be holes in the array, merge reorders it with no holes
 		}
 
@@ -889,6 +890,9 @@
 			{
 				$tonight = $parm['night'];
 				$day = $this->build('WhuDbDay', $tonight);
+				if (!$day->hasData)						// I sometimes make spot_day entries for times I'm not on a trip, so handle it
+					return array();
+
 			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) > SEC_TO_TIME(3600 * %s)", $tonight, $day->dayend());
 				// dumpVar($q, "q pm");
 				$pmpics = $this->getAll($q);
