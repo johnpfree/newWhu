@@ -603,7 +603,8 @@ class CatGallery extends Gallery
 
 class OneMap extends ViewWhu
 {
-	var $file = "onemap.ihtml";   
+	var $file = "onemap.ihtml";
+	var $loopfile = 'mapBoundsLoop.js';
 	function showPage()	
 	{
 		$eventLog = array();
@@ -642,6 +643,8 @@ class OneMap extends ViewWhu
 			$this->template->set_var("CONNECT_DOTS", 'true');		// there is no route map, so connect the dots with polylines
 		}
 		
+		$this->template->setFile('LOOP_INSERT', $this->loopfile);
+		
  	 	$days = $this->build('DbDays', $tripid);
 		for ($i = 0, $rows = array(), $prevname = '@'; $i < $days->size(); $i++)
 		{
@@ -679,9 +682,20 @@ class OneMap extends ViewWhu
 }
 class DateMap extends OneMap
 {
+	var $loopfile = 'mapCenteredLoop.js';
+	// function showPage()
+	// {
+	// 	parent::showPage();
+	// }
 	function trip()
 	{
-		$day = $this->build('DbDay', $this->key);		// get this day
+		$day = $this->build('DayInfo', $this->key);		// get this day
+
+		dumpVar($day->lon(), "day->lon()");
+		$this->template->set_var('CENTER_LAT', $day->lon());
+		$this->template->set_var('CENTER_LON', $day->lat());
+		$this->template->set_var('ZOOM', '9');
+
 		return $day->tripId();
 	}
 }
@@ -693,6 +707,7 @@ class SpotMap extends OneMap
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		$this->template->set_var('LINK_BAR', '');
 		$this->template->set_var("JSON_INSERT", '');
+		$this->template->setFile('LOOP_INSERT', $this->loopfile);
 		$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		$this->template->set_var('PAGE_VAL', 'spot');
 		$this->template->set_var('TYPE_VAL', 'id');
@@ -1080,7 +1095,7 @@ class Search extends ViewWhu
 	var $file = "search.ihtml";   
 	function showPage()	
 	{
-		// state / region
+		// --------------------------------------------------------------------- state / region
 		$placeCats = array(-106, 109, -113, 70, 110, 111, 120, 121, 112, 108, 107, 105, 103, 173, 91, 83, 80, 128);
 		// $addKids = array(105 => array(64), 91 => array(170), 83 => array(87, 77, 76, 88), 80 => array(81, 85, 86, 90, 92), 128 => array(131, 132));		
 		for ($i = 0, $rows = array(); $i < sizeof($placeCats); $i++) 
@@ -1096,7 +1111,7 @@ class Search extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 
-		// type of campground
+		// --------------------------------------------------------------------- type of campground
 		$types = WhuDbSpot::$CAMPTYPES;
 		// dumpVar($types, "types");
 		$rows = array();
@@ -1110,7 +1125,7 @@ class Search extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'typerow', 'none_msg' => "no types", 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		// all keywords
+		// --------------------------------------------------------------------- all keywords
 		$spotkeys = getAllSpotKeys(new DbWhufu(new 	Properties(array())));
 		// dumpVar($spotkeys, "types");
 		$rows = array();
@@ -1118,10 +1133,27 @@ class Search extends ViewWhu
 		{
 			$rows[] = array('spname' =>$k, 'spcount' => sizeof($v));
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'none_msg' => "no keywords", 'noFields' => true));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		// still using this?
+		// --------------------------------------------------------------------- Picture categories
+		$cats = $this->build('Categorys', 'all');
+		$placeCats = $cats->children($cats->placesRoot());
+		dumpVar($placeCats->data, "placeCats->data");
+		for ($i = 0, $rows = array(); $i < $cats->size(); $i++)
+		{
+			$cat = $cats->one($i);
+		
+			// $row = array(parms);
+			// $rows[] = $row;
+		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'ppicrow', 'noFields' => true));
+		$loop->do_loop($rows);
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'cpicrow', 'noFields' => true));
+		$loop->do_loop($rows);
+		
+				
+		// --------------------------------------------------------------------- still using this?
 		//
 		$opts = array();			// assume show all
 		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)

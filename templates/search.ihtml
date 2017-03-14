@@ -1,6 +1,6 @@
 
 <div class="container"id="main_item">
-  <h2>Finding Spots</h2>
+  <h2>Finding Stuff</h2>
 
   <div class="panel-group">
     <div class="panel panel-default">
@@ -115,13 +115,15 @@
 				</h4>
 	    </div>
 	    <div id="collapse3" class="panel-collapse collapse">
-	      <div class="panel-body">
-					<div class="row">
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=HOTSPR">Hot Springs</a></div>
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=NWR">Wildlife Refuges</a></div>
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=LODGE">Lodging</a></div>
-					</div>
-	      </div>
+        <div class="panel-body">
+			    <div class="row">
+<!-- BEGIN ppicrows -->
+			      <div class="col-md-2">
+							<a class="onecheck" href="?page=spots&type=place&key={SPID}">{SPNAME} ({SPCOUNT})</a>
+			      </div>
+<!-- END ppicrows -->
+			    </div>
+        </div>
 	    </div>
 	  </div>
 
@@ -133,11 +135,13 @@
 	    </div>
 	    <div id="collapse7" class="panel-collapse collapse">
 	      <div class="panel-body">
-					<div class="row">
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=HOTSPR">Hot Springs</a></div>
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=NWR">Wildlife Refuges</a></div>
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=LODGE">Lodging</a></div>
-					</div>
+			    <div class="row">
+<!-- BEGIN cpicrows -->
+			      <div class="col-md-2">
+							<a class="onecheck" href="?page=spots&type=place&key={SPID}">{SPNAME} ({SPCOUNT})</a>
+			      </div>
+<!-- END cpicrows -->
+			    </div>
 	      </div>
 	    </div>
 	  </div>

@@ -958,7 +958,6 @@
 			else
 				$one = $this->data[array_rand($this->data)];
 
-				return $this->build('Pics', $one);
 			return $this->build('Pic', $one);
 		}
 		private function favorites()					// returns an array, NOT an object, of ids of favorites in this collection
@@ -987,15 +986,24 @@
 				return $key;
 			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
 		}
-		function id()			{ return $this->dbValue('wf_categories_id'); }
-		function name()		{ return $this->dbValue('wf_categories_text'); }
-		function parent()	{ return $this->dbValue('wf_categories_parent'); }
+		function id()				{ return $this->dbValue('wf_categories_id'); }
+		function name()			{ return $this->dbValue('wf_categories_text'); }
+		function parent()		{ return $this->dbValue('wf_categories_parent'); }
 	}
 	class WhuCategorys extends WhuCategory 
 	{
 		var $isCollection = true;
 		function getRecord($parm)	//  picid
 		{
+			if ($parm == 'all') 
+			{				
+				return $this->getAll("select * from wf_categories");
+			}		
+			if (isset($parm['children'])) 
+			{				
+				$q = sprintf("select * FROM wf_categories where wf_categories_parent=%s order by wf_categories_order", $parm['children']);
+				return $this->getAll($q);
+			}
 			if (isset($parm['picid'])) 
 			{				
 				$q = sprintf("select * from wf_idmap i join wf_categories c on c.wf_categories_id=i.wf_id_2 where i.wf_type_1='pic' and i.wf_id_1=%s and i.wf_type_2='cat' order by i.wf_type_2", $parm['picid']);
@@ -1003,6 +1011,8 @@
 			}
 			WhuThing::getRecord($parm);		// FAIL
 		}
+		function placesRoot() { return 40; }
+		function children($cat) { return $this->build('Categorys', array('children' => $cat)); }
 	}
 	
 	?>
