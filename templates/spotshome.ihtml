@@ -31,6 +31,10 @@
 
 <style type="text/css" media="screen">
 
+.jumbotron h2 {
+	color: {BOLDCOLOR};
+}
+
 @media (max-width: 700px)  {	
 	#main_item_lg { display: none;}
 }

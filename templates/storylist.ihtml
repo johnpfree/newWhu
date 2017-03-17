@@ -2,9 +2,16 @@
 
 <!-- BEGIN rows -->
 <hr />
-<a href="?page=txt&type=wpid&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
-<p class="storydates">{STORY_DATES}</p>
-<p class="storypart clearfix">{STORY_EXCERPT}</p>
+<div class="row">
+  <div class="col-md-10">
+		<a href="?page=txt&type=wpid&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
+		<p class="storydates">{STORY_DATES}</p>
+		<p class="storypart clearfix">{STORY_EXCERPT}</p>
+	</div>
+  <div class="col-md-2">
+		<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+	</div>
+</div>
 <!-- END rows -->
 {LINK_BAR}
 
@@ -24,4 +31,11 @@
 .storypart {
 	margin: 0px 0 22px;
 }
+.hideme { display: none; }
+.squareme {
+	object-fit: cover;
+	width: 120px;
+	height: 120px;
+}
+
 </style>

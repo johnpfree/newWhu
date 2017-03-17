@@ -6,15 +6,14 @@ class ViewWhu extends ViewBase  // ViewDbBase
 {	
 	var $file = "UNDEF";
 	var $curpal = NULL;
-	var $pals =	array(
+	var $pals =	array(               //  
 			"deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'), 
-			// "deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#659a8b', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'),
-			"map" => 		array('boldcolor' => '#47894B', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
-			"log" =>		array('boldcolor' => '#2d4976', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
-			"txt" => 		array('boldcolor' => '#59463A', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'), 
-			"pic" => 		array('boldcolor' => '#515022', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'), 
-			"search" => array('boldcolor' => '#B96936', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'), 
-			"spot" => 	array('boldcolor' => '#101010', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
+			"map" => 		array('boldcolor' => '#B8BE3F', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
+			"log" =>		array('boldcolor' => '#00A6B6', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
+			"txt" => 		array('boldcolor' => '#81683B', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'),
+			"pic" => 		array('boldcolor' => '#B1A472', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'),
+			"search" => array('boldcolor' => '#D76824', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'),
+			"spot" => 	array('boldcolor' => '#464646', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'),
 			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
 		);
 	
@@ -74,6 +73,10 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function setStyle($page)
 	{
+		$pagemap = array('day' => 'log');
+		if (isset($pagemap[$page]))					// map pages
+			$page = $pagemap[$page];
+
 		foreach ($this->pals as $k => $v)
 		{
 			// dumpVar($k, "pt= $page, k");
@@ -990,9 +993,9 @@ class TripStories extends ViewWhu
 		
 		// collect unique Post ids
 		$days = $this->build('DbDays', $tripid);
-		for ($i = 0, $wpids = $wpdates = $wpdate = array(); $i < $days->size(); $i++)
+		for ($i = 0, $wpids = $wpdates = $wpdate = $pics = array(); $i < $days->size(); $i++)
 		{
-			$day = $days->one($i);
+			$day = $days->one($i);			
 			$wpdate[1] = $day->date();
 			
 			if (in_array($wpid = $day->postId(), $wpids))
@@ -1002,9 +1005,13 @@ class TripStories extends ViewWhu
 			if (isset($wpdate[0]))
 				$wpdates[] = $wpdate;
 			$wpdate[0] = $day->date();
+
+			$dpics = $day->pics();
+			$pics[] = ($dpics->size() > 0) ? $dpics->favored() : NULL;
 		}
 		$wpdates[] = $wpdate;
 
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		// now fill the loop
 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
 		{ 
@@ -1015,12 +1022,18 @@ class TripStories extends ViewWhu
 			$str .= " - ";
 			$str .= Properties::prettyDate($wpdates[$i][1]);
 			$row['story_dates'] = $str;
-			
 			$row['story_excerpt'] = $post->baseExcerpt($post->content(), 300);
-			
+
+			if (is_null($pics[$i]))
+				$row['use_image']  = 'hideme';
+			else
+			{
+				$row['pic_name'] = $pics[$i]->filename();
+		 		$row['wf_images_path'] = $pics[$i]->folder();
+				$row['use_image']  = '';
+			}
 			$rows[] = $row;
 		}          
-
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		$this->tripLinkBar('txts', $tripid);		
@@ -1136,19 +1149,38 @@ class Search extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
 		$loop->do_loop($rows);
 		
-		// --------------------------------------------------------------------- Picture categories
+		// --------------------------------------------------------------------- Pictures
+		// --------------------------------------------------------------------- Place categories
 		$cats = $this->build('Categorys', 'all');
-		$placeCats = $cats->children($cats->placesRoot());
-		dumpVar($placeCats->data, "placeCats->data");
-		for ($i = 0, $rows = array(); $i < $cats->size(); $i++)
+		// $placeCats = $cats->children($cats->placesRoot());
+		// dumpVar($placeCats->data, "placeCats->data");
+
+		$catlist = $cats->traverse($this->build('Category', $cats->placesRoot()));
+		for ($i = 0, $rows = array(); $i < sizeof($cats->descendantList()); $i++) 
 		{
-			$cat = $cats->one($i);
-		
-			// $row = array(parms);
-			// $rows[] = $row;
+			$cat = $cats->descendantList()[$i];
+			// dumpVar($cat->name(), sprintf("%s. d=%s, id=%s", $i, $cat->depth(), $cat->id()));
+
+			$row = array('spid' =>$cat->id());
+			$row['spcount'] = $cat->nPics();
+			$row['spname'] = sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name());
+			$rows[] = $row;
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'ppicrow', 'noFields' => true));
 		$loop->do_loop($rows);
+
+		// --------------------------------------------------------------------- Non-Place categories
+		
+		$catlist = $cats->traverse($this->build('Category', $cats->picCatsRoot()));
+		for ($i = 0, $rows = array(); $i < sizeof($cats->descendantList()); $i++) 
+		{
+			$cat = $cats->descendantList()[$i];
+
+			$row = array('spid' =>$cat->id());
+			$row['spcount'] = $cat->nPics();
+			$row['spname'] = sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name());			
+			$rows[] = $row;
+		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'cpicrow', 'noFields' => true));
 		$loop->do_loop($rows);
 		

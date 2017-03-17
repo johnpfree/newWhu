@@ -694,18 +694,7 @@
 		{
 			return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");// order by wf_days_date");
 		}
-	}
-	class WhuSpotCat extends WhuThing 
-	{
-		function getRecord($key)		// key = cat id
-		{
-			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
-		}
-		function id()			{ return $this->dbValue('wf_categories_id'); }
-		function name()		{ return $this->dbValue('wf_categories_text'); }
-		function parent()	{ return $this->dbValue('wf_categories_parent'); }
-	}
-	
+	}	
 	class WhuPost extends WhuThing 
 	{
 		var $lazyPostRec = 0;
@@ -980,15 +969,34 @@
 	
 	class WhuCategory extends WhuThing 
 	{
+		var $rootRoot 	= 7;
+		var $placesRoot = 40;
+		var $catsRoot 	= 176;
 		function getRecord($key)		// key = cat id
 		{
 			if ($this->isCategoryRecord($key))
 				return $key;
 			return $this->getOne("select * from wf_categories where wf_categories_id=$key");	
 		}
+		function root() 				{ return $this->rootRoot; }
+		function placesRoot() 	{ return $this->placesRoot; }
+		function picCatsRoot() 	{ return $this->catsRoot; }
+
 		function id()				{ return $this->dbValue('wf_categories_id'); }
 		function name()			{ return $this->dbValue('wf_categories_text'); }
 		function parent()		{ return $this->dbValue('wf_categories_parent'); }
+		function order()		{ return $this->dbValue('wf_categories_order'); }
+		
+		function nPics()	
+		{ 
+			$q = sprintf("select COUNT(*) count from wf_idmap WHERE wf_type_1='pic' and wf_type_2='cat' and wf_id_2=%s", $this->id());
+			$item = $this->getOne($q);
+			return $item['count'];
+		}
+		
+		function children() { return $this->build('Categorys', array('children' => $this->id())); }
+		function depth()				{ return isset($this->data['depth']) ? $this->data['depth'] : 0; }
+		function setDepth($d)		{ $this->data['depth'] = $d; }
 	}
 	class WhuCategorys extends WhuCategory 
 	{
@@ -1011,8 +1019,22 @@
 			}
 			WhuThing::getRecord($parm);		// FAIL
 		}
-		function placesRoot() { return 40; }
-		function children($cat) { return $this->build('Categorys', array('children' => $cat)); }
+		function traverse($root, $depth = 0)
+		{
+			if ($depth == 0)
+				$this->desc = array();
+			$depth++;
+			// dumpVar(sizeof($this->desc), sprintf("dep=%s, root=%s,%s", $depth, $root->id(), $root->name()));
+			$cats = $root->children();
+			for ($i = 0, $rows = array(); $i < $cats->size(); $i++)
+			{
+				$cat = $cats->one($i);
+				$cat->setDepth($depth);
+				$this->desc[] = $cat;
+				$this->traverse($cat, $depth);
+			}
+		}
+		function descendantList()	{ return $this->desc; }
 	}
 	
 	?>

@@ -32,13 +32,13 @@
 	</div> 
 	</div> 
 <style type="text/css" media="screen">
-	#main_item h2 {
-		margin-top: 0;
-	}
-		#biglist {
-		font-size: 120%;
-	}
-	#biglist li,#findlist li {
-		margin-bottom: .8rem;
-	}
+#main_item h1 {
+	color: {BOLDCOLOR};
+}
+#biglist {
+	font-size: 120%;
+}
+#biglist li,#findlist li {
+	margin-bottom: .8rem;
+}
 </style>

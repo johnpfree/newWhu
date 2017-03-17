@@ -10,12 +10,15 @@
 	}
 	#linkbar>div {
 		padding: 30px 0px;
-		fxont-size: 140%;
 		text-align: center;
-		border: 1px solid #3a5950;
+		border: 1px solid {BOLDCOLOR};
 	}
 	#linkbar>div>h3 {
 		margin: 0;
+	}
+	#linkbar>div>h3a {
+		margin: 0;
+		color: red;
 	}
 </style>
 
