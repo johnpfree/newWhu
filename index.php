@@ -112,14 +112,9 @@ if ($props->isProp('do_text_search'))	{				// text search
 	$props->pagetypekey('results', 'text', $props->get('search_text'));
 }
 else if ($props->isProp('comment_form')) {		// comment form
-	$formkeys = array(
-		'choose_purpose' => 'Purpose', 
-		'f_name'		 		=> 'Name', 
-		'f_email' 			=> 'Email', 
-		'f_Topic' 			=> 'Topic', 
-		'f_comment' 		=> 'Comment', 
-		'f_url' 				=> 'Url', 
-	 );	
+	
+	$savecmt = new SaveForm($props);
+	$savecmt->write($_REQUEST, 'cloudy');	
 	$props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));	
 }
 else if ($props->isProp('search_near_spot')) {		// form has the correct parms as hidden data, nothing to do here
