@@ -1,7 +1,13 @@
 
-<div class="container"id="main_item">
-	<h2>Contact Form</h2>
-  <form role="form" data-toggle="validator">
+<div class="container {HIDE_THANKS}" id="main_item">
+	<h2>Your feedback has been sent. Thank you for sharing!</h2>
+	<h4 id="thxlink"><a href="?page={FROM_P}&type={FROM_T}&key={FROM_K}&id={FROM_I}">Click here</a> to return to the page you were looking at, or use the menu to go somewhere else.</h4>
+	
+</div>
+
+<div class="container {HIDE_FORM}" id="main_item">
+	<h2>Feedback Form</h2>
+  <form role="form" method="post" data-toggle="validator">
     <fieldset class="form-group row">
       <div class="col-sm-2">
         <div class="form-check">
@@ -88,7 +94,7 @@
     <div class="form-group row">
       <label for="Captcha" class="col-sm-8 col-form-label">Prove you are a worthy submitter, please do this math ({MATH_Q}) and enter the result:</label>
       <div class="col-sm-2">
-        <input type="number" class="form-control" name="f_cap" id="Captcha" placeholder="{MATH_Q}" required>   <!-- max={MATH_A} min={MATH_A}-->
+        <input type="number" class="form-control" name="f_cap" id="Captcha" placeholder="{MATH_Q}" required autocomplete="false">   <!-- max={MATH_A} min={MATH_A}-->
       </div>
       <div class="col-sm-2">
         <button type="submit" name="comment_form" class="btn btn-primary">&nbsp; Send &nbsp;</button>
@@ -105,6 +111,9 @@
 <style type="text/css" media="screen">
 label {
 	text-align: right;
+}
+#thxlink {
+	margin: 20px 0 100px;
 }
 </style>
 

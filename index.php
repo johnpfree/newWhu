@@ -111,11 +111,13 @@ $props->dump('props');
 if ($props->isProp('do_text_search'))	{				// text search
 	$props->pagetypekey('results', 'text', $props->get('search_text'));
 }
-else if ($props->isProp('comment_form')) {		// comment form
-	
+else if ($props->isProp('comment_form')) 		// comment form
+{
 	$savecmt = new SaveForm($props);
 	$savecmt->write($_REQUEST, 'cloudy');	
-	$props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));	
+	$props->set('type', 'thx');
+	$props->dump('again');
+	// $props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));
 }
 else if ($props->isProp('search_near_spot')) {		// form has the correct parms as hidden data, nothing to do here
 }
@@ -170,11 +172,12 @@ switch ("$curpage$curtype")
 	case 'spotscamp':		$page = new SpotsCamps($props);			break;		// type of campground (usfs, usnp, state)
 	case 'spotsplace':	$page = new SpotsPlaces($props);		break;		// state/region
 	
-	case 'searchhome':	$page = new Search($props);				break;
+	case 'searchhome':	$page = new Search($props);					break;
 	case 'resultstext':	$page = new SearchResults($props);	break;
 
-	case 'abouthome':		$page = new About($props);				break;	
-	case 'contacthome':	$page = new ContactForm($props);	break;	
+	case 'abouthome':		$page = new About($props);					break;	
+	case 'contacthome':	$page = new ContactForm($props);		break;	
+	case 'contactthx':	$page = new ContactThanks($props);	break;	
 	
 	default: 
 		dumpVar("$curpage$curtype", "Unknown page/type:");

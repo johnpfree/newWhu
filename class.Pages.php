@@ -1287,8 +1287,12 @@ class ContactForm extends ViewWhu
 	var $file = "contact.ihtml";   
 	function showPage()	
 	{
+		$this->template->set_var("HIDE_THANKS", 'hideme');
+		$this->template->set_var("HIDE_FORM", '');
+		
 		$x1 = rand(2, 9);
 		$x2 = rand(2, 9);
+		dumpVar($x1 * $x2, "$x1 * $x2");
 		$this->template->set_var('MATH_Q', "$x1 * $x2");
 		$this->template->set_var('MATH_A', $x1 * $x2);
 
@@ -1298,6 +1302,21 @@ class ContactForm extends ViewWhu
 		$this->template->set_var('FROM_I', $this->props->get('fromi'));
 
 		parent::showPage();
+	}
+}
+class ContactThanks extends ContactForm
+{
+	function showPage()	
+	{
+		$this->template->set_var("HIDE_THANKS", '');
+		$this->template->set_var("HIDE_FORM", 'hideme');
+		
+		$this->template->set_var('FROM_P', $this->props->get('fromp'));
+		$this->template->set_var('FROM_T', $this->props->get('fromt'));
+		$this->template->set_var('FROM_K', $this->props->get('fromk'));
+		$this->template->set_var('FROM_I', $this->props->get('fromi'));
+
+		ViewWhu::showPage();
 	}
 }
 ?>
