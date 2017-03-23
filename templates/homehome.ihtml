@@ -23,7 +23,7 @@
 		<div class="col-md-6">
 			<h3>Finding what you want in WHUFU</h3>
 			<ul id="findlist">
-				<li><a href="?page=search&type=home">Spot Search</a> &ndash; Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have a feature search for the hundreds of spots.</li>
+				<li><a href="?page=search&type=home">Spot Search</a> &ndash; Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have <a href="?page=search&type=home">boatload of ways</a> to search through the hundreds of spots.</li>
 				<li><a href="?page=search&type=home">Area Search</a> &ndash; Alternatively you can search for all the spots near your home, or any other place.</li>
 				<li>Text Search &ndash; The "search text" box above will look for text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I said anything mean about them. Enter the name of a town or a beach, or whatever strikes your fancy.</li>
 			</ul>

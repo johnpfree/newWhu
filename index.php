@@ -116,8 +116,6 @@ else if ($props->isProp('comment_form')) 		// comment form
 	$savecmt = new SaveForm($props);
 	$savecmt->write($_REQUEST, 'cloudy');	
 	$props->set('type', 'thx');
-	$props->dump('again');
-	// $props->pagetypekey($props->get('fpage'), $props->get('ftype'), $props->get('fkey'), $props->get('fid'));
 }
 else if ($props->isProp('search_near_spot')) {		// form has the correct parms as hidden data, nothing to do here
 }

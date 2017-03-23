@@ -153,13 +153,13 @@
 	<footer>
 	  <div class="container">
 			<div class="row" id="main-footer">
-				<div class="col-sm-3" id="my_name">
-					&copy; 2010-2017 John P Freeman
+				<div class="col-sm-4" id="my_name">
+					Whufu 3.0 &copy; 2010-2017 John P Freeman
 				</div>
 				<div class="col-sm-2">
 					<a href="http://www.cloudyhands.com/">cloudyhands.com</a> 
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-1">
 		      <a href="https://twitter.com/johnpfreem"      target="_blank"><img src="resources/icons/tweet.png" height="20"></a>
 		      <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>
 				</div>

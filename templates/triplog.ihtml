@@ -2,7 +2,7 @@
 <table class="table table-hover" id="triptable">
 	<thead>
 		<tr>
-			<td class="table-caption" colspan="11"><h4>{TRIP_NAME}</h4></td>
+			<td class="table-caption" colspan="11"><h1>{TRIP_NAME}</h1></td>
 		</tr>
 		<tr id=triptablehead>
 			<td>#</td>
