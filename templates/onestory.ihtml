@@ -63,6 +63,11 @@ img.wp-post-image {
 	border: 2px solid {BOLDCOLOR};
 /*	border: 2px solid #4D804C;*/
 }
+.wp-caption:hover {
+	background-color: {linkhover};
+	border: 2px solid #80003B;
+	text-shadow: 0 0 2px #999;
+}
 .wp-caption .wp-caption-text {
 	font-style: italic;
 	font-size: 90%;
@@ -85,12 +90,10 @@ h5 {
 }
 .entry-content h3 {
 	margin: 18px 0 8px;
+	font-size: 2rem;
 	line-height: 1.714285714;
 	clear: both;			/* so heading doesn't float with pic layout */
-}
-.entry-content h3 {
-	font-size: 2rem;
-	line-height: 1.846153846;
+	text-decoration: none;
 }
 .entry-content p {
 	margin: 0 0 18px; 	/* less space btwn paragraphs */

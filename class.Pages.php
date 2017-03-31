@@ -6,15 +6,17 @@ class ViewWhu extends ViewBase  // ViewDbBase
 {	
 	var $file = "UNDEF";
 	var $curpal = NULL;
-	var $pals =	array(               //  
-			"deflt" => 	array('boldcolor' => '#3A5950', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1', 'backcolor' => '#e9f0ee'), 
-			"map" => 		array('boldcolor' => '#B8BE3F', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc', 'backcolor' => '#ebf4eb'), 
-			"log" =>		array('boldcolor' => '#00A6B6', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced', 'backcolor' => '#e5ebf5'), 
-			"txt" => 		array('boldcolor' => '#81683B', 'linkcolor' => '#9a7a65', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'),
-			"pic" => 		array('boldcolor' => '#B1A472', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd', 'backcolor' => '#f3f3e3'),
-			"search" => array('boldcolor' => '#D76824', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#f8efea'),
-			"spot" => 	array('boldcolor' => '#464646', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'),
-			"gray" => 	array('boldcolor' => '#101010', 'linkcolor' => '#909090', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d0d0d0'), 
+	var $pals =	array(
+			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'), 
+			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#f0f', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
+			// "map" => 		array('boldcolor' => '#B8BE3F', 'bordercolor' => '#868C1A', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'),
+			"log" =>		array('boldcolor' => '#007383', 'bordercolor' => '#e5ebf5', 'linkcolor' => '#005A6A', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#E5FFFF'), 
+			// "log" =>		array('boldcolor' => '#00A6B6', 'bordercolor' => '#e5ebf5', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced'),
+			"pic" => 		array('boldcolor' => '#B1A472', 'bordercolor' => '#f3f3e3', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd'),
+			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#f8efea', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9'),
+			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0'),
+			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#084F13', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFFFD4', 'backcolor' => '#FFE8BB'),
+			// "txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#f0ece9', 'linkcolor' => '#5a3a25', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'),
 		);
 	
 	var $caption = '';		// if $caption is non-blank, use it. Otherwise call getCaption()
@@ -91,7 +93,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->set_var('BBACKCOLOR', 	$this->curPal->pageBackColor());
 		$this->template->set_var('BODYCOLOR', 	$this->curPal->pageLineColor());
 		$this->template->set_var('BACKCOLOR', 	$this->curPal->contBackColor());
-		$this->template->set_var('BORDERCOLOR', $this->curPal->contLineColor());
+		$this->template->set_var('BORDERCOLOR', $this->curPal->borderColor());
 		$this->template->set_var('BOLDCOLOR', 	$this->curPal->boldFontColor());
 		$this->template->set_var('LINKCOLOR', 	$this->curPal->linkColor()    );
 		$this->template->set_var('LINKHOVER', 	$this->curPal->linkHover()    );

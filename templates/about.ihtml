@@ -11,11 +11,11 @@
 	      </div>
 	      <div id="collapse1" class="panel-collapse collapse in">
 	        <div class="panel-body">
-						<p>This site is the results of the obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's, but it wasn't the technology developments of the early 2000's, when I started travelling with my laptop and a digital camera, that I got the notion to put together an app to try to convey the experiences. </p>		
+						<p>This site is the results of my obsessive documentation of my road trips for the last eight years.  I have kept a mileage log forever, since the 70's, but it wasn't until the technology developments of the early 2000's, when I started travelling with my laptop and a digital camera, that I got the notion to put together an app to try to convey the experiences.</p>		
 						<ul>
 							<li>Here is the <a target="_blank" href="http://cloudyhands.com/fall00/fall00.php">first try</a> from 2000.</li>
 							<li>Here is the <a target="_blank" href="http://cloudyhands.com/php/PicOrg/usmap.php">second try</a> from 2002.</li>
-							<li>Here is the massive <a target="_blank" href="http://www.whufu.com/">third try</a>. It was at this URL until April 2017, when I moved it elsewhere and installed the new WUHFU.</li>
+							<li>Here is the massive <a target="_blank" href="http://www.whufu.com/whufu2.4">third try</a>. It was at the present URL until March 2017, when I moved it down a directory and installed this, the mobile-friendly WHUFU.</li>
 						</ul>
 						<p>This website is the fourth try ... really the third try gutted and re-written to be more mobile-friendly and I hope, more people-friendly.</p>
 					</div>
@@ -99,7 +99,7 @@
 									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
 										This means I have to export them from my laptop Wordpress and import them to my server Wordpress, one of the least satisfying parts of this process, since any updates or corrections have to be done manually in both places.<br />
 										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. Also the day name headers in the posts are done by a shortcode which generates a "name" anchor tag so I may link directly to the part of the post for that day.<br />
-										To display a story in WHUFU I crank up Wordpress to render the content into a <strong>div</strong>, so I get all those shortcode renderings exactly as in the actual blog..
+										To display a story in WHUFU I crank up Wordpress to render the content into a <strong>div</strong>, so I get all those shortcode renderings exactly as in the actual blog.
 									</dd>
 								</dl>
 							</li>
@@ -111,16 +111,17 @@
 											<li>I use an ancient templating class called <strong>template.inc</strong>. I’ve built my own set of classes around it, mostly to encapsulate it's non-user-friendly looping conventions. It does pretty much everything I need.</li>
 											<li>All the responsive behavior is from <strong>Bootstrap</strong>. It's pretty cool.</li>
 											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here.</li>
-											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there.</li>
-											<li>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Along with odometer readings and place names and notes it has columns for the blog post id for that day and the id of the Spot where I stayed if any. Back home I export the spreadsheet as CSV, then run a little PHP program to read the CSV and create day records in the database. <br />
-												This is the backbone of WHUFU, basically everything interconnects using the Trips table and the Days table.</li>
+											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there, for all to see.</li>
+											<li><p>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Along with odometer readings and place names and notes it has columns for the blog post id for that day and the id of the Spot where I stayed if any. Back home I export the spreadsheet as CSV, then run a little PHP program to read the CSV and create day records in the database.</p>
+												<p>This is the backbone of WHUFU, basically everything interconnects using the <em>Trips table</em> and the <em>Days table</em>.</p>
+											</li>
 											<li>
 												I have an extensive set of backend tools for entering all the data for WHUFU:
 												<ul>
-													<li>A Spot manager app for entering and editing Spots and the different times I have been to a spot (SpotDays).</li>
+													<li>A <em>Spot manager app</em> for entering and editing Spots and the different times I have been to a spot (SpotDays).</li>
 													<li>I upload pictures with iPhoto or the Canon app. I use Mac Preview for the initial winnowing. After I am down to just the pictures I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data. The pictures for each trip go into a separate folder.</li>
-													<li>When I have exactly the pictures I want in the folder for that trip I run the Picture entry app in that folder. It reads the image names creates database records for them</li>
-													<li>Once they're in the database I run a Picture captioning app, to label each one and assign keywords.</li>
+													<li>When I have exactly the pictures I want in the folder for that trip I run the <em>Picture entry app</em> on that folder. It reads the image names and creates a database record for each.</li>
+													<li>Once pictures are in the database I run a <em>Picture captioning app</em>, to label them and assign keywords.</li>
 												</ul>
 											</li>
 										</ul>

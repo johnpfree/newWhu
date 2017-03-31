@@ -10,7 +10,7 @@ include_once("class.Pages.php");
 include_once("class.Geo.php");				// after Pages
 
 include_once(INCPATH . "jfdbg.php");
-$noDbg = NODBG_DFLT;
+$noDbg = 1;//NODBG_DFLT;
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 
@@ -80,12 +80,12 @@ class StyleProps extends WhuProps
 
 	function pageBackColor() { return $this->getDefault("bbackcolor", "#fff"); }
 	function pageLineColor() { return $this->getDefault("bodycolor" , "#000"); }
+	function allFontColor()  { return $this->getDefault("fontcolor" , "#000"); }
 	function contBackColor() { return $this->getDefault("backcolor" , $this->pageBackColor()); }
-	function contLineColor() { return $this->getDefault("linecolor" , $this->pageLineColor()); }
-	function allFontColor()  { return $this->getDefault("fontcolor" , $this->contLineColor()); }
-	function boldFontColor() { return $this->getDefault("boldcolor" , $this->allFontColor()); }
-	function linkColor()     { return $this->getDefault("linkcolor" , $this->allFontColor()); }
-	function linkHover()     { return $this->getDefault("linkhover" , $this->allFontColor()); }
+	function borderColor()	 { return $this->getDefault("bordercolor" , $this->pageLineColor()); }
+	function boldFontColor() { return $this->getDefault("boldcolor" , $this->borderColor()); }
+	function linkColor()     { return $this->getDefault("linkcolor" , $this->borderColor()); }
+	function linkHover()     { return $this->getDefault("linkhover" , $this->borderColor()); }
 }
 
 // ---------------- Template Class, for nothing just yet -------------

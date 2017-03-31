@@ -1,5 +1,5 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<h1><span>Pictures for:</span> {GAL_TITLE}</h1>
+	<h2><span>pictures for:</span> {GAL_TITLE}</h2>
 	<p>{NUM_DAYS} days, {NUM_PICS} pictures</p>
 	
 	<div class="clearfix" id="thegal">
@@ -17,9 +17,10 @@
 </div>
 
 <style type="text/css" media="screen">
-h1>span { 
+h2>span { 
 	font-size: 80%;
 	font-weight: light;
+	font-style: italic;
 }
 #thegal>p {
 	float: left;
