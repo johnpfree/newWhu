@@ -80,10 +80,16 @@ class SaveForm
 	{
 		// date time, purpose, name, email, topic, content, url
 		$str = sprintf("%s,%s,%s,%s,%s,%s,%s", date("Y-m-d H:i:s"),
-						$this->props->get('choose_purpose'), $this->props->get('f_name'), $this->props->get('f_email'), 
-						$this->props->get('f_topic'), $this->props->get('f_comment'), $this->props->get('f_url'));
+						$this->props->get('choose_purpose'), $this->massageForCsv('f_name'), $this->props->get('f_email'), 
+						$this->massageForCsv('f_topic'), $this->massageForCsv('f_comment'), $this->props->get('f_url'));
 		
 		$this->out->write("$str");
+	}
+	function massageForCsv($prop)
+	{
+		$txt = $this->props->get($prop);					// specialized, get the prop here
+		$txt = str_ireplace('"', '"""', $txt);		// double quotes in text are doubled
+		return '"' . $txt . '"';
 	}
 }
 

@@ -106,9 +106,9 @@
 		function random($num)						// chops the data array down to a maximum of $num items (unchanged if there aren't $num items)
 		{	
 			shuffle($this->data);
-			dumpVar(sizeof($this->data), "this->data0");
+			dumpVar(sizeof($this->data), "random($num) size in");
 			$this->data = array_slice($this->data, 0, $num);
-			dumpVar(sizeof($this->data), "this->data1");
+			// dumpVar(sizeof($this->data), "size out");
 		}
 		// add more items to the collection
 		function add($more) { $this->data = array_merge($this->data, $more->data); }
@@ -220,10 +220,11 @@
 		function getRecord($key)
 		{
 			// dumpVar($key, "key");
-			// APCIteratordumpBool(is_array($key), "arr");
+			// dumpBool(is_array($key), "arr");
 			if (is_array($key))					// $key == the record?
 				return $key;
 
+			// dumpVar($key, "select * from wf_days where wf_days_date='$key'");
 			if ($this->isDate($key))		// $key == date?
 				return $this->getOne("select * from wf_days where wf_days_date='$key'");	
 
@@ -504,7 +505,7 @@
 			if (isset($vfld[0]) && $vfld[0] == "+")
 				$ndays += substr($vfld, 1);		
 				
-			dumpVar($ndays, "vfld = $vfld, day recs=" . $this->lazyDays->size() . "RESULT");
+			// dumpVar($ndays, "vfld = $vfld, day recs=" . $this->lazyDays->size() . "RESULT");
 			return $ndays;
 		}
 		function keywords()
@@ -816,7 +817,7 @@
 			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
 		}
 		
-		// imapge FILE stuff - extract GPS, extract thumbnail
+		// image FILE stuff - extract GPS, extract thumbnail
 		function latlon()
 		{
 			$fullpath = $this->fullpath();		
@@ -860,6 +861,7 @@
 		var $isCollection = true;
 		function getRecord($parm)	//  tripid. folder, date
 		{
+			// dumpVar($parm, "WhuPics parm");
 			if ($this->isTextSearch($parm))						// for text search
 			{
 				$qterm = $parm['searchterm'];

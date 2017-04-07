@@ -28,6 +28,8 @@
 {LINK_BAR}
 
 <style type="text/css" media="screen">
+#main_item h1 a 			{ color: {BOLDCOLOR}; }
+#main_item h1 a:hover { color: {LINKCOLOR}; }
 
 article.jumbotron	{
   padding-bottom: 1em;

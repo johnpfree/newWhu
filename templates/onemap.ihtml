@@ -20,9 +20,12 @@ h2 {
 }
 
 .leaflet-popup-content {
-	color: #8c2b09;
-	background-color: #ffebc9;
+	color: {BOLDCOLOR};
+	background-color: {BBACKCOLOR};
 }
+.leaflet-popup-content a			 {	color: {LINKCOLOR};	}
+.leaflet-popup-content a:hover {	color: {LINKHOVER}; text-decoration: underline;	}
+
 </style>
 <script>
 L.mapbox.accessToken = '{MAPBOX_TOKEN}';

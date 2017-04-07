@@ -32,10 +32,10 @@
 	</div> 
 	</div> 
 <style type="text/css" media="screen">
-#main_item h1 {
-	color: {BOLDCOLOR};
-}
-#biglist {
+
+#main_item h1 {	color: {BOLDCOLOR};	}
+
+,#biglist {
 	font-size: 120%;
 }
 #biglist li,#findlist li {

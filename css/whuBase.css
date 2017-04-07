@@ -20,11 +20,13 @@ body {
   shared 
 ==================================== */
 
+/* un-jumbo jumbotron a bit: */
 .jumbotron { 
-	background-color: transparent; 
+	background-color: transparent; 		/* un-color jumbotrons */
 	padding-top: 0;
-}		/* un-color jumbotrons */
+}
 .jumbotron p {	font: inherit;	}
+.jumbotron h1 { font-size: 36px;}
 
 #main_item hr {
 	height: 4px;

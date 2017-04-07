@@ -64,15 +64,15 @@
 			 CSS for header and footer might as well be here with the header and footer.
 			==================================== */
 			.navbar-inverse .navbar-nav>.active>a { background-color: #59503a; }
+			.navbar-inverse .navbar-nav>.active>a:hover { background-color: #403721;	}
+						
 			.navbar-brand     { padding: 0 15px; }
 			.navbar-brand img { height: 50px; }
 	    .navbar,footer {  
 				background-color: #3A5950;
 				font-family: Roboto, Arial, sans-serif;
 			}
-	    .navbar a {  
-				color: #f75035;
-			}
+
 			footer {
 				color: #a7c5bc;
 				padding: 1rem 0;

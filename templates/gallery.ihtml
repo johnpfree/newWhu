@@ -19,6 +19,9 @@
 
 <style type="text/css" media="screen">
 
+	#main_item h1 a 			{ color: {BOLDCOLOR}; }
+	#main_item h1 a:hover { color: {LINKCOLOR}; }
+
 h1>i.small { color: {BOLDCOLOR}; }
 
 #thegal>p {

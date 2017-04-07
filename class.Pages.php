@@ -7,16 +7,13 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $file = "UNDEF";
 	var $curpal = NULL;
 	var $pals =	array(
+			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9'),
+			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#868C1A', 'linkcolor' => '#33A672', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
+			"pic" => 		array('boldcolor' => '#4B3E0C', 'bordercolor' => '#655826', 'linkcolor' => '#1B4F24', 'linkhover' => '#6A5835', 'bbackcolor' => '#FFFFE7'),
+			"log" =>		array('boldcolor' => '#004151', 'bordercolor' => '#007383', 'linkcolor' => '#005A6A', 'linkhover' => '#33A6B6', 'bbackcolor' => '#E5FFFF'), 
+			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'), 
-			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#f0f', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
-			// "map" => 		array('boldcolor' => '#B8BE3F', 'bordercolor' => '#868C1A', 'linkcolor' => '#73b778', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'),
-			"log" =>		array('boldcolor' => '#007383', 'bordercolor' => '#e5ebf5', 'linkcolor' => '#005A6A', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#E5FFFF'), 
-			// "log" =>		array('boldcolor' => '#00A6B6', 'bordercolor' => '#e5ebf5', 'linkcolor' => '#4e78bc', 'linkhover' => '#9ab2d8', 'bbackcolor' => '#d1dced'),
-			"pic" => 		array('boldcolor' => '#B1A472', 'bordercolor' => '#f3f3e3', 'linkcolor' => '#52223B', 'linkhover' => '#d0cf90', 'bbackcolor' => '#eae9cd'),
-			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#f8efea', 'linkcolor' => '#6D1D00', 'linkhover' => '#e6c2ab', 'bbackcolor' => '#f4e3d9'),
 			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0'),
-			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#084F13', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFFFD4', 'backcolor' => '#FFE8BB'),
-			// "txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#f0ece9', 'linkcolor' => '#5a3a25', 'linkhover' => '#c5b3a7', 'bbackcolor' => '#e5dcd7', 'backcolor' => '#f0ece9'),
 		);
 	
 	var $caption = '';		// if $caption is non-blank, use it. Otherwise call getCaption()
@@ -225,13 +222,14 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		{
 			$this->template->set_var("MAP_INSET", 
 					"<i class=smaller><br />Apparently the camera couldn't <br />geolocate this pic.</i>");
-			return;
+			return false;
 		}
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
 		foreach ($coords as $k => $v) 
 		{
 			$this->template->set_var("PT_$k", addslashes($v));
 		}
+		return true;
 	}
 	
 	
@@ -804,7 +802,7 @@ class OnePic extends ViewWhu
 		$this->template->set_var('WF_IMAGES_TEXT', $pic->caption());
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		// $this->template->set_var('REL_PICPATH', REL_PICPATH);
-		
+
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $pic->date()));
 		
 		$pageprops = array();
@@ -831,7 +829,14 @@ class OnePic extends ViewWhu
 		$loop->do_loop($rows);
 		
 		$gps = $pic->latlon();
-		$this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($date), 'desc' => $pic->caption())));
+		if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($date), 'desc' => $pic->caption()))))
+		{
+			$this->template->set_var('GPS_VIS', '');
+			$this->template->set_var('GPS_LAT', $gps['lat']);
+			$this->template->set_var('GPS_LON', $gps['lon']);
+		}
+		else
+			$this->template->set_var('GPS_VIS', 'hideme');
 	}
 }
 

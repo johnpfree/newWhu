@@ -69,9 +69,7 @@
 </article>
 
 <style type="text/css" media="screen">
-#main_item h1 {
-	color: {BOLDCOLOR};
-}
+#main_item h1 {	color: {BOLDCOLOR};	}
 
 .list_head {
 	margin: 1em 0 0;

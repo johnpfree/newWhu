@@ -15,9 +15,6 @@
 .jumbotron {
 	padding-bottom: 0px;
 }
-#main_item h1 {
-	font-size: 50px;
-}
 
 .entry-content {  
 	padding: 10px;

@@ -16,7 +16,8 @@
 	      <div class="panel-body">
 					<div class="row" id="infotable">
 						<div class="col-sm-8">
-							<i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> at <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b>
+							<p><i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> at <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b></p>
+							<p style="{GPS_VIS}">geolocation: {GPS_LAT}, {GPS_LON}</p>
 							<hr />
 							<i>keywords for this picture:</i><br />
 							&bull; 
