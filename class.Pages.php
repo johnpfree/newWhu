@@ -388,6 +388,7 @@ class AllTrips extends ViewWhu
 			$row['TRIP_NAME'] = $trip->name();
 			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='hidden'";		// everybody gets a map!
 			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='hidden'";
+			$row['VID_CLASS'] = $trip->hasVids() ? '' : "class='hidden'";
 			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='hidden'";
 			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
 			// dumpVar($row, "row");exit;
@@ -472,15 +473,34 @@ class TripPictures extends ViewWhu
 		$trip = $this->build('Trip', $this->key);
 		$this->template->set_var('GAL_TITLE', $trip->name());
 		
+		$tripvids = $this->build('Vids', array('tripid' => $this->key));
+		if (($nvid = $tripvids->size()) == 0)
+		{
+			$this->template->set_var('AND_VIDS', '');
+			$this->template->set_var('NUM_VIDS', '');
+		}
+		else
+		{
+			$this->template->set_var('AND_VIDS', '/videos');
+			$this->template->set_var('NUM_VIDS', " &bull; $nvid videos");
+		}
+		dumpVar($tripvids->data[0], "videos=>data[0]");
+
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		$days = $this->build('DbDays', $this->key);	
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
-			$pics = $day->pics();
+			$pics = $day->pics();		
 			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $pics->size());
-			if ($dc == 0)
+			
+			if ($dc == 0 && $dc == 0)		// all done if there's no pix or vids
 				continue;
+			
+			// start with the trip collection and return the collection for that day
+			$dayvids = $this->build('Vids', array('date' => $day->date(), 'collection' => $tripvids));	
+
+			$row['vid_count'] = ($dayvids->isEmpty()) ? '' : '|' . $dayvids->size();
 			
 			$row['nice_date'] = Properties::prettyShortest($date);
 			$pic = $pics->favored();		// returns one picture
@@ -1097,6 +1117,7 @@ class HomeHome extends ViewWhu
 		$this->template->set_var('N_MAP', $site->numMaps());
 		$this->template->set_var('N_TXT', $site->numPosts());
 		$this->template->set_var('N_PIC', $site->numPics());
+		$this->template->set_var('N_VID', $site->numVids());
 		$this->template->set_var('N_SPO', $site->numSpots());
 
 		parent::showPage();

@@ -6,7 +6,7 @@
 			<ul id="biglist">
 				<li>We have <b>{N_MAP}</b> Maps.</li>
 				<li>We have <b>{N_TXT}</b> Stories.</li>
-				<li>We have <b>{N_PIC}</b> Pictures.</li>
+				<li>We have <b>{N_PIC}</b> Pictures, <b>{N_VID}</b> Videos.</li>
 				<li>We have <b>{N_SPO}</b> Spots - <a href="?page=spots&type=home">campgrounds</a>, <a href="?page=spots&type=type&key=HOTSPR">hot springs</a>, <a href="?page=spots&type=type&key=NWR">wildlife refuges</a> and more.</li>
 			</ul>
 			<hr />

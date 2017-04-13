@@ -1,6 +1,6 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<h2><span>pictures for:</span> {GAL_TITLE}</h2>
-	<p>{NUM_DAYS} days, {NUM_PICS} pictures</p>
+	<h2><span>pictures{AND_VIDS} for:</span> {GAL_TITLE}</h2>
+	<p>{NUM_DAYS} days &bull; {NUM_PICS} pictures{NUM_VIDS}</p>
 	
 	<div class="clearfix" id="thegal">
 		<!-- BEGIN rows -->
@@ -8,7 +8,7 @@
 			<a href="?page=pics&type=date&key={GAL_DATE}">
 				<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
 				<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
-				<span>{NICE_DATE} ({DATE_COUNT})</span>
+				<span>{NICE_DATE} ({DATE_COUNT}{VID_COUNT})</span>
 			</a>		
 		</p>
 		<!-- END rows -->

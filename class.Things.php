@@ -61,6 +61,8 @@
 		function isCategoryRecord($key)		{	return (is_array($key) && isset($key['wf_categories_parent']));	}		// spots also have a cat id
 		function isDayRecord($key)				{	return (is_array($key) && isset($key['wf_days_date']));	}
 		function isTextSearch($key)				{	return (is_array($key) && isset($key['searchterm']));	}
+		function isVidRecord($key)				{	return (is_array($key) && isset($key['wf_resources_id']));	}
+		// function isVidCollection($key)		{	return (is_array($key) && is_array($key[0]) && isset($key[0]['wf_resources_id']));	}
 
 		// --------- utilities
 		function isDate($str) 				// true for 
@@ -172,6 +174,11 @@
 			$pics = $this->build('Pics', array('tripid' => $this->id())); 
 			return $pics->size() > 0;
 		}
+		function hasVids()
+		{
+			$vids = $this->build('Vids', array('tripid' => $this->id())); 
+			return $vids->size() > 0;
+		}
 		function hasStories()	{
 			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
 			return $count['nposts'] > 0;
@@ -208,6 +215,7 @@
 		}
 		// good a place as any to put the global queries for home page
 		function numPics() 	{	return $this->getOne("select count(*) RES from wf_images")['RES'];	}
+		function numVids() 	{	return $this->getOne("select count(*) RES from wf_resources")['RES'];	}
 		function numSpots()	{	return $this->getOne("select count(*) RES from wf_spots" )['RES'];	}
 		function numPosts()	{	return $this->getOne("select count(distinct wp_id) RES from wf_days" )['RES'];	}
 		function numMaps() 	{	return $this->getOne("select count(*) RES from wf_trips where wf_trips_extra !='' OR wf_trips_map_fid !=''")['RES'];	}
@@ -767,6 +775,65 @@
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}
+	class WhuVid extends WhuThing 
+	{
+		function getRecord($key)		// key = pic id
+		{
+			if ($this->isVidRecord($key))
+				return $key;
+			return $this->getOne("select * from wf_images where wf_resources_id=$key");	
+		}
+		function id()				{ return $this->dbValue('wf_resources_id'); }
+		function name()			{ return $this->dbValue('wf_resources_name'); }
+		function token()		{ return $this->dbValue('wf_resources_token'); }
+		function desc()			{ return $this->dbValue('wf_resources_desc'); }
+		function camera()		{ return $this->dbValue('wf_resources_origin'); }
+		function date()			{ return $this->dbValue('wf_resources_date'); }
+		function time()			{ return $this->dbValue('wf_resources_time'); }
+		function filename()	{ return $this->dbValue('wf_resources_file'); }
+		function lat()			{ return $this->dbValue('wf_resources_lat'); }
+		function lon()			{ return $this->dbValue('wf_resources_lon'); }
+		function spotId()		{ return $this->dbValue('wf_resources_spot_id'); }
+	}
+	class WhuVids extends WhuVid 
+	{
+		var $isCollection = true;
+		function getRecord($parm)	//  tripid. folder, date
+		{
+			// dumpVar($parm, "WhuPics parm");
+			if ($this->isTextSearch($parm))						// for text search
+			{
+				$qterm = $parm['searchterm'];
+				$q = "SELECT * FROM wf_resources WHERE wf_resources_name LIKE '$qterm' OR wf_resources_desc LIKE '$qterm' OR wf_resources_file LIKE '$qterm'";
+				// dumpVar($q, "q");
+				return $this->getAll($q);
+			}
+			if (isset($parm['tripid'])) 
+			{
+				$trip = $this->build('Trip', $parm['tripid']);
+				
+				$q = sprintf("select * from wf_resources where wf_resources_date BETWEEN '%s' AND '%s' order by wf_resources_date", $trip->startDate(), $trip->endDate());
+			// dumpVar($parm, "parm $q");
+				return $this->getAll($q);
+			}
+			if (isset($parm['date'])) 		// just 'date', OR ('date','collection')
+			{
+				if (isset($parm['collection'])) 		// are there videos for this date in this collection? (trip)
+				{
+					for ($i = 0, $rows = array(); $i < $parm['collection']->size(); $i++)
+					{
+						$one = $parm['collection']->one($i);
+						if ($one->date() == $parm['date'])
+							$rows[] = $one->data;
+					}
+					return $rows;
+				}
+				$q = sprintf("select * from wf_resources where wf_resources_date='%s' order by wf_resources_time", $parm['date']);
+			// dumpVar($parm, "parm $q");
+				return $this->getAll($q);
+			}
+		}
+	}
 	class WhuPic extends WhuThing 
 	{
 		var $prvnxt = NULL;
@@ -791,8 +858,7 @@
 											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
 			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
 		}
-		
-		
+			
 		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
 		{
 			if (is_null($this->prvnxt))
