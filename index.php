@@ -146,11 +146,13 @@ switch ("$curpage$curtype")
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
-	case 'picid':
-		$props->set('id', $props->get('key'));			// Wordpress likes to send pic/id/i#. NOT pic/xxx/c#/i#, so add the id parm
 	case 'piccat':	
+	case 'picid':
+		$props->set('id', $props->get('key'));			// this is sent from Wordpress, so add the id parm. The correct date key will be inferred
 	case 'picdate':			$page = new OnePic($props);					break;	
 	
+	case 'vidid':				$page = new OneVideo($props);		break;	
+
 	case 'logid':				$page = new OneTripLog($props);		break;	
 	
 	case 'mapid':				$page = new OneMap($props);			break;	
@@ -186,7 +188,7 @@ switch ("$curpage$curtype")
 $templates = array("main" => 'container.ihtml', "the_content" => $page->file);
 $page->startPage($templates);
 $page->setStyle($curpage);
-$savepage = $page;
+$savepage = $page;									// hack for Wordpress pages
 $page->key = $props->get('key');		// just for convenience, everyone needs it
 $page->showPage();
 if (!is_object($page))

@@ -7,9 +7,10 @@
 	<div class="clearfix" id="thegal">
 		<!-- BEGIN rows -->
 		<p>
-			<a href="?page=pic&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
+			<a href="?page={VIS_PAGE}&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}">
 				<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
 				<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
+				<img class="img-rounded img-responsive squareme {USE_VIDTMB}" src='http://img.youtube.com/vi/{VID_TOKEN}/0.jpg' border="0" />				
 			</a>		
 		</p>
 		<!-- END rows -->

@@ -114,6 +114,14 @@
 		}
 		// add more items to the collection
 		function add($more) { $this->data = array_merge($this->data, $more->data); }
+		
+		function sortByField($data, $field)
+		{
+			$column = array_column($data, $field);
+			array_multisort($column, $data);
+			// dumpVar($data, "data");
+			return $data;
+		}
 
 	
 		// --------- factory
@@ -775,13 +783,69 @@
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}
-	class WhuVid extends WhuThing 
+	// ------------------------------------------- WhuVisual -> WhuPic | WhuVid -------------------
+	class WhuVisual extends WhuThing 
+	{
+		function getRecord($key)
+		{
+			// if (is_object($key) && get_class($key) == 'WhuVid')
+			// 	return $key->data;
+			return $key;
+		}
+		function isImage() { return $this->isPicRecord($this->data); }
+		
+		function cameraDesc()
+		{
+			$names = array('Canon650' => 'my good ole Canon 650', 'Ericsson' => 'Ericsson W350i phone', 
+											'CanonG9X' => 'my state of the art Powershot G9X', 
+											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
+			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
+		}
+
+		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxtPic();
+			return $this->prvnxt['prev'];
+		}
+		function next() 
+		{
+			if (is_null($this->prvnxt))
+				$this->getPrvNxtPic();
+			return $this->prvnxt['next'];
+		}
+		function getPrvNxtPic()
+		{
+			$this->prvnxt = array();
+
+			// $q = sprintf("select * from wf_images where wf_images_localtime > '%s' order by wf_images_localtime ASC LIMIT 3", $dt = $this->datetime());
+			$q = sprintf("select *, wf_images_localtime datetime from wf_images where wf_images_localtime > '%s%s' order by wf_images_localtime ASC LIMIT 3", $this->date(), $this->time());
+			$pics = $this->getAll($q);					
+			$q = sprintf("select *, CONCAT(wf_resources_date, ' ', wf_resources_time) datetime from wf_resources where wf_resources_date > '%s' AND wf_resources_time > '%s' order by wf_resources_time ASC LIMIT 3", $this->date(), $this->time());
+			$vids = $this->getAll($q);	
+			$visuals = array_merge($pics, $vids);
+			$items = $this->sortByField($visuals, 'datetime');
+							
+			$this->prvnxt['next'] = $this->build('Pic', $items[0]);
+			
+			$q = sprintf("select *, wf_images_localtime datetime from wf_images where wf_images_localtime < '%s%s' order by wf_images_localtime ASC LIMIT 3", $this->date(), $this->time());
+			$pics = $this->getAll($q);					
+			$q = sprintf("select *, CONCAT(wf_resources_date, ' ', wf_resources_time) datetime from wf_resources where wf_resources_date < '%s' AND wf_resources_time > '%s' order by wf_resources_time ASC LIMIT 3", $this->date(), $this->time());
+			$vids = $this->getAll($q);	
+			$visuals = array_merge($pics, $vids);
+			$items = $this->sortByField($visuals, 'datetime');
+
+			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
+		}
+	}			
+	class WhuVid extends WhuVisual 
 	{
 		function getRecord($key)		// key = pic id
 		{
 			if ($this->isVidRecord($key))
 				return $key;
-			return $this->getOne("select * from wf_images where wf_resources_id=$key");	
+			dumpVar($key, "key");
+			return $this->getOne("select * from wf_resources where wf_resources_id=$key");	
 		}
 		function id()				{ return $this->dbValue('wf_resources_id'); }
 		function name()			{ return $this->dbValue('wf_resources_name'); }
@@ -834,7 +898,7 @@
 			}
 		}
 	}
-	class WhuPic extends WhuThing 
+	class WhuPic extends WhuVisual 
 	{
 		var $prvnxt = NULL;
 		function getRecord($key)		// key = pic id
@@ -851,38 +915,7 @@
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
 		function folder()		{ return $this->dbValue('wf_images_path'); }
 		function camera()		{ return $this->dbValue('wf_images_origin'); }
-		function cameraDesc()
-		{
-			$names = array('Canon650' => 'my good ole Canon 650', 'Ericsson' => 'Ericsson W350i phone', 
-											'CanonG9X' => 'my state of the art Powershot G9X', 
-											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
-			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
-		}
-			
-		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
-		{
-			if (is_null($this->prvnxt))
-				$this->getPrvNxtPic();
-			return $this->prvnxt['prev'];
-		}
-		function next() 
-		{
-			if (is_null($this->prvnxt))
-				$this->getPrvNxtPic();
-			return $this->prvnxt['next'];
-		}
-		function getPrvNxtPic()
-		{
-			$this->prvnxt = array();
-
-			$q = sprintf("select * from wf_images where wf_images_localtime > '%s' order by wf_images_localtime ASC LIMIT 3", $dt = $this->datetime());
-			$items = $this->getAll($q);			
-			$this->prvnxt['next'] = $this->build('Pic', $items[0]);
-			$q = sprintf("select * from wf_images where wf_images_localtime < '%s' order by wf_images_localtime DESC LIMIT 3", $dt);
-			$items = $this->getAll($q);
-			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
-		}
-		
+					
 		// image FILE stuff - extract GPS, extract thumbnail
 		function latlon()
 		{
@@ -977,7 +1010,7 @@
 			{
 				$trip = $this->build('DbTrip', $parm['tripid']);
 				$folder = $trip->folder();
-			}			
+			}
 			return $this->getAll($q = "select * from wf_images where wf_images_path='$folder' order by wf_images_localtime");
 			WhuThing::getRecord($parm);		// FAIL
 		}
@@ -1034,6 +1067,27 @@
 			return $faves;
 		}
 	}
+	class WhuVisuals extends WhuVisual 				// slightly hacky, but this is a collection of images AND videos
+	{
+		var $isCollection = true;
+		function getRecord($parm)
+		{
+			dumpVar($parm, "parm");
+			if (isset($parm['date'])) 			// just date -> get all pics/vids for a date 
+			{
+				// if (isset($parm['time']))			// date, time, next/prev -> get following pic/vid for next/prev
+				// {
+				// }				
+				$q = sprintf("select *, TIME(wf_images_localtime) time from wf_images where DATE(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+				$pics = $this->getAll($q);
+				$q = sprintf("select *, wf_resources_time time from wf_resources where wf_resources_date='%s' order by wf_resources_time", $parm['date']);
+				$vids = $this->getAll($q);
+
+				$visuals = array_merge($pics, $vids);
+				return $this->sortByField($visuals, 'time');
+			}
+		}
+	}	
 	
 	class WhuCategory extends WhuThing 
 	{
