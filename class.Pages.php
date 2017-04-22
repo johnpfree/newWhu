@@ -198,11 +198,11 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("N_VIS", "class='hidden'");
 		
 		// single picture nav needs an id parm, hack it into the key parm
-		if (isset($props['nid']))
-		{
-			$this->template->set_var("P_KEY", sprintf("%s&id=%s", $props['pkey'], $props['pid']));
-			$this->template->set_var("N_KEY", sprintf("%s&id=%s", $props['nkey'], $props['nid']));
-		}
+		// if (isset($props['nid']))
+		// {
+		// 	$this->template->set_var("P_KEY", sprintf("%s&id=%s", $props['pkey'], $props['pid']));
+		// 	$this->template->set_var("N_KEY", sprintf("%s&id=%s", $props['nkey'], $props['nid']));
+		// }
 			
 		if ($props['middle'])
 		{
@@ -551,11 +551,12 @@ class Gallery extends ViewWhu
 		{
 			// dumpVar($i, "i");
 			$visual = $visuals->one($i);
-			if (!$visual->isImage())
+			
+			if ($visual->isVideo())
 			{
-				$vid = $this->build('Vid', $visual->data);
+				$vid = $this->build('Vid', $visual->vidId());
 				dumpVar($vid->token(), "vid->token()");
-				$row = array('VIS_PAGE' => 'vid', 'GAL_TYPE' => 'id', 'GAL_KEY' => $vid->id(), 'PIC_ID' => '', 
+				$row = array('VIS_PAGE' => 'vid', 'GAL_TYPE' => 'id', 'PIC_ID' => $pic->id(), 
 						'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
 				$rows[] = $row;	
 				continue;			
@@ -828,80 +829,74 @@ class OneVisual extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
+ 	 	$vis = $this->build('Visual', $visid = $this->key);		
 		
-		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $this->vis->date()));
+		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $vis->date()));
 		$this->template->set_var('DATE', $date);
 		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
+		
+		if ($vis->isImage())
+		{
+			$this->template->set_var('USE_PIC', '');
+			$this->template->set_var('USE_VID', 'hideme');
+			$this->template->set_var('WF_IMAGES_PATH', $vis->folder());
+			$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
+			$this->template->set_var('VIS_NAME', $vis->caption());
+			$this->template->set_var('REL_PICPATH', iPhotoURL);
+
+			// Details info	- keywords
+			$keys = $this->build('Categorys', array('picid' => $visid));
+			for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
+			{
+				$key = $keys->one($i);	
+				$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
+				$rows[] = $row;
+			}
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+			$loop->do_loop($rows);
+		
+	 	 	$pic = $this->build('Pic', $vis);		
+			$gps = $pic->latlon();
+			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $vis->caption()))))
+			{
+				$this->template->set_var('GPS_VIS', '');
+				$this->template->set_var('GPS_LAT', $gps['lat']);
+				$this->template->set_var('GPS_LON', $gps['lon']);
+			}
+			else
+				$this->template->set_var('GPS_VIS', 'hideme');
+		}
+		else
+		{
+			$this->template->set_var('USE_PIC', 'hideme');
+			$this->template->set_var('USE_VID', '');
+
+	 	 	$vid = $this->build('Video', $vis);		
+			$this->template->set_var('VIS_NAME', $vid->name());
+			$this->template->set_var('VID_TOKEN', $vid->token());
+		
+			// Details info
+			$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
+			$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
+
+			if ($this->setLittleMap(array('name' => Properties::prettyDate($date), 'desc' => $vis->name())))
+			{
+				$this->template->set_var('GPS_VIS', '');
+				$this->template->set_var('GPS_LAT', $vid->lat());
+				$this->template->set_var('GPS_LON', $vid->lon());
+			}
+			else
+				$this->template->set_var('GPS_VIS', 'hideme');
+			
+			// no keywords for now
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+			$loop->do_loop(array());
+		}
 
 		$pageprops = array();
-		$pageprops['pkey'] = $this->vis->prev()->date();
-		$pageprops['pid' ] = $this->vis->prev()->id();
-		$pageprops['nkey'] = $this->vis->next()->date();
-		$pageprops['nid' ] = $this->vis->next()->id();
-		$this->pagerBar('pic', 'date', $pageprops);		
-	}
-}
-class OneVideo extends OneVisual
-{
-	function showPage()	
-	{
- 	 	$this->vis = $vid = $this->build('Vid', $picid = $this->props->get('id'));		
-		parent::showPage();
-		
-		$this->template->set_var('VIS_NAME', $this->vis->name());
-		$this->template->set_var('VID_TOKEN', $vis->token());
-		
-		if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($date), 'desc' => $vid->name()))))
-		{
-			$this->template->set_var('GPS_VIS', '');
-			$this->template->set_var('GPS_LAT', $vid->lat());
-			$this->template->set_var('GPS_LON', $vid->lon());
-		}
-		else
-			$this->template->set_var('GPS_VIS', 'hideme');
-		
-		// Details info
-		$this->template->set_var('PIC_TIME', $vis->time());
-		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
-		
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop(array());
-	}
-}
-class OnePic extends OneVisual
-{
-	function showPage()	
-	{
- 	 	$this->vis = $pic = $this->build('Pic', $picid = $this->props->get('id'));		
-		parent::showPage();
-
-		$this->template->set_var('WF_IMAGES_PATH', $pic->folder());
-		$this->template->set_var('WF_IMAGES_FILENAME', $pic->filename());
-		$this->template->set_var('VIS_NAME', $pic->caption());
-		$this->template->set_var('REL_PICPATH', iPhotoURL);
-		// $this->template->set_var('REL_PICPATH', REL_PICPATH);
-
-		// Details info
-		// keywords
-		$keys = $this->build('Categorys', array('picid' => $picid));
-		for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
-		{
-			$key = $keys->one($i);	
-			$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop($rows);
-		
-		$gps = $pic->latlon();
-		if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($pic->date()), 'desc' => $pic->caption()))))
-		{
-			$this->template->set_var('GPS_VIS', '');
-			$this->template->set_var('GPS_LAT', $gps['lat']);
-			$this->template->set_var('GPS_LON', $gps['lon']);
-		}
-		else
-			$this->template->set_var('GPS_VIS', 'hideme');
+		$pageprops['pkey'] = $vis->prev()->id();
+		$pageprops['nkey'] = $vis->next()->id();
+		$this->pagerBar('vis', 'id', $pageprops);		
 	}
 }
 

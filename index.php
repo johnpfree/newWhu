@@ -146,12 +146,12 @@ switch ("$curpage$curtype")
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
-	case 'piccat':	
-	case 'picid':
-		$props->set('id', $props->get('key'));			// this is sent from Wordpress, so add the id parm. The correct date key will be inferred
-	case 'picdate':			$page = new OnePic($props);					break;	
-	
-	case 'vidid':				$page = new OneVideo($props);		break;	
+	// case 'piccat':
+	// case 'picid':
+	// 	$props->set('id', $props->get('key'));			// this is sent from Wordpress, so add the id parm. The correct date key will be inferred
+	// case 'picdate':			$page = new OnePic($props);					break;
+	// case 'vidid':				$page = new OneVideo($props);		break;
+	case 'visid':				$page = new OneVisual($props);		break;	
 
 	case 'logid':				$page = new OneTripLog($props);		break;	
 	
