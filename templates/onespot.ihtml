@@ -26,7 +26,8 @@
 			<div class="list_head">Days visited (posted cost | senior cost):</div>
 			<div id="list_item">
 				<!-- BEGIN rows -->
-					<span style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
+					<span class="{USE_LINK}" style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
+					<span class="{NOT_LINK}" style="white-space: nowrap;">{NICE_DATE} ({SPCOSTS})</span>
 					<div class="day_desc">{SPDESC}</div>
 					<!-- END rows -->	
 			</div>

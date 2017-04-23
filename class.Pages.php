@@ -365,6 +365,7 @@ class SpotsPlaces extends SpotsHome
 {
 	function showPage()	
 	{
+		$this->searchterms = array('wf_categories_id' => $this->key, 'kids' => 1);
 		$cat = $this->build('Category', $this->key);	
 		$this->title = sprintf("Spots in: <i>%s</i>", $cat->name());
 		parent::showPage();
@@ -386,16 +387,13 @@ class AllTrips extends ViewWhu
 			$trip = $trips->one($i);
 			$row = array('TRIP_DATE' => $trip->startDate(), 'TRIP_ID' => $trip->id(), 'TRIP_FOLDER' => $trip->folder());
 			$row['TRIP_NAME'] = $trip->name();
-			$row['MAP_CLASS'] = '';//$trip->hasMap() ? '' : "class='hidden'";		// everybody gets a map!
+			$row['MAP_CLASS'] = '';																					// everybody gets a map!
 			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='hidden'";
-			$row['VID_CLASS'] = $trip->hasVids() ? '' : "class='hidden'";
+			$row['VID_CLASS'] = $trip->hasVideos() ? '' : "class='hidden'";
 			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='hidden'";
-			// dumpVar($row['TRIP_ID'], $row['TRIP_DATE']);
-			// dumpVar($row, "row");exit;
-			// dumpVar($row['MAP_CLASS'], "row['MAP_CLASS']");
-			// little hack for keeping track of maps
-			if ($trip->hasMapboxMap())	$row['TRIP_NAME'] .= "-M";
-			if ($trip->hasGoogleMap())	$row['TRIP_NAME'] .= "-G";
+
+			// if ($trip->hasMapboxMap())	$row['TRIP_NAME'] .= "-M";
+			// if ($trip->hasGoogleMap())	$row['TRIP_NAME'] .= "-G";
 			$rows[] = $row;
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
@@ -473,8 +471,8 @@ class TripPictures extends ViewWhu
 		$trip = $this->build('Trip', $this->key);
 		$this->template->set_var('GAL_TITLE', $trip->name());
 		
-		$tripvids = $this->build('Vids', array('tripid' => $this->key));
-		if (($nvid = $tripvids->size()) == 0)
+		// $tripvids = $this->build('Vids', array('tripid' => $this->key));
+		if (($nvid = $trip->hasVideos()) == 0)		// hack: hasVideos returns the number
 		{
 			$this->template->set_var('AND_VIDS', '');
 			$this->template->set_var('NUM_VIDS', '');
@@ -497,9 +495,9 @@ class TripPictures extends ViewWhu
 				continue;
 			
 			// start with the trip collection and return the collection for that day
-			$dayvids = $this->build('Vids', array('date' => $day->date(), 'collection' => $tripvids));	
+			// $dayvids = $this->build('Vids', array('date' => $day->date(), 'collection' => $tripvids));
 
-			$row['vid_count'] = ($dayvids->isEmpty()) ? '' : '|' . $dayvids->size();
+			$row['vid_count'] = ($nvid = $day->hasVideos()) ? '|' . $nvid : '';
 			
 			$row['nice_date'] = Properties::prettyShortest($date);
 			$pic = $pics->favored();		// returns one picture
@@ -1008,7 +1006,17 @@ class OneSpot extends ViewWhu
 			else
 				$costs = "free!";
 			$row['spcosts'] = $costs;
-
+			if ($day->tripId() > 0)
+			{
+				$row['use_link'] = '';
+				$row['not_link'] = 'hideme';
+			}
+			else
+			{
+				$row['use_link'] = 'hideme';
+				$row['not_link'] = '';
+			}
+			// dumpVar($row, "$i row");
 			$rows[] = $row;
 
 			// collect evening and morning pictures for each day

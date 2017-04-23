@@ -182,10 +182,11 @@
 			$pics = $this->build('Pics', array('tripid' => $this->id())); 
 			return $pics->size() > 0;
 		}
-		function hasVids()
+		function hasVideos()
 		{
-			$vids = $this->build('Vids', array('tripid' => $this->id())); 
-			return $vids->size() > 0;
+			$q = sprintf("select * from wf_images where wf_images_path='%s' and wf_resources_id>0", $this->folder());
+			$items = $this->getAll($q);
+			return sizeof($items);				// note that I am returning the number of items
 		}
 		function hasStories()	{
 			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
@@ -270,8 +271,15 @@
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
-		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
+		function pics() 		{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
+		function hasVideos()
+		{
+			$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' and wf_resources_id>0", $this->date());
+			$items = $this->getAll($q);
+			return sizeof($items);				// note that I am returning the number of items
+		}
+
 		function daystart()	{ return $this->dbValue('wf_days_daystart'); }
 		function dayend()  	{ return $this->dbValue('wf_days_dayend'); }
 		
@@ -443,7 +451,7 @@
 					'nwr'			=> 'Wildlife Refuge Campgrounds',
 					'county'	=> 'County Campgrounds',
 					'private'	=> 'private Campgrounds',
-					'roadside'			=> 'pullover when there\'s no place to camp',
+					'roadside' => 'pullover when there\'s no place to camp',
 					'parking'	=> 'parking lot',
 				);
 		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
@@ -602,17 +610,15 @@
 			{
 				$q = sprintf("select * FROM wf_spots WHERE wf_categories_id=%s", ($id = $searchterms['wf_categories_id']));
 				$ret = $this->getAll($q);
-				// dumpVar(sizeof($ret), "$q -> ret=");	
+				// dumpVar(assizeof($ret), "$q -> ret=");
 				
-				if (isset($searchterms['kids']) && $searchterms['kids']) 
+				if (isset($searchterms['kids'])) 
 				{
 					$q = sprintf("select * FROM wf_categories WHERE wf_categories_parent=%s", $id);
 					$items = $this->getAll($q);
-					// dumpVar(sizeof($items), "$q -> items=");
 					for ($i = 0; $i < sizeof($items); $i++) 		// just do one level search, haven't implemented recursive
 					{
 						$q = sprintf("select * FROM wf_spots WHERE wf_categories_id=%s", $items[$i]['wf_categories_id']);
-						// dumpVar(sizeof($ret), "$q -> ret $i =");
 						$ret = array_merge($ret, $this->getAll($q));
 					}
 				}
@@ -670,6 +676,13 @@
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
+		}
+		function tripId()		// used so far only to detect that it is NOT in a trip (returns 0)
+		{
+			$day = $this->build('DbDay', $this->date());
+			if ($day->hasData)
+				return $day->tripId();
+			return 0;
 		}
 	}
 	class WhuDbSpotDays extends WhuDbSpotDay			//  So far this can be a collection of days for a date, or of days for a Spot
