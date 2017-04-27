@@ -627,9 +627,18 @@
 			else if ($this->isSpotKeySearch($searchterms))
 			{
 				$clean = $this->real_escape_string($key = $searchterms['wf_spot_days_keywords']);
-				$q = "select s.* from wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE d.wf_spot_days_keywords LIKE '%$clean%'";
+				$q = "select s.* from wf_spot_days d RIGHT OUTER JOIN wf_spots s ON s.wf_spots_id=d.wf_spots_id WHERE d.wf_spot_days_keywords LIKE '%$clean%' ORDER BY s.wf_spots_name";
 				// dumpVar($searchterms, "$q, searchterms");
-				return $this->getAll($q);	
+				$items = $this->getAll($q);	
+				for ($i = $id = 0, $ret = array(); $i < sizeof($items); $i++) 	// JOIN adds record for each day with the keyword => weed out duplicates
+				{
+					$item = $items[$i];
+					if ($id != $item['wf_spots_id'])
+						$ret[] = $item;
+					$id = $item['wf_spots_id'];
+				}
+				// dumpVar($ret, "ret");
+				return $ret;
 			}
 			else
 			{
@@ -874,6 +883,7 @@
 		var $prvnxt = NULL;
 		function getRecord($key)		// key = pic id
 		{
+			// dumpVar($key, "key");
 			if (is_object($key) && (get_class($key) == 'WhuVisual'))		// cast a Visual to a Pic
 				return $key->data;
 			if ($this->isPicRecord($key))
@@ -1043,13 +1053,6 @@
 				$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
 				dumpVar($q, "q");
 				return $this->getAll($q);
-				// $q = sprintf("select *, TIME(wf_images_localtime) time from wf_images where DATE(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
-				// $pics = $this->getAll($q);
-				// $q = sprintf("select *, wf_resources_time time from wf_resources where wf_resources_date='%s' order by wf_resources_time", $parm['date']);
-				// $vids = $this->getAll($q);
-				//
-				// $visuals = array_merge($pics, $vids);
-				// return $this->sortByField($visuals, 'time');
 			}
 		}
 	}	

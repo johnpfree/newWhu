@@ -31,12 +31,12 @@
     </div>
 		
     <div class="panel panel-default">
-      <div class="panel-heading" data-toggle="collapse" href="#collapse5">
+      <div class="panel-heading" data-toggle="collapse" href="#collapseSpLoc">
         <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse5">Find Spots by State / Region:</a>
+          <a data-toggle="collapse" href="#collapseSpLoc">Find Spots by State / Region:</a>
         </h4>
       </div>
-      <div id="collapse5" class="panel-collapse collapse">
+      <div id="collapseSpLoc" class="panel-collapse collapse">
         <div class="panel-body">
 			    <div class="row">
 <!-- BEGIN rows -->

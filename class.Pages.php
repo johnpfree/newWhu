@@ -530,19 +530,16 @@ class Gallery extends ViewWhu
 	var $file = "gallery.ihtml";   
 	var $galtype = "UNDEF";  
 	var $maxGal = 30; 
-	var $smallVis = '';
 	function showPage()	
 	{
 		$this->template->set_var('GAL_TYPE', $this->galtype);
 		$this->template->set_var('GAL_TITLE', $this->galleryTitle($this->key));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
-		$this->template->set_var('VIS_CLASS_SML', $this->smallVis);
 		
 		$this->doNav();			// do nav (or not)
 
 		$visuals = $this->getPictures($this->key);
-		$this->template->set_var('GAL_KEY', $this->key);
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		
 		for ($i = 0, $rows = array(), $fold = ''; $i < $visuals->size(); $i++) 
@@ -552,20 +549,19 @@ class Gallery extends ViewWhu
 			
 			if ($visual->isVideo())
 			{
-				$vid = $this->build('Vid', $visual->vidId());
+				$vid = $this->build('Video', $visual);
 				dumpVar($vid->token(), "vid->token()");
-				$row = array('VIS_PAGE' => 'vid', 'GAL_TYPE' => 'id', 'PIC_ID' => $pic->id(), 
+				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 
 						'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
 				$rows[] = $row;	
 				continue;			
 			}
 			
-			$pic = $this->build('Pic', $visual->data);
+			$pic = $this->build('Pic', $visual->data);		// using data avoids class check (cat sends pics, date sends visuals)
 			if ($fold == '')
 		 		$this->template->set_var('WF_IMAGES_PATH', $fold = $pic->folder());
 			
-			$row = array('VIS_PAGE' => 'pic', 'GAL_TYPE' => $this->galtype, 'GAL_KEY' => $this->key, 'PIC_ID' => $pic->id(), 
-					'PIC_name' => $pic->filename(), 'PIC_CAPTION' => $pic->caption(), 'USE_VIDTMB' => 'hideme');
+			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'USE_VIDTMB' => 'hideme');
 			
 			$row['binpic'] = $pic->thumbImage();
 			if (strlen($row['binpic']) > 100) {			// hack to just downsize the full image if the thumbnail fails on server
@@ -589,6 +585,9 @@ class DateGallery extends Gallery
 	var $galtype = "date";   
 	function showPage()	
 	{
+		$this->template->set_var("DATE_GAL_VIS", '');
+		$this->template->set_var("CAT_GAL_VIS" , 'hideme');
+
 		$this->dayLinkBar('pics', $this->key);
 		parent::showPage();
 	}
@@ -609,11 +608,13 @@ class DateGallery extends Gallery
 class CatGallery extends Gallery
 {
 	var $galtype = "cat";
-	var $smallVis = 'hidden';
 	var $message = '';
 	function showPage()	
 	{
 		$cat = $this->build('Category', $this->key);
+
+		$this->template->set_var("DATE_GAL_VIS", 'hideme');
+		$this->template->set_var("CAT_GAL_VIS" , '');
 		
 		$this->template->set_var("TRIP_ID", $this->key);
 		$this->template->set_var("TRIP_NAME", $this->name = $cat->name());		// save name for caption call below
@@ -832,8 +833,10 @@ class OneVisual extends ViewWhu
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $vis->date()));
 		$this->template->set_var('DATE', $date);
 		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
+		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
+		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
 		
-		if ($vis->isImage())
+		if ($vis->isImage())												// picture
 		{
 			$this->template->set_var('USE_PIC', '');
 			$this->template->set_var('USE_VID', 'hideme');
@@ -841,6 +844,7 @@ class OneVisual extends ViewWhu
 			$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
 			$this->template->set_var('VIS_NAME', $vis->caption());
 			$this->template->set_var('REL_PICPATH', iPhotoURL);
+			$this->template->set_var('VID_SPOT_VIS', 'hideme');
 
 			// Details info	- keywords
 			$keys = $this->build('Categorys', array('picid' => $visid));
@@ -864,7 +868,7 @@ class OneVisual extends ViewWhu
 			else
 				$this->template->set_var('GPS_VIS', 'hideme');
 		}
-		else
+		else																				// video
 		{
 			$this->template->set_var('USE_PIC', 'hideme');
 			$this->template->set_var('USE_VID', '');
@@ -873,10 +877,6 @@ class OneVisual extends ViewWhu
 			$this->template->set_var('VIS_NAME', $vid->name());
 			$this->template->set_var('VID_TOKEN', $vid->token());
 		
-			// Details info
-			$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
-			$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
-
 			if ($this->setLittleMap(array('name' => Properties::prettyDate($date), 'desc' => $vis->name())))
 			{
 				$this->template->set_var('GPS_VIS', '');
@@ -885,6 +885,17 @@ class OneVisual extends ViewWhu
 			}
 			else
 				$this->template->set_var('GPS_VIS', 'hideme');
+			
+			if ($id = $vid->spotId())
+			{
+				$this->template->set_var('VID_SPOT_VIS', '');
+				$spot = $this->build('DbSpot', $id);
+				$this->template->set_var('SPOT_ID', $id);
+				$this->template->set_var('SPOT_NAME', $spot->name());
+				
+			}
+			else
+				$this->template->set_var('VID_SPOT_VIS', 'hideme');
 			
 			// no keywords for now
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
@@ -1215,7 +1226,7 @@ class Search extends ViewWhu
 		$loop->do_loop($rows);
 		
 		// --------------------------------------------------------------------- all keywords
-		$spotkeys = getAllSpotKeys(new DbWhufu(new 	Properties(array())));
+		$spotkeys = getAllSpotKeys(new DbWhufu(new Properties(array())));
 		// dumpVar($spotkeys, "types");
 		$rows = array();
 		foreach ($spotkeys as $k => $v)

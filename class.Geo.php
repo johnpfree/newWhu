@@ -31,7 +31,7 @@ function getGeocode($name)
 // ---------------------------------------------------------------------------------------	
 function getAllSpotKeys($db)
 {
-	$items = $db->getAll("select * from wf_spot_days");
+	$items = $db->getAll("select * from wf_spot_days order by wf_spots_id");
 
 	$singlekeys = array();
 	$keypairs = array();
@@ -48,7 +48,7 @@ function getAllSpotKeys($db)
 			{
 				if (empty($singlekeys[$val[0]]))
 					$singlekeys[$val[0]] = array($items[$i]['wf_spots_id']);
-				else
+				else if ($singlekeys[$val[0]][sizeof($singlekeys[$val[0]])-1] != $items[$i]['wf_spots_id'])	// tricky: save only one instance of spot id         d
 					$singlekeys[$val[0]][] = $items[$i]['wf_spots_id'];
 			}
 			else if (sizeof($val) >= 1)
