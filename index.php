@@ -11,6 +11,7 @@ include_once("class.Geo.php");				// after Pages
 
 include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'ajax')  $noDbg = TRUE;	// force clean page for ajax
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 
@@ -134,6 +135,19 @@ $curtype = $props->get('type');
 
 switch ("$curpage$curtype") 
 {
+	case 'searchajax':												// async requests on search page
+	$page = new HomeHome($props);							// need a simple page object to run build()
+	switch ($key = $props->get('key')) 
+	{
+		case 'SpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
+		case 'SpType':		$ajax = new SpotType();			echo $ajax->result($page);	exit;
+		case 'SpKey':			$ajax = new SpotKey();			echo $ajax->result($page);	exit;
+		case 'PicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
+		case 'PicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
+	}
+	jfDie("unknown key-$key");
+	break;
+
 	case 'homehome':		$page = new HomeHome($props);			break;		
 	case 'homelook':		$page = new HomeLook($props);				break;
 	case 'homeread':		$page = new HomeRead($props);				break;

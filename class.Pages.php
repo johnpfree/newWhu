@@ -7,14 +7,15 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $file = "UNDEF";
 	var $curpal = NULL;
 	var $pals =	array(
-			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9'),
 			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#868C1A', 'linkcolor' => '#33A672', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
 			"pic" => 		array('boldcolor' => '#4B3E0C', 'bordercolor' => '#655826', 'linkcolor' => '#1B4F24', 'linkhover' => '#6A5835', 'bbackcolor' => '#FFFFE7'),
 			"log" =>		array('boldcolor' => '#004151', 'bordercolor' => '#007383', 'linkcolor' => '#005A6A', 'linkhover' => '#33A6B6', 'bbackcolor' => '#E5FFFF'), 
-			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'), 
 			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0'),
+			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
+			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#C1B0A6'),
 		);
+		var $sansFont = "font-family: Roboto, Arial, sans-serif";
 	
 	var $caption = '';		// if $caption is non-blank, use it. Otherwise call getCaption()
 
@@ -87,6 +88,8 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		if (!isset($this->curPal))
 			$this->curPal = new StyleProps($this->pals['deflt'], 'default');
 		
+		$this->template->set_var('SANS_FONT', 	$this->sansFont);				// sometimes the serifs don't look good
+
 		$this->template->set_var('BBACKCOLOR', 	$this->curPal->pageBackColor());
 		$this->template->set_var('BODYCOLOR', 	$this->curPal->pageLineColor());
 		$this->template->set_var('BACKCOLOR', 	$this->curPal->contBackColor());
@@ -1193,128 +1196,6 @@ class About extends ViewWhu
 class Search extends ViewWhu
 {
 	var $file = "search.ihtml";   
-	function showPage()	
-	{
-		// --------------------------------------------------------------------- state / region
-		$placeCats = array(-106, 109, -113, 70, 110, 111, 120, 121, 112, 108, 107, 105, 103, 173, 91, 83, 80, 128);
-		// $addKids = array(105 => array(64), 91 => array(170), 83 => array(87, 77, 76, 88), 80 => array(81, 85, 86, 90, 92), 128 => array(131, 132));		
-		for ($i = 0, $rows = array(); $i < sizeof($placeCats); $i++) 
-		{
-			$parms = array('wf_categories_id' => ($id = abs($placeCats[$i])));
-			$parms['kids'] = ($placeCats[$i] > 0);		// little hack, negative number above means do NOT loop through children
-			
-			$spots = $this->build('DbSpots', $parms);
-			$cat = $this->build('Category', $id);
-			$row = array('spid' =>$id, 'spcount' => $spots->size(), 'spname' => $cat->name());
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop($rows);
-
-		// --------------------------------------------------------------------- type of campground
-		$types = WhuDbSpot::$CAMPTYPES;
-		// dumpVar($types, "types");
-		$rows = array();
-		foreach ($types as $k => $v) 
-		{
-			$parms = array('camp_type' => $k);
-			$spots = $this->build('DbSpots', $parms);
-			$row = array('CAMPTYPE' =>$k, 'spcount' => $spots->size(), 'spname' => $v);
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'typerow', 'none_msg' => "no types", 'noFields' => true));
-		$loop->do_loop($rows);
-		
-		// --------------------------------------------------------------------- all keywords
-		$spotkeys = getAllSpotKeys(new DbWhufu(new Properties(array())));
-		// dumpVar($spotkeys, "types");
-		$rows = array();
-		foreach ($spotkeys as $k => $v)
-		{
-			$rows[] = array('spname' =>$k, 'spcount' => sizeof($v));
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
-		$loop->do_loop($rows);
-		
-		// --------------------------------------------------------------------- Pictures
-		// --------------------------------------------------------------------- Place categories
-		$cats = $this->build('Categorys', 'all');
-		// $placeCats = $cats->children($cats->placesRoot());
-		// dumpVar($placeCats->data, "placeCats->data");
-
-		$catlist = $cats->traverse($this->build('Category', $cats->placesRoot()));
-		for ($i = 0, $rows = array(); $i < sizeof($cats->descendantList()); $i++) 
-		{
-			$cat = $cats->descendantList()[$i];
-			// dumpVar($cat->name(), sprintf("%s. d=%s, id=%s", $i, $cat->depth(), $cat->id()));
-
-			$row = array('spid' =>$cat->id());
-			$row['spcount'] = $cat->nPics();
-			$row['spname'] = sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name());
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'ppicrow', 'noFields' => true));
-		$loop->do_loop($rows);
-
-		// --------------------------------------------------------------------- Non-Place categories
-		
-		$catlist = $cats->traverse($this->build('Category', $cats->picCatsRoot()));
-		for ($i = 0, $rows = array(); $i < sizeof($cats->descendantList()); $i++) 
-		{
-			$cat = $cats->descendantList()[$i];
-
-			$row = array('spid' =>$cat->id());
-			$row['spcount'] = $cat->nPics();
-			$row['spname'] = sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name());			
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'cpicrow', 'noFields' => true));
-		$loop->do_loop($rows);
-		
-				
-		// --------------------------------------------------------------------- still using this?
-		//
-		$opts = array();			// assume show all
-		if ($this->props->get('submit') == 'Show' && sizeof($srch = $this->props->get('search_fld')) > 0)
-		{
-			$chkopts = array(
-				'chkcamp' => 'CAMP',
-				'chklodg' => 'LODGE',
-				'chkhspr' => 'HOTSPR',
-				'chknwrf' => 'NWR',
-				);
-			foreach ($srch as $k => $v)
-			{
-				$opts[] = $chkopts[$v];
-				$this->template->set_var("CHK_$v", 'checked');
-			}
-		}
-
-		$opts = array(
-			'chk_stti', 
-			'chk_stst', 
-			'chk_pcti', 
-			'chk_trip', 
-			'chk_maps', 
-		);
-		if ($this->props->isProp('search_for_term') && ($term = $this->props->get('search_term')) != '' && sizeof($srch = $this->props->get('search_fld')) > 0)
-		{
-			dumpVar($srch, "term=$term, srch");
-			if (isset($srch['chk_stti']))		// search blog
-			{
-				// ((wp_posts.post_title LIKE '%football%') OR
-				// (wp_posts.post_content LIKE '%football%'))
-			}
-		}
-		else 
-		{
-			foreach ($opts as $k => $v) 
-			{
-				$this->template->set_var(strtoupper($v), 'checked');
-			}
-		}
-		parent::showPage();
-	}
 }
 class SearchResults extends ViewWhu
 {

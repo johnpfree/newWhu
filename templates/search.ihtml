@@ -1,3 +1,30 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		console.log('ready');
+	    $('[data-toggle="collapse"]').click(function(){
+				console.log('click', this, $(this).attr('class'), 'href', $(this).attr('href'));
+						
+				var section = $(this).attr('href');
+				
+				var sectKey = section.substr(9);
+				if (sectKey == 1) return;		// no ajax for this one
+				if (sectKey == 4) return;		// no ajax for this one
+				
+				var sectElem = section + ">div>div";
+				var sectUrl = "?page=search&type=ajax&key=" + sectKey;
+
+				console.log('this: ', section, sectElem, sectUrl);
+			
+        $.ajax({url: sectUrl, success: function(result){
+            $(sectElem).html(result);
+        }});
+				
+				console.log('done');
+	    });
+
+	});
+	
+</script>
 
 <div class="container"id="main_item">
   <h2>Finding Stuff</h2>
@@ -39,50 +66,34 @@
       <div id="collapseSpLoc" class="panel-collapse collapse">
         <div class="panel-body">
 			    <div class="row">
-<!-- BEGIN rows -->
-			      <div class="col-md-2">
-							<a class="onecheck" href="?page=spots&type=place&key={SPID}">{SPNAME} ({SPCOUNT})</a>
-							<!-- <span class="onecheck"><input type="radio" name="choose_place" value="spid{SPID}" id="spid{SPID}"> <label for="spid{SPID}">{SPNAME} ({SPCOUNT})</label></span> -->
-			      </div>
-<!-- END rows -->
 			    </div>
         </div>
       </div>
     </div>
 		
     <div class="panel panel-default">
-      <div class="panel-heading" data-toggle="collapse" href="#collapse2">
+      <div class="panel-heading" data-toggle="collapse" href="#collapseSpType">
         <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse2">Find Spots by Type of Campground</a>
+          <a data-toggle="collapse" href="#collapseSpType">Find Spots by Type of Campground</a>
         </h4>
       </div>
-      <div id="collapse2" class="panel-collapse collapse">
+      <div id="collapseSpType" class="panel-collapse collapse">
         <div class="panel-body">
 			    <div class="row">
-<!-- BEGIN typerows -->
-			      <div class="col-md-4">
-							<a class="onecheck" href="?page=spots&type=camp&key={CAMPTYPE}">{SPNAME} ({SPCOUNT})</a>
-			      </div>
-<!-- END typerows -->
 			    </div>
         </div>
       </div>
     </div>
 
 	  <div class="panel panel-default">
-	    <div class="panel-heading" data-toggle="collapse" href="#collapse6">
+	    <div class="panel-heading" data-toggle="collapse" href="#collapseSpKey">
 	      <h4 class="panel-title">
-					<a data-toggle="collapse" href="#collapse6">Find Spots by Keyword:</a>
+					<a data-toggle="collapse" href="#collapseSpKey">Find Spots by Keyword:</a>
 				</h4>
 	    </div>
-	    <div id="collapse6" class="panel-collapse collapse">
+	    <div id="collapseSpKey" class="panel-collapse collapse">
 	      <div class="panel-body">
 					<div class="row">
-	<!-- BEGIN keyrows -->
-				      <div class="col-md-2">
-								<a class="onecheck" href="?page=spots&type=key&key={SPNAME}">{SPNAME} ({SPCOUNT})</a>
-				      </div>
-	<!-- END keyrows -->
 					</div>
 	      </div>
 	    </div>
@@ -97,9 +108,12 @@
 	    <div id="collapse4" class="panel-collapse collapse">
 	      <div class="panel-body">
 					<div class="row">
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=HOTSPR">Hot Springs</a></div>
+						<div class="col-xs-4"><button class="btn btn-outline-success" type="button"><a href="?page=spots&type=type&key=HOTSPR">Hot Springs</a></button></div>
+						<div class="col-xs-4"><button class="btn btn-outline-success" type="button"><a href="?page=spots&type=type&key=NWR">Wildlife Refuges</a></button></div>
+						<div class="col-xs-4"><button class="btn btn-outline-success" type="button"><a href="?page=spots&type=type&key=LODGE">Lodging</a></button></div>
+						<!-- <div class="col-xs-4"><a href="?page=spots&type=type&key=HOTSPR">Hot Springs</a></div>
 						<div class="col-xs-4"><a href="?page=spots&type=type&key=NWR">Wildlife Refuges</a></div>
-						<div class="col-xs-4"><a href="?page=spots&type=type&key=LODGE">Lodging</a></div>
+						<div class="col-xs-4"><a href="?page=spots&type=type&key=LODGE">Lodging</a></div> -->
 					</div>
 	      </div>
 	    </div>
@@ -109,38 +123,28 @@
   <div class="panel-group">
 	
 	  <div class="panel panel-default">
-	    <div class="panel-heading" data-toggle="collapse" href="#collapse3">
+	    <div class="panel-heading" data-toggle="collapse" href="#collapsePicPlace">
 	      <h4 class="panel-title">
-					<a data-toggle="collapse" href="#collapse3">Find Pictures by Place:</a>
+					<a data-toggle="collapse" href="#collapsePicPlace">Find Pictures by Place:</a>
 				</h4>
 	    </div>
-	    <div id="collapse3" class="panel-collapse collapse">
+	    <div id="collapsePicPlace" class="panel-collapse collapse">
         <div class="panel-body">
 			    <div class="row">
-<!-- BEGIN ppicrows -->
-			      <div class="col-md-2">
-							<a class="onecheck" href="?page=pics&type=cat&key={SPID}">{SPNAME} ({SPCOUNT})</a>
-			      </div>
-<!-- END ppicrows -->
 			    </div>
         </div>
 	    </div>
 	  </div>
 
 	  <div class="panel panel-default">
-	    <div class="panel-heading" data-toggle="collapse" href="#collapse7">
+	    <div class="panel-heading" data-toggle="collapse" href="#collapsePicCat">
 	      <h4 class="panel-title">
-					<a data-toggle="collapse" href="#collapse7">Find Pictures by Category:</a>
+					<a data-toggle="collapse" href="#collapsePicCat">Find Pictures by Category:</a>
 				</h4>
 	    </div>
-	    <div id="collapse7" class="panel-collapse collapse">
+	    <div id="collapsePicCat" class="panel-collapse collapse">
 	      <div class="panel-body">
 			    <div class="row">
-<!-- BEGIN cpicrows -->
-			      <div class="col-md-2">
-							<a class="onecheck" href="?page=pics&type=cat&key={SPID}">{SPNAME} ({SPCOUNT})</a>
-			      </div>
-<!-- END cpicrows -->
 			    </div>
 	      </div>
 	    </div>
@@ -165,8 +169,10 @@
 	color: {BOLDCOLOR};
 }
 
-.onecheck {
-	white-space: nowrap;
-	padding: .2em .8em;
+.row>.btn, .row>div>.btn {
+	margin: 4px;
+	background-color: {BACKCOLOR};
+	border: 2px solid {LINKHOVER};
+	{SANS_FONT};
 }
 </style>

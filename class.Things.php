@@ -650,7 +650,7 @@
 			 $where = substr($where, 0, -3);
 			}	 
 			$q = sprintf("SELECT * FROM wf_spots %sORDER BY %s", $where, $deflts['order']);
-			dumpVar($searchterms, "$q - st");
+			// dumpVar($searchterms, "$q - st");
 			return $this->getAll($q);
 		}
 	}	
@@ -1051,7 +1051,7 @@
 			if (isset($parm['date'])) 			// just date -> get all pics/vids for a date 
 			{
 				$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
-				dumpVar($q, "q");
+				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}
 		}
