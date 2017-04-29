@@ -890,6 +890,12 @@
 				return $key;
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
+
+		function isPano()
+		{
+			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=155", $this->id());
+			return is_array($this->getOne($q));
+		}
 					
 		// image FILE stuff - extract GPS, extract thumbnail
 		function latlon()

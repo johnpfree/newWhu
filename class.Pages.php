@@ -554,7 +554,7 @@ class Gallery extends ViewWhu
 			{
 				$vid = $this->build('Video', $visual);
 				dumpVar($vid->token(), "vid->token()");
-				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 
+				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
 						'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
 				$rows[] = $row;	
 				continue;			
@@ -565,6 +565,9 @@ class Gallery extends ViewWhu
 		 		$this->template->set_var('WF_IMAGES_PATH', $fold = $pic->folder());
 			
 			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'USE_VIDTMB' => 'hideme');
+			
+			// $row['pano_symb'] = $pic->isPano() ? '<strong><img src="resources/pano/pano0.png" width="48" height="48" alt="panorama"></strong>' : '';
+			$row['pano_symb'] = $pic->isPano() ? '<strong>&hArr;</strong>' : '';
 			
 			$row['binpic'] = $pic->thumbImage();
 			if (strlen($row['binpic']) > 100) {			// hack to just downsize the full image if the thumbnail fails on server
