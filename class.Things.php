@@ -770,7 +770,6 @@
 			require(WP_PATH . 'wp-load.php');											// Include WordPress			
 			query_posts($args);																	// get collection (of 1) post
 			$posts = array();
-
 			while (have_posts()): the_post();										// The Loop
 				$posts[] = array(
 					'title' 	=> the_title('', '', false),				// first two can return a string

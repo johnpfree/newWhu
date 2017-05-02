@@ -17,7 +17,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 		);
 		var $sansFont = "font-family: Roboto, Arial, sans-serif";
 	
-	var $caption = '';		// if $caption is non-blank, use it. Otherwise call getCaption()
+	var $caption = '';		// if $caption is non-blank, use it in setCaption(). Otherwise call getCaption()
 
 	function __construct($p)
 	{
@@ -33,23 +33,14 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		$this->template->set_var('PROD_NAVBAR'   , $noDbg ? "" : "");		// fixed navbar sucks
 		$this->template->set_var('DEBUG_SIZE_MSG', $noDbg ? "" : '<i id="mysize">size: </i>');		// which media query
 	}
-	function setCaption()		// hand place for bookkeeping shared for all pages
+	function setCaption()		// also handy place for bookkeeping shared for all pages
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
-		// also set active menu
-		$menu_items = array(
-			'home', 
-			'trips', 
-			'spots', 
-			'about', 
-			'search', 
-		);
-		
+
 		// set active menu
 		$page = $this->props->get('page');
-		foreach ($menu_items as $k => $v) 
+		foreach (array('home', 'trips', 'spots', 'about', 'search') as $k => $v) 
 		{
-			// dumpVar(($page == $v) ? "active" : '', "ACTIVE_$v");
 			$this->template->set_var("ACTIVE_$v", ($page == $v) ? "active" : '');
 		}
 		
@@ -73,7 +64,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function setStyle($page)
 	{
-		$pagemap = array('day' => 'log');
+		$pagemap = array('day' => 'log', 'vis' => 'pic');
 		if (isset($pagemap[$page]))					// map pages
 			$page = $pagemap[$page];
 
@@ -121,11 +112,10 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
 				default:			$gotSome = TRUE;
 			}
-			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='hidden'");
 
 // dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
 			$this->template->set_var("PAGE$i", $k);
-			$this->template->set_var("LABEL$i", $v);
+			$this->template->set_var("LABEL$i", $gotSome ? $v : '&nbsp;');		// hacky, there's still a little live spot
 			$this->template->set_var("TYPE$i", 'id');
 			$this->template->set_var("KEY$i", $id);		
 				
@@ -255,40 +245,6 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 }
 
-class HomeLook extends ViewWhu
-{
-	var $file = "homelook.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
-}
-class HomeRead extends ViewWhu
-{
-	var $file = "homeread.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
-}
-class HomeOrient extends ViewWhu
-{
-	var $file = "homeorient.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
-}
-class HomeBrowse extends ViewWhu
-{
-	var $file = "homebrowse.ihtml";   
-	function showPage()	
-	{
-		parent::showPage();
-	}
-	function getCaption()	{	return "Browse Trips";	}
-}
-
 class SpotsHome extends ViewWhu
 {
 	var $file = "spotshome.ihtml";
@@ -308,6 +264,7 @@ class SpotsHome extends ViewWhu
 		}
 		else
 			$this->template->set_var("TITLE", $this->title);
+		$this->caption = "Browse " . $this->title;
 		
 		for ($i = 0, $rows = array(); $i < min($maxrows, $spots->size()); $i++)
 		{
@@ -329,7 +286,6 @@ class SpotsHome extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true, 'one' =>'lg_row'));
 		$loop->do_loop($rows);		
 	}
-	function getCaption()	{	return "Browse Spots";	}
 }
 class SpotsTypes extends SpotsHome
 {
@@ -341,7 +297,6 @@ class SpotsTypes extends SpotsHome
 					'NWR'			=> 'Wildlife Refuges',
 					);
 		$this->title = $spottypes[$this->key];
-		// $this->title = ($this->key == "NWR") ? "Wildlife Refuges" : "Hot Springs";
 		$this->searchterms = array($this->key => 'wf_spots_types');
 		parent::showPage();
 	}
@@ -402,7 +357,7 @@ class AllTrips extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
 		$loop->do_loop($rows);		
 	}
-	function getCaption()	{	return "All Trips";	}
+	function getCaption()	{	return "Browse All Trips";	}
 }
 
 class OneTripLog extends ViewWhu
@@ -579,7 +534,7 @@ class Gallery extends ViewWhu
 			}
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true, 'none_msg' => 'no pictures'));
 		$loop->do_loop($rows);
 		
 		parent::showPage();
@@ -659,7 +614,8 @@ class OneMap extends ViewWhu
 
 		$tripid = $this->trip();		// local function		
  	 	$trip = $this->build('Trip', $tripid);		
-		$this->template->set_var('MAP_NAME', $trip->name());
+		$this->template->set_var('MAP_NAME', $name = $trip->name());
+		$this->caption = "Map for $name";
 		
 		if ($trip->hasMapboxMap())
 		{
@@ -725,10 +681,6 @@ class OneMap extends ViewWhu
 class DateMap extends OneMap
 {
 	var $loopfile = 'mapCenteredLoop.js';
-	// function showPage()
-	// {
-	// 	parent::showPage();
-	// }
 	function trip()
 	{
 		$day = $this->build('DayInfo', $this->key);		// get this day
@@ -737,6 +689,8 @@ class DateMap extends OneMap
 		$this->template->set_var('CENTER_LAT', $day->lon());
 		$this->template->set_var('CENTER_LON', $day->lat());
 		$this->template->set_var('ZOOM', '9');
+
+		$this->caption = "Trip map near " . Properties::prettyShort($day->date());
 
 		return $day->tripId();
 	}
@@ -795,7 +749,8 @@ class SpotMap extends OneMap
 	function setTitle($rad) 
 	{ 
  	 	$this->spot = $this->build('DbSpot', $this->key);		
-		$this->template->set_var('MAP_NAME', sprintf("Spots in a %s mile radius of %s", $rad, $this->spot->name()));
+		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of %s", $rad, $this->spot->name()));
+		$this->caption = $t;
 	}
 	function getSpots($rad) 
 	{ 
@@ -809,7 +764,6 @@ class NearMap extends SpotMap
 	function setTitle($rad) 
 	{ 
 		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of \"%s\"", $rad, $this->props->get('search_term')));
-		// dumpVar($t, "t");
 	}
 	function getSpots($rad) 
 	{ 
@@ -848,7 +802,7 @@ class OneVisual extends ViewWhu
 			$this->template->set_var('USE_VID', 'hideme');
 			$this->template->set_var('WF_IMAGES_PATH', $vis->folder());
 			$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
-			$this->template->set_var('VIS_NAME', $vis->caption());
+			$this->template->set_var('VIS_NAME', $name = $vis->caption());
 			$this->template->set_var('REL_PICPATH', iPhotoURL);
 			$this->template->set_var('VID_SPOT_VIS', 'hideme');
 
@@ -865,7 +819,7 @@ class OneVisual extends ViewWhu
 		
 	 	 	$pic = $this->build('Pic', $vis);		
 			$gps = $pic->latlon();
-			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $vis->caption()))))
+			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
 			{
 				$this->template->set_var('GPS_VIS', '');
 				$this->template->set_var('GPS_LAT', $gps['lat']);
@@ -1191,6 +1145,7 @@ class HomeHome extends ViewWhu
 class About extends ViewWhu
 {
 	var $file = "about.ihtml";   
+	var $caption = "What is this?";   
 	function showPage()	
 	{
 			parent::showPage();
@@ -1199,6 +1154,7 @@ class About extends ViewWhu
 class Search extends ViewWhu
 {
 	var $file = "search.ihtml";   
+	var $caption = "Find Spots. Browse Pictures";   
 }
 class SearchResults extends ViewWhu
 {

@@ -149,10 +149,6 @@ switch ("$curpage$curtype")
 	break;
 
 	case 'homehome':		$page = new HomeHome($props);			break;		
-	case 'homelook':		$page = new HomeLook($props);				break;
-	case 'homeread':		$page = new HomeRead($props);				break;
-	case 'homeorient':	$page = new HomeOrient($props);			break;
-	case 'homebrowse':	$page = new HomeBrowse($props);			break;	
 	
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
@@ -160,11 +156,7 @@ switch ("$curpage$curtype")
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
-	// case 'piccat':
-	// case 'picid':
-	// 	$props->set('id', $props->get('key'));			// this is sent from Wordpress, so add the id parm. The correct date key will be inferred
-	// case 'picdate':			$page = new OnePic($props);					break;
-	// case 'vidid':				$page = new OneVideo($props);		break;
+	case 'picid':				// legacy, still used in Wordpress e.g.
 	case 'visid':				$page = new OneVisual($props);		break;	
 
 	case 'logid':				$page = new OneTripLog($props);		break;	

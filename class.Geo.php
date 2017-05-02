@@ -163,7 +163,9 @@ class SpotKey extends AjaxCode
 		$str ='';
 		foreach ($spotkeys as $k => $v)
 		{
-			$str .= sprintf($this->oneLink, $this->page, $this->type, $k, $k, sizeof($v));
+			if (($nv = sizeof($v)) < 2)
+				continue;
+			$str .= sprintf($this->oneLink, $this->page, $this->type, $k, $k, $nv);
 		}
 		return $str;
 	}
@@ -184,7 +186,10 @@ class PicPlace extends AjaxCode
 			$cat = $cats->descendantList()[$i];
 			// dumpVar($cat->name(), sprintf("%s. d=%s, id=%s", $i, $cat->depth(), $cat->id()));
 
-			$str .= sprintf($this->oneLink, $this->page, $this->type, $cat->id(), sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name()), $cat->nPics());
+			if (($npic = $cat->nPics()) < 2)
+				continue;
+
+			$str .= sprintf($this->oneLink, $this->page, $this->type, $cat->id(), sprintf("%s %s", str_repeat('&bull;', $cat->depth()-1), $cat->name()), $npic);
 		}
 		return $str;
 	}

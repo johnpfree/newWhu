@@ -1,7 +1,15 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<h1 class="{DATE_GAL_VIS}"><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a> <i class="small">&ndash; {TODAY}</i></h1>
-	<h1 class="{CAT_GAL_VIS}">{TRIP_NAME}</h1>
-
+	
+	<div class="row" id="pichead">
+		<div class="{DATE_GAL_VIS} col-lg-9">
+			<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
+		</div>
+		<div class="{DATE_GAL_VIS} col-lg-3">
+			<h3>{TODAY}</h3>
+		</div>
+		<h1 class="{CAT_GAL_VIS}">{TRIP_NAME}</h1>
+	</div>	      	
+	
 {PAGER_BAR}
 
 	<!-- <h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2> -->
@@ -27,6 +35,12 @@
 	#main_item h1 a:hover { color: {LINKCOLOR}; }
 
 h1>i.small { color: {BOLDCOLOR}; }
+#pichead div {}
+#pichead div:nth-child(2) {	
+	text-align: right;
+	vertical-align: bottom;	
+	padding-top: 13px;
+}
 
 #thegal>p {
 	float: left;
@@ -43,14 +57,13 @@ h1>i.small { color: {BOLDCOLOR}; }
   top: 8px;
   right: 16px;
 /*	background-color: #FFFFE7;*/
-	color: white;
+/*	color: #662753;*/
+	color: #f00;
 	font-size: 200%;
 }
 #thegal>p strong>img {
 	border: 0;		
 }
-
-
 
 @media (max-width: 785px)  {	
 	#thegal>p { width: 78px; }
