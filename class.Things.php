@@ -814,6 +814,7 @@
 				return $key;
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
+		function kind()			{ return "UNKNONM"; }
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
 		function id()				{ return $this->dbValue('wf_images_id'); }
 		function caption()	{ return $this->dbValue('wf_images_text'); }
@@ -872,6 +873,7 @@
 			dumpVar($key, "key");
 			WhuThing::getRecord();
 		}
+		function kind()			{ return "video"; }
 		function token()		{ return $this->dbValue('wf_resources_token'); }
 		function lat()			{ return $this->dbValue('wf_resources_lat'); }
 		function lon()			{ return $this->dbValue('wf_resources_lon'); }
@@ -890,6 +892,7 @@
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
 
+		function kind()			{ return "picture"; }
 		function isPano()
 		{
 			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=155", $this->id());

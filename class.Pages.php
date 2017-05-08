@@ -817,8 +817,8 @@ class OneVisual extends ViewWhu
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 			$loop->do_loop($rows);
 		
-	 	 	$pic = $this->build('Pic', $vis);		
-			$gps = $pic->latlon();
+	 	 	$vis = $this->build('Pic', $vis);		
+			$gps = $vis->latlon();
 			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
 			{
 				$this->template->set_var('GPS_VIS', '');
@@ -833,20 +833,20 @@ class OneVisual extends ViewWhu
 			$this->template->set_var('USE_PIC', 'hideme');
 			$this->template->set_var('USE_VID', '');
 
-	 	 	$vid = $this->build('Video', $vis);		
-			$this->template->set_var('VIS_NAME', $vid->name());
-			$this->template->set_var('VID_TOKEN', $vid->token());
+	 	 	$vis = $this->build('Video', $vis);		
+			$this->template->set_var('VIS_NAME', $vis->name());
+			$this->template->set_var('VID_TOKEN', $vis->token());
 		
 			if ($this->setLittleMap(array('name' => Properties::prettyDate($date), 'desc' => $vis->name())))
 			{
 				$this->template->set_var('GPS_VIS', '');
-				$this->template->set_var('GPS_LAT', $vid->lat());
-				$this->template->set_var('GPS_LON', $vid->lon());
+				$this->template->set_var('GPS_LAT', $vis->lat());
+				$this->template->set_var('GPS_LON', $vis->lon());
 			}
 			else
 				$this->template->set_var('GPS_VIS', 'hideme');
 			
-			if ($id = $vid->spotId())
+			if ($id = $vis->spotId())
 			{
 				$this->template->set_var('VID_SPOT_VIS', '');
 				$spot = $this->build('DbSpot', $id);
@@ -861,6 +861,8 @@ class OneVisual extends ViewWhu
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 			$loop->do_loop(array());
 		}
+
+		$this->caption = sprintf("%s on %s", $vis->kind(), Properties::prettyShort($date));
 
 		$pageprops = array();
 		$pageprops['pkey'] = $vis->prev()->id();
