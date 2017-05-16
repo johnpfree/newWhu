@@ -1,10 +1,6 @@
-<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-	// AWESOME!  capture arrow keys ONLY in the edit box!
-	$("#newtitle").keydown(function(event) {		
-		event.stopPropagation();
-		});	
+$(document).ready(function() {
+	
 	$(document).keydown(function(event) { 	// $(document).keypress(function(event) - in Chrome, keydown works, keypress doesn't
 		console.log("keyCode:", event.keyCode);
 		if (event.keyCode == 37)

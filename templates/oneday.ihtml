@@ -12,7 +12,7 @@
 		<dd>{DAY_DESC}</dd>
 	</dl>
 	
-	<p>I started the day at {AM_STOP}. I ended the day at {PM_STOP}</p>
+	<p>I started the day at {AM_STOP}. I ended the day at {PM_STOP}.</p>
 	
 	<dl>
 		<dt>Here is a short description of the evening:</dt>

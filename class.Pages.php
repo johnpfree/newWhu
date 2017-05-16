@@ -26,13 +26,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 		$pagetype = $this->props->get('page') . $this->props->get('type');
 dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>");
 	}
-	function showPage()	
-	{	
-		global $noDbg;
-		// $this->template->set_var('PROD_NAVBAR'   , $noDbg ? "navbar-fixed-top" : "");		// fixed navbar messes up debugging
-		$this->template->set_var('PROD_NAVBAR'   , $noDbg ? "" : "");		// fixed navbar sucks
-		$this->template->set_var('DEBUG_SIZE_MSG', $noDbg ? "" : '<i id="mysize">size: </i>');		// which media query
-	}
+	function showPage()	{}
 	function setCaption()		// also handy place for bookkeeping shared for all pages
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
@@ -817,7 +811,7 @@ class OneVisual extends ViewWhu
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 			$loop->do_loop($rows);
 		
-	 	 	$vis = $this->build('Pic', $vis);		
+	 	 	$vis = $this->build('Pic', $vis);			// NOTE I am recasting my generic vis to a picture
 			$gps = $vis->latlon();
 			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
 			{
@@ -833,7 +827,7 @@ class OneVisual extends ViewWhu
 			$this->template->set_var('USE_PIC', 'hideme');
 			$this->template->set_var('USE_VID', '');
 
-	 	 	$vis = $this->build('Video', $vis);		
+	 	 	$vis = $this->build('Video', $vis);					// NOTE I am recasting my generic vis to a video
 			$this->template->set_var('VIS_NAME', $vis->name());
 			$this->template->set_var('VID_TOKEN', $vis->token());
 		
@@ -861,7 +855,6 @@ class OneVisual extends ViewWhu
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 			$loop->do_loop(array());
 		}
-
 		$this->caption = sprintf("%s on %s", $vis->kind(), Properties::prettyShort($date));
 
 		$pageprops = array();

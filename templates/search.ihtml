@@ -26,7 +26,7 @@
 	
 </script>
 
-<div class="container"id="main_item">
+<div class="container" id="main_item">
   <h2>Finding Stuff</h2>
 
   <div class="panel-group">
@@ -153,6 +153,9 @@
 </div>
 	
 <style type="text/css" media="screen">
+	#main_item form {		margin: 0;	}
+	#main_item form .form-group {		margin: 0;	}
+	
 #collapse4 .col-xs-4 {
 	text-align: center;
 }

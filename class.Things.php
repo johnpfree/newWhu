@@ -122,7 +122,6 @@
 			// dumpVar($data, "data");
 			return $data;
 		}
-
 	
 		// --------- factory
 		function build ($type = '', $key) 

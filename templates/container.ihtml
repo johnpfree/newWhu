@@ -9,6 +9,8 @@
 		<meta name="keywords" content="travel" />
 		<title>WHUFU: {CAPTION}</title>
 
+		<link rel="icon" type="image/png" sizes="16x16 32x32" href="resources/favicon/boxes.png">
+
 		<link rel="stylesheet" href="css/normalize.min.css">		
 		<!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
 		<!-- <link rel="stylesheet" href="https://rawgit.com/johnpfree/newWhu/master/css/whuBase.css"> -->
@@ -103,11 +105,11 @@
 	</head>
 	<body>
 	<header>	
-		<nav class="navbar navbar-inverse {PROD_NAVBAR}">	  <!-- if not debugging, add navbar-fixed-top class -->
+		<nav class="navbar navbar-inverse">	  <!-- if not debugging, add navbar-fixed-top class -->
 		  <div class="container">
 		    <div class="navbar-header">
 		      <!-- <a class="navbar-brand" href="#">WebSiName</a> -->
-					<a class="navbar-brand" href="?page=home&type=home"><img src="resources/JohnFreeman_logo_sm_03.png" alt=""></a>
+					<a class="navbar-brand" href="?page=home&type=home"><img src="resources/logo1.png" alt=""></a>
 		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#whuNavbar">
 		        <span class="icon-bar"></span>
 		        <span class="icon-bar"></span>
@@ -122,8 +124,7 @@
 		        <li class="nav-item {ACTIVE_spots}"><a class="nav-link" href="?page=spots&type=home">Spots</a></li>
 		        <li class="nav-item {ACTIVE_about}"><a class="nav-link" href="?page=about&type=home">About</a></li>
 		        <li class="nav-item {ACTIVE_search}"><a class="nav-link" href="?page=search&type=home">Search</a></li>
-						<!-- {DEBUG_SIZE_MSG} -->
-						</ul>
+					</ul>
 			    <form class="navbar-form navbar-right">
 					  <div class="input-group">
 					    <input type="text" class="form-control" id="search_text" name="search_text" placeholder="search text">
