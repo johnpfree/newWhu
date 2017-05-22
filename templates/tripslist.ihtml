@@ -22,4 +22,5 @@
 	#tripstable td {
 		padding: 4px 6px;
 	}
+	a {	color: green;	}
 </style>

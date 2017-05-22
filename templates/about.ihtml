@@ -64,7 +64,7 @@
 									<dt>why do I do this?</dt>
 									<dd>
 										<p>Beavers are gonna build dams, programmers are gonna program.</p>
-										<p>I was a professional computer programmer all my adult life. By the mid-2000's I still had the skills, still liked to do it, but  lost the ability so show up at a job interview and project caring about their stuff enough to get the job. I made the classic time-money tradeoff and chose time. This turns out to be what I do to feel fulfilled in retirement. Different strokes...</p>
+										<p>I was a professional computer programmer all my adult life. By the mid-2000's I still had the skills, still liked to do it, but  lost the ability so show up at a job interview and care about somebody else's stuff enough to get the job. I made the classic time-money tradeoff and chose to have more time and less money. Fiddling endlessly with the code and content for this site turns out to be what I do to make myself happy in retirement. Different strokes ...</p>
 									</dd>
 								</dl>
 							</li>
@@ -83,12 +83,19 @@
 						<ul>
 							<li>
 								<dl>
+									<dt>videos:</dt>
+									<dd>
+										I upload the videos to YouTube, into <a href="https://www.youtube.com/playlist?list=PLSQR0xDCyqtn4pZPocx92bcmrOBYS-wmi">this playlist</a>. 
+									</dd>                                             
+								</dl>
+							</li>
+								<dl>
 									<dt>maps:</dt>
-									<dd>I now use <a href="https://www.mapbox.com/">Mapbox</a> to render all the maps. 
+									<dd>I use <a href="https://www.mapbox.com/">Mapbox</a> to render the maps. 
 										<ul>
-											<li>The overnight spots are rendered from GPS information in the WHUFU database.</li>
-											<li>The routes are drawn by hand using Mapbox or Google Maps depending on my mood at the time. Google has fixed an annoying feature in it's UI so it has regained its status as my preferred tool.</li>
-											<li>I never got around to drawing a route map for some trips. For thse I simply connect the overnight spots with straight lines.</li>
+											<li>The overnight spots are plotted from GPS information in the WHUFU database.</li>
+											<li>I enter routes manually using Mapbox or Google Maps depending on my mood at the time. I used Google then I used Mapbox, now I'm back to Google. Mapbox makes it very easy to render either its JSON or Google's KML geodata into a layer.</li>
+											<li>I haven't drawn a route map for some trips. For these I simply connect the overnight spots with straight lines ... better than nothing I think.</li>
 										</ul>
 									</dd>
 								</dl>
@@ -96,10 +103,12 @@
 							<li>
 								<dl>
 									<dt>stories:</dt>
-									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet. <br />
-										This means I have to export them from my laptop Wordpress and import them to my server Wordpress, the technically ugliest part of this process, since updates or corrections have to be done manually in both places.<br />
-										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. Also the day name headers in the posts are done by a shortcode which generates a "name" anchor tag so I may link directly to the part of the post for that day.<br />
-										To display a story in WHUFU I crank up Wordpress to render the content into a <strong>div</strong>, so I get all those shortcode renderings exactly as in the actual blog. Wordpress is a lot of code, so there is sometimes a noticeable pause on these pages.
+									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. 
+										<ul>
+											<li>The good news is that I run a server and MYSQL on my laptop, so I can write posts at the campground without having to be connected to the internet.</li>
+											<li>The bad news is that I must therefore export them from my laptop Wordpress and import them to my server Wordpress to share them with you. This is the technically ugliest part of this process, since edits have to be done updated manually in both places.</li>
+										</ul>
+										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and Spot day descriptions from WHUFU and inserting them in posts. The day name section headers are done by a shortcode which generates a "name" anchor tag so WHUFU may link directly to the part of the post for that day. I crank up Wordpress inside WHUFU any time I need its content. Wordpress is a lot of code, so there is sometimes a noticeable pause on the Story pages.
 									</dd>
 								</dl>
 							</li>
@@ -110,19 +119,19 @@
 										<ul>
 											<li>I use an ancient templating class called <strong>template.inc</strong>. I’ve built my own set of classes around it, mostly to encapsulate it's non-user-friendly looping conventions. It does pretty much everything I need.</li>
 											<li>All the responsive behavior is from <strong>Bootstrap</strong>. It's pretty cool.</li>
-											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here, including some JQuery Ajax to to as-needed queries on the Search page which I'm very pleased with.</li>
+											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here, including some JQuery Ajax to to as-needed queries on the Search page, which I'm very pleased with.</li>
 											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there for all to see.</li>
-											<li><p>While travelling, I maintain a mileage log spreadsheet in Numbers (I'm a Mac guy). Along with odometer readings and place names and notes it has columns for the blog post id for that day and the id of the Spot where I stayed if any. Back home I export the spreadsheet as CSV, then run a little PHP program to read the CSV and create day records in the database.</p>
-												<p>This is the backbone of WHUFU, basically everything interconnects using the <em>Trips table</em> and the <em>Days table</em>.</p>
+											<li><p>While travelling, I maintain a mileage log spreadsheet in Numbers (the poor man's Excel on Mac). Along with odometer readings and place names and notes it has columns for the blog post id for that day and the Spot id for where I stayed. Eventually I export the spreadsheet as a CSV file, then run a little PHP program to read the CSV and create day records in the database.</p>
+												<p>The <em>Trips table</em> and the <em>Days table</em> are the backbone of WHUFU. Everything with a date - pictures, stories, maps -  are interconnected through those tables.</p>
 											</li>
 											<li>
 												I have an extensive set of backend tools for entering all the data for WHUFU:
 												<ul>
 													<li>A <em>Spot manager app</em> for entering and editing <strong>Spots</strong> and the different times I have been to a spot (<strong>Spot Days</strong>).</li>
-													<li>I upload pictures with iPhoto or the Canon app. I use Mac Preview for the initial winnowing. After I am down to just the pictures I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data. The pictures for each trip go into a separate folder.</li>
+													<li>I upload pictures and videos into <em>iPhoto</em> or the <em>Canon app</em>. I use <em>Mac Preview</em> for the initial winnowing. After I am down to just the pictures I want to show in WHUFU I run a little UNIX script based on the excellent <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" title="ExifTool by Phil Harvey">exiftool</a> to resize them to fit in an 800px square and to cram a thumbnail into the EXIF data. The pictures for each trip go into a unique folder.</li>
 													<li>When I have exactly the pictures I want in the folder for that trip I run the <em>Picture entry app</em> on that folder. It reads the image names and creates a database record for each.</li>
 													<li>Once pictures are in the database I run a <em>Picture captioning app</em>, to label them and assign keywords.</li>
-													<li>Likewise with Videos I have a script to read the EXIF data and build a table record..</li>
+													<li>For Videos I have another exiftool-based script to read the EXIF data and build a table record which links to the  video via its YouTube token.</li>
 												</ul>
 											</li>
 										</ul>

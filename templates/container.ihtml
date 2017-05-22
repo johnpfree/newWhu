@@ -45,29 +45,18 @@
 			a {	color: {LINKCOLOR}	}
 			a:hover {	color: {LINKHOVER};	}
 			
-			/* =========================	 CSS debugging 		==================================== */
-			#mysize:before {
-				color: "#1bb";
-				font-size: 80%;
-				content: "palette: {PAL_NAME} || ";
-			}		
-			#mysize {		color: #bb0;		}
-			#mysize:after {
-				color: yellow;
-				font-weight: bold;
-				content: "default";
-			}
-			@media (min-width: 544px)  {	#mysize:after {	content: "min-width: 544px";	}	}
-			@media (min-width: 768px)  {	#mysize:after {	content: "min-width: 768px";	}	}
-			@media (min-width: 992px)  {	#mysize:after {	content: "min-width: 992px";	}	}
-			@media (min-width: 1200px) {	#mysize:after {	content: "min-width: 1200px";	}	}
-
 			/* ================================= 
 			 CSS for header and footer might as well be here with the header and footer.
 			==================================== */
-			.navbar-inverse .navbar-nav>.active>a { background-color: #59503a; }
-			.navbar-inverse .navbar-nav>.active>a:hover { background-color: #403721;	}
-						
+			
+			ul.nav.navbar-nav { margin-left: 20px; }
+			li.nav-item 			{ margin: 0 6px;	}
+			
+			.navbar-inverse .navbar-nav>.active>a 			{ background-color: #59503a; color: #b1a472; }
+			.navbar-inverse .navbar-nav>.active>a:hover { background-color: #59503a; color: #E4D7A5;	}
+			.navbar-inverse .navbar-nav>li>a 						{ color: #b1a472; font-size: 120%; }
+			.navbar-inverse .navbar-nav>li>a:hover 			{ color: #E4D7A5; }
+			
 			.navbar-brand     { padding: 0 15px; }
 			.navbar-brand img { height: 50px; }
 	    .navbar,footer {  
@@ -108,7 +97,6 @@
 		<nav class="navbar navbar-inverse">	  <!-- if not debugging, add navbar-fixed-top class -->
 		  <div class="container">
 		    <div class="navbar-header">
-		      <!-- <a class="navbar-brand" href="#">WebSiName</a> -->
 					<a class="navbar-brand" href="?page=home&type=home"><img src="resources/logo1.png" alt=""></a>
 		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#whuNavbar">
 		        <span class="icon-bar"></span>
