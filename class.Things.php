@@ -702,7 +702,7 @@
 				return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");
 
 			if ($key > 0)
-				return $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date");
+				return $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
 
 			WhuThing::getRecord($key);
 		}
@@ -830,6 +830,7 @@
 											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
 			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
 		}
+		function cameraDoesGeo() { 	return (strpos('iPhone', $this->camera()) !== false); }		// only iPhones do geolocation
 
 		function vidId()			{ return $this->dbValue('wf_resources_id'); }
 		function isImage() 		{ return ($this->vidId() == 0); }
@@ -971,6 +972,8 @@
 
 				$tomorrow = Properties::sqlDate("$tonight +1 day");
 				$day = $this->build('WhuDbDay', $tomorrow);
+				if (!$day->hasData)          // I sometimes make spot_day entries for times I'm not on a trip, so handle it
+					return $pmpics;
 			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' 
 							and TIME(wf_images_localtime) < SEC_TO_TIME(3600 * %s)", $tomorrow, $day->daystart());
 				// dumpVar($q, "q am");

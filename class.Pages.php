@@ -208,8 +208,9 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 // dumpVar($coords, "setLittleMap");
 		if (!isset($coords['lat']))
 		{
-			$this->template->set_var("MAP_INSET", 
-					"<i class=smaller><br />Apparently the camera couldn't <br />geolocate this pic.</i>");
+			$this->template->set_var("MAP_INSET", isset($coords['geo']) ?
+					"<i class=smaller><br />Apparently the camera couldn't <br />geolocate this pic.</i>" :
+					"<i class=smaller><br />This camera doesn't do geolocation.</i>");
 			return false;
 		}
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
@@ -597,13 +598,14 @@ class OneMap extends ViewWhu
 {
 	var $file = "onemap.ihtml";
 	var $loopfile = 'mapBoundsLoop.js';
+	var $marker_color = '#535900';	// '#8c54ba';
 	function showPage()	
 	{
 		$eventLog = array();
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		$this->template->set_var('PAGE_VAL', 'day');
 		$this->template->set_var('TYPE_VAL', 'date');
-		$this->template->set_var('MARKER_COLOR', '#8c54ba');
+		$this->template->set_var('MARKER_COLOR', $this->marker_color);
 		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
 		// dumpVar($foo, "WHU_URL");
 
@@ -616,7 +618,7 @@ class OneMap extends ViewWhu
 		{
 			$filename = $trip->mapboxJson();
 			$fullpath = MAP_DATA_PATH . $filename;
-// dumpVar($fullpath, "fullpath");
+dumpVar($fullpath, "Mapbox fullpath");
 			$this->template->set_var("MAP_JSON", file_get_contents($fullpath));
 			$this->template->setFile('JSON_INSERT', 'mapjson.js');
 			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
@@ -625,7 +627,7 @@ class OneMap extends ViewWhu
 		{
 			$filename = $trip->folder();
 			$fullpath = 'data/' . $filename;
-// dumpVar($fullpath, "fullpath");
+dumpVar($fullpath, "Google fullpath");
 			$this->template->set_var("KML_FILE", $fullpath);
 			$this->template->setFile('JSON_INSERT', 'mapkml.js');
 			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
@@ -692,7 +694,6 @@ class DateMap extends OneMap
 }
 class SpotMap extends OneMap
 {
-	var $marker_color = '#8c54ba';
 	function showPage()	
 	{
 		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
@@ -791,7 +792,7 @@ class OneVisual extends ViewWhu
 		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
 		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
 		
-		if ($vis->isImage())												// picture
+		if ($vis->isImage())	// ==================================== picture ==============
 		{
 			$this->template->set_var('USE_PIC', '');
 			$this->template->set_var('USE_VID', 'hideme');
@@ -814,6 +815,8 @@ class OneVisual extends ViewWhu
 		
 	 	 	$vis = $this->build('Pic', $vis);			// NOTE I am recasting my generic vis to a picture
 			$gps = $vis->latlon();
+			if ($vis->cameraDoesGeo())
+				$gps['geo'] = true;
 			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
 			{
 				$this->template->set_var('GPS_VIS', '');
@@ -823,7 +826,7 @@ class OneVisual extends ViewWhu
 			else
 				$this->template->set_var('GPS_VIS', 'hideme');
 		}
-		else																				// video
+		else					// ============================================ video ==============================
 		{
 			$this->template->set_var('USE_PIC', 'hideme');
 			$this->template->set_var('USE_VID', '');
@@ -955,6 +958,8 @@ class OneSpot extends ViewWhu
 		// dumpVar($rows, "rows");
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
 		$loop->do_loop($rows);
+		
+		
 		$days = $this->build('DbSpotDays', $spot->id());	
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{

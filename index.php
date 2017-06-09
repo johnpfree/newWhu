@@ -96,8 +96,6 @@ class WhuTemplate extends VwTemplate
 
 // ---------------- Start Code ---------------------------------------------
 
-// session_start();			// always make this the first thing!
-
 $defaults = array(
 	'page' => 'home', 
 	'type' => 'home', 
@@ -105,7 +103,8 @@ $defaults = array(
 );
 
 $props = new WhuProps($defaults);		// default settings
-$props->set($_REQUEST);							// absorb all web parms
+$props->set($_POST);						// absorb web parms
+$props->set($_GET);							// ... but REQUEST has to much junk
 $props->dump('props');
 
 // grab form requests and package them for the factory below
