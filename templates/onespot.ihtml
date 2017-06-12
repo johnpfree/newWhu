@@ -1,3 +1,9 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();   
+	});	
+</script>
+
 <article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1>{SPOT_NAME}</h1>
 	<div class="row">
@@ -14,16 +20,23 @@
 				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
 
-			<div class="list_head"  title="keywords can be contradictory, for example noisy in the summer and quiet in the winter!">Spot keywords:</div>
+			<div class="list_head">Spot keywords:
+			  <a {INFO_CLASS} href="#" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<ul><li>Keywords can be contradictory, a spot might be '<em>noisy</em>' on a summer day and 'quiet' on a winter day.</li><li>Really quiet places may have 'road noise' when big rigs go past.</li></ul>">
+          <span class="glyphicon glyphicon-info-sign"></span>
+			  </a>
+			</div>
 			<div class="list_item">
-				&bull; 
 				<!-- BEGIN keyrows -->
-					<a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
+				&bull; <a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
+				<!-- END keyrows -->	
 				&bull; 
-					<!-- END keyrows -->	
 			</div>
 
-			<div class="xlist_head">Days visited (posted cost | senior cost):</div>
+			<div class="">Days visited (posted cost | senior cost):
+			  <a {INFO_CLASS2} href="#" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<ul><li>List the first day first 'cuz that's when I write the most.</li> <li>List the others most recent first!</li></ul>The date links to that Whu Day if there is one.">
+          <span class="glyphicon glyphicon-info-sign"></span>
+			  </a>
+			</div>
 			<div id="day_list" class="list_item">
 				<!-- BEGIN rows -->
 					<span class="{USE_LINK}" style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
@@ -75,6 +88,11 @@
 .list_head {
 	margin: 1em 0 0;
 	border-bottom: 2px solid {BOLDCOLOR};
+}
+[data-toggle="popover"] {
+	position: relative;
+  bottom: 5px;
+  left: 5px
 }
 .list_item {
 	padding: .5em 1em 1em;

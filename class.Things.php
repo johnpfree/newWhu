@@ -702,7 +702,18 @@
 				return $this->getAll("select * from wf_spot_days where wf_spot_days_date='$key'");
 
 			if ($key > 0)
-				return $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
+			{
+				$items = $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
+				
+				$first = array_pop($items);
+				array_unshift($items, $first);
+				// for ($i = 0; $i < sizeof($items); $i++)
+				// {
+				// 	dumpVar($items[$i]['wf_spot_days_date'], "22items[$i]['wf_spot_days_date']");
+				// }
+				// exit;
+				return $items;
+			}
 
 			WhuThing::getRecord($key);
 		}

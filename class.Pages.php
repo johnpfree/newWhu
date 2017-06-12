@@ -961,6 +961,8 @@ class OneSpot extends ViewWhu
 		
 		
 		$days = $this->build('DbSpotDays', $spot->id());	
+		$this->template->set_var('INFO_CLASS', '');
+		$this->template->set_var('INFO_CLASS2', ($days->size() > 1) ? '' : 'class="hideme"');
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
