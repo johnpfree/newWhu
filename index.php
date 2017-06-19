@@ -11,6 +11,8 @@ include_once("class.Geo.php");				// after Pages
 
 include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
+if (isset($_GET['dbg'])) 
+	$noDbg = !$_GET['dbg'];				// force debugging (or not)
 if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'ajax')  $noDbg = TRUE;	// force clean page for ajax
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP

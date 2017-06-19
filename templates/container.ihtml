@@ -12,15 +12,14 @@
 		<link rel="icon" type="image/png" sizes="16x16 32x32" href="resources/favicon/boxes.png">
 
 		<link rel="stylesheet" href="css/normalize.min.css">		
-		<!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
-		<!-- <link rel="stylesheet" href="https://rawgit.com/johnpfree/newWhu/master/css/whuBase.css"> -->
-
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script src="js/main.js"></script>    
 
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="css/whuBase.css">
+		
+		<link href="css/genericons.css" rel="stylesheet">
+		<link href="css/whuBase.css" rel="stylesheet">
 
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		
@@ -74,6 +73,9 @@
 			}
 	    footer a {  
 				color: #a7c5bc;
+			}
+			.genericon {
+				vertical-align: middle;
 			}
 
 			/* ================================= 
@@ -143,8 +145,9 @@
 					<a href="http://www.cloudyhands.com/">cloudyhands.com</a> 
 				</div>
 				<div class="col-sm-1">
-		      <a href="https://twitter.com/johnpfreem"      target="_blank"><img src="resources/icons/tweet.png" height="20"></a>
-		      <a href="https://www.facebook.com/johnpfree/" target="_blank"><img src="resources/icons/facebook.png" height="20"></a>
+		      <a href="https://twitter.com/johnpfreem" target="_blank"><span class="genericon genericon-twitter"></span></a>
+		      <a href="https://www.facebook.com/johnpfree" target="_blank"><span class="genericon genericon-facebook-alt"></span></a>
+		      <a href="http://www.whufu.com/wpwhu/" target="_blank"><span class="genericon genericon-wordpress"></span></a>
 				</div>
 				<div class="col-sm-3">
 					design with &nbsp;<a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
