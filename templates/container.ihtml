@@ -144,15 +144,17 @@
 				<div class="col-sm-2">
 					<a href="http://www.cloudyhands.com/">cloudyhands.com</a> 
 				</div>
-				<div class="col-sm-1">
+				<div class="col-sm-2">
 		      <a href="https://twitter.com/johnpfreem" target="_blank"><span class="genericon genericon-twitter"></span></a>
 		      <a href="https://www.facebook.com/johnpfree" target="_blank"><span class="genericon genericon-facebook-alt"></span></a>
 		      <a href="http://www.whufu.com/wpwhu/" target="_blank"><span class="genericon genericon-wordpress"></span></a>
+		      <a href="https://www.youtube.com/channel/UC9TfELP0fNmd49-cwLJHgRg" target="_blank"><span class="genericon genericon-youtube"></span></a>
+		      <a href="https://www.instagram.com/johnpfree/" target="_blank"><span class="genericon genericon-instagram"></span></a>
 				</div>
 				<div class="col-sm-3">
 					design with &nbsp;<a href="http://eltondeleon.com/">Elton de Leon Arteaga</a></span>
 				</div>
-				<div class="col-sm-2" id="contactlink">
+				<div class="col-sm-1" id="contactlink">
 					<a href="?page=contact&fromp={FROM_P}&fromt={FROM_T}&fromk={FROM_K}"><button type="button" class="btn btn-primary btn-sm">feedback</button></a>
 				</div>
 			</div>
