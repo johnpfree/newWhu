@@ -606,8 +606,10 @@ class OneMap extends ViewWhu
 		$this->template->set_var('PAGE_VAL', 'day');
 		$this->template->set_var('TYPE_VAL', 'date');
 		$this->template->set_var('MARKER_COLOR', $this->marker_color);
-		$this->template->set_var('WHU_URL', $foo = sprintf("https://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
-		// dumpVar($foo, "WHU_URL");
+		
+		// cheeseball trick to use http locally and https on server :<
+		$this->template->set_var('WHU_URL', $foo = sprintf("http%s://%s%s", (HOST == 'cloudy') ? 's' : '', $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
+		dumpVar($foo, "WHU_URL");
 
 		$tripid = $this->trip();		// local function		
  	 	$trip = $this->build('Trip', $tripid);		
