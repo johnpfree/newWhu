@@ -1,7 +1,7 @@
 # newWhu
-September 2016 - New WHUFU
+September 2016 - July 2017 - New WHUFU
 
-The new responsive version of WHUFU. It's my vacation blog, but it's oh so much more.
+The new responsive version of WHUFU. It's my vacation blog, but it's and extra-fancy vacation blog!
 
 The the version of this code is here:  http://whufu.com/. 
 
