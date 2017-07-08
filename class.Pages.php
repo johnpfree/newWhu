@@ -12,7 +12,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"log" =>		array('boldcolor' => '#004151', 'bordercolor' => '#007383', 'linkcolor' => '#005A6A', 'linkhover' => '#33A6B6', 'bbackcolor' => '#E5FFFF'), 
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#b30000', 'linkhover' => '#593A43', 'bbackcolor' => '#d7e5e1'), 
 			// "deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'),
-			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0'),
+			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d5dFdF'),
 			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
 			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#C1B0A6'),
 		);
@@ -518,7 +518,7 @@ class Gallery extends ViewWhu
 			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'USE_VIDTMB' => 'hideme');
 			
 			// $row['pano_symb'] = $pic->isPano() ? '<strong><img src="resources/pano/pano0.png" width="48" height="48" alt="panorama"></strong>' : '';
-			$row['pano_symb'] = $pic->isPano() ? '<strong>&hArr;</strong>' : '';
+			$row['pano_symb'] = $pic->picPanoSym();
 			
 			$row['binpic'] = $pic->thumbImage();
 			if (strlen($row['binpic']) > 100) {			// hack to just downsize the full image if the thumbnail fails on server
@@ -952,81 +952,97 @@ class OneSpot extends ViewWhu
 
 		$keys = $spot->keywords();
 		// dumpVar($keys, "keys");
-		for ($i = 0; $i < sizeof($keys); $i++) 
+		if ($keys)
 		{
-			// dumpVar($keys[$i], "keys[$i]");
-			$rows[] = array('spot_key' => $keys[$i]);
-		}
-		// dumpVar($rows, "rows");
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
-		$loop->do_loop($rows);
+			for ($i = 0; $i < sizeof($keys); $i++) 
+			{
+				// dumpVar($keys[$i], "keys[$i]");
+				$rows[] = array('spot_key' => $keys[$i]);
+			}
+			// dumpVar($rows, "rows");
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
+			$loop->do_loop($rows);
 		
-		
-		$days = $this->build('DbSpotDays', $spot->id());	
-		$this->template->set_var('INFO_CLASS', '');
-		$this->template->set_var('INFO_CLASS2', ($days->size() > 1) ? '' : 'class="hideme"');
-		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
-		{
-			$day = $days->one($i);
-			// $day->dump($i);
-			$row = array('stay_date' => $date = $day->date());
-			$row['nice_date'] = Properties::prettyDate($date);
-			$row['spdesc'] = $day->htmldesc();
+			$days = $this->build('DbSpotDays', $spot->id());	
+			$this->template->set_var('INFO_CLASS', '');
+			$this->template->set_var('INFO_CLASS2', ($days->size() > 1) ? '' : 'class="hideme"');
+			for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
+			{
+				$day = $days->one($i);
+				// $day->dump($i);
+				$row = array('stay_date' => $date = $day->date());
+				$row['nice_date'] = Properties::prettyDate($date);
+				$row['spdesc'] = $day->htmldesc();
 
-			if (($cost = $day->cost()) > 0)
-			{
-				$costs = $this->addDollarSign($cost);
-				if ($day->senior() > 0 && $day->senior() != $cost)
-					$costs .= ' | '.$this->addDollarSign($day->senior());
-			}
-			else
-				$costs = "free!";
-			$row['spcosts'] = $costs;
-			if ($day->tripId() > 0)
-			{
-				$row['use_link'] = '';
-				$row['not_link'] = 'hideme';
-			}
-			else
-			{
-				$row['use_link'] = 'hideme';
-				$row['not_link'] = '';
-			}
-			// dumpVar($row, "$i row");
-			$rows[] = $row;
+				if (($cost = $day->cost()) > 0)
+				{
+					$costs = $this->addDollarSign($cost);
+					if ($day->senior() > 0 && $day->senior() != $cost)
+						$costs .= ' | '.$this->addDollarSign($day->senior());
+				}
+				else
+					$costs = "free!";
+				$row['spcosts'] = $costs;
+				if ($day->tripId() > 0)
+				{
+					$row['use_link'] = '';
+					$row['not_link'] = 'hideme';
+				}
+				else
+				{
+					$row['use_link'] = 'hideme';
+					$row['not_link'] = '';
+				}
+				// dumpVar($row, "$i row");
+				$rows[] = $row;
 
-			// collect evening and morning pictures for each day
-			if ($i == 0) {
-				$pics = $this->build('Pics', array('night' => $date));
+				// collect evening and morning pictures for each day
+				if ($i == 0) {
+					$pics = $this->build('Pics', array('night' => $date));
+				}
+				else {
+					// dumpVar($date, "$i date");
+					$more = $this->build('Pics', array('night' => $date));
+					$pics->add($more);
+				}
 			}
-			else {
-				// dumpVar($date, "$i date");
-				$more = $this->build('Pics', array('night' => $date));
-				$pics->add($more);
-			}
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop($rows);
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+			$loop->do_loop($rows);
 		
-		$this->template->set_var('REL_PICPATH', iPhotoURL);
-		$pics->random(7);
-		for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
-		{
-			$pic = $pics->one($i);
+			$this->template->set_var('REL_PICPATH', iPhotoURL);
+			$pics->random(12);
+			for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
+			{
+				$visual = $pics->one($i);
 			
-			$row = array('gal_date' => $day->date(), 'wf_images_path' => $pic->folder(), 'pic_name' => $pic->filename());
-			$row['binpic'] = $pic->thumbImage();
-			if (strlen($row['binpic']) > 100) {			// hack to slow the slow image if the thumbnail fails on server
-				$row['use_binpic'] = '';
-				$row['use_image']  = 'hideme';
-			} else {
-				$row['use_binpic'] = 'hideme';
-				$row['use_image']  = '';
+				if ($visual->isVideo())
+				{
+					$vid = $this->build('Video', $visual);
+					dumpVar($vid->token(), "vid->token()");
+					$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
+							'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
+					$rows[] = $row;	
+					continue;			
+				}
+
+				$row = array('gal_date' => $day->date(), 'wf_images_path' => $visual->folder(), 'pic_name' => $visual->filename(), 'pic_id' => $visual->id(), 'use_vidtmb' => 'hideme');
+				// dumpVar($row, "$i row");
+				$row['binpic'] = $visual->thumbImage();
+				if (strlen($row['binpic']) > 100) {			// hack to show the slow image if the thumbnail fails on server
+					$row['use_binpic'] = '';
+					$row['use_image']  = 'hideme';
+				} else {
+					$row['use_binpic'] = 'hideme';
+					$row['use_image']  = '';
+				}
+					// $row['use_binpic'] = 'hideme';
+					// $row['use_image']  = '';
+				$row['pano_symb'] = $visual->picPanoSym();
+				$rows[] = $row;
 			}
-			$rows[] = $row;
-		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
-		$loop->do_loop($rows);
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
+			$loop->do_loop($rows);
+		}		
 
 		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
 		parent::showPage();
@@ -1041,6 +1057,7 @@ class TripStories extends ViewWhu
 		$tripid = $this->props->get('key');
  	 	$trip = $this->build('DbTrip', $tripid);	
 		$this->template->set_var('TRIP_NAME', $trip->name());
+		$this->caption = "Stories for " . $trip->name();
 		
 		// collect unique Post ids
 		$days = $this->build('DbDays', $tripid);
@@ -1100,7 +1117,7 @@ class TripStory extends ViewWhu
 		$postid = $this->key;
  	 	$post = $this->build('Post', array('wpid' => $postid));	
 
-		$this->template->set_var('POST_TITLE', $post->title());
+		$this->template->set_var('POST_TITLE', $this->caption = $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());
 		
 		$pageprops = array();

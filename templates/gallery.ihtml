@@ -53,16 +53,11 @@ h1>i.small { color: {BOLDCOLOR}; }
 .squareme {	object-fit: cover; }
 
 #thegal>p strong {
-	position: absolute;
   top: 8px;
   right: 16px;
-/*	background-color: #FFFFE7;*/
-/*	color: #662753;*/
+/*	position: absolute;
 	color: #f00;
-	font-size: 200%;
-}
-#thegal>p strong>img {
-	border: 0;		
+	font-size: 200%;*/
 }
 
 @media (max-width: 785px)  {	

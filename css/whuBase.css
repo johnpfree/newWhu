@@ -20,6 +20,16 @@ body {
   shared 
 ==================================== */
 
+#thegal>p strong {
+	position: absolute;
+	color: #f0f;
+	font-size: 200%;
+}
+#thegal>p strong>img {
+	border: 0;		
+}
+
+
 /* un-jumbo jumbotron a bit: */
 .jumbotron { 
 	background-color: transparent; 		/* un-color jumbotrons */
@@ -38,7 +48,6 @@ body {
 
 .hideme { display: none; }
 .squareme {	object-fit: cover; }
-
 
 /* ================================= 
   Media Queries

@@ -535,7 +535,12 @@
 		{
 			if ($this->lazyDays == NULL)
 				$this->lazyDays = $this->build('DbSpotDays', $this->id());
-			
+
+			// dumpVar($this->lazyDays->data, "this->lazyDays->data");
+			// dumpVar(boolStr($this->lazyDays->isEmpty()), "this->lazyDays->isEmpty");
+			if ($this->lazyDays->isEmpty())		// return of FALSE means there are no Spot Days (enver visited here)
+				return FALSE;
+
 			for ($i = 0, $allkeys = array(); $i < $this->lazyDays->size(); $i++)
 			{
 				$spotDay = $this->lazyDays->one($i);
@@ -704,14 +709,12 @@
 			if ($key > 0)
 			{
 				$items = $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
-				
+
+				if (sizeof($items) == 0)		// return now if there's nothing to shift
+					return $items;
+
 				$first = array_pop($items);
 				array_unshift($items, $first);
-				// for ($i = 0; $i < sizeof($items); $i++)
-				// {
-				// 	dumpVar($items[$i]['wf_spot_days_date'], "22items[$i]['wf_spot_days_date']");
-				// }
-				// exit;
 				return $items;
 			}
 
@@ -876,12 +879,13 @@
 	{
 		function getRecord($key)		// key = pic id
 		{
-			if (is_object($key) && (get_class($key) == 'WhuVisual'))		// cast a Visual to a Video, add the video data
+			dumpVar(get_class($key), "get_classkey");
+			if (is_object($key) && ((get_class($key) == 'WhuVisual') || (get_class($key) == 'WhuPic')))		// cast a Visual or Pic to a Video, add the video data
 			{
 				$item = $this->getOne("select * from wf_resources where wf_resources_id=" . $key->vidId());					
 				return array_merge($key->data, $item);
 			}
-			dumpVar($key, "key");
+			// dumpVar($key, "key");
 			WhuThing::getRecord();
 		}
 		function kind()			{ return "video"; }
@@ -909,6 +913,7 @@
 			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=155", $this->id());
 			return is_array($this->getOne($q));
 		}
+		function picPanoSym()	{ return $this->isPano() ? '<strong>&hArr;</strong>' : ''; }
 					
 		// image FILE stuff - extract GPS, extract thumbnail
 		function latlon()

@@ -1,7 +1,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
     $('[data-toggle="popover"]').popover();   
-	});	
+	});
+	// $('.popover-dismiss').popover({
+	//   trigger: 'focus'
+	// })
 </script>
 
 <article class="jumbotron jumbotron-fluid" id="main_item">
@@ -13,15 +16,15 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-8">
-			<p>Number of visits: {SPOT_NUM}</p>
-
-			<p><i>gps: </i>{SPLAT},{SPLON}</p>
-			<p>
-				<i>bathroom: </i>{SPBATH} &bull; <i> water: </i>{SPWATER}
+			<p><i>Number of visits</i>: {SPOT_NUM}<br />
+				<i>gps</i>: {SPLAT},{SPLON}<br />
+				<i>bathroom</i>: {SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
 
+<!-- <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a> -->
+			
 			<div class="list_head">Spot keywords:
-			  <a {INFO_CLASS} href="#" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<ul><li>Keywords can be contradictory, a spot might be '<em>noisy</em>' on a summer day and 'quiet' on a winter day.</li><li>Really quiet places may have 'road noise' when big rigs go past.</li></ul>">
+			  <a {INFO_CLASS} href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul><li>Keywords can be contradictory, a spot might be '<em>noisy</em>' on a summer day and '<em>quiet</em>' on a winter day.</li><li>A lot of campgrounds are really quiet except when trucks (or trains) roll past, so they get both '<em>quiet</em>'and '<em>road noise</em>'!</li></ul>">
           <span class="glyphicon glyphicon-info-sign"></span>
 			  </a>
 			</div>
@@ -31,9 +34,9 @@
 				<!-- END keyrows -->	
 				&bull; 
 			</div>
-
+			
 			<div class="">Days visited (posted cost | senior cost):
-			  <a {INFO_CLASS2} href="#" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<ul><li>List the first day first 'cuz that's when I write the most.</li> <li>List the others most recent first!</li></ul>The date links to that Whu Day if there is one.">
+			  <a {INFO_CLASS2} href="#" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" data-content="<ul><li>The first time I visited is listed first 'cuz that's when I write the most.</li><li>After that visits are listed most recent first!</li></ul>If the visit was part of a trip the date will link to that WhuDay page.">
           <span class="glyphicon glyphicon-info-sign"></span>
 			  </a>
 			</div>
@@ -45,7 +48,20 @@
 					<!-- END rows -->	
 			</div>
 		</div>
-		<div class="col-sm-4">			
+		<div class="col-sm-4">		
+			<div class="clearfix" id="thegal">
+				<!-- BEGIN picrows -->
+				<p>
+					<a href="?page=vis&type=id&key={PIC_ID}">
+						<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+						<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
+						<img class="img-rounded img-responsive squareme {USE_VIDTMB}" src='http://img.youtube.com/vi/{VID_TOKEN}/0.jpg' border="0" />
+					</a>		
+					{PANO_SYMB}
+				</p>
+				<!-- END picrows -->
+			</div>
+			<!-- <hr />	 -->
 			{MAP_INSET}
 			<div id="formbox">
 			  <form role="form" id="nearform" method="get" data-toggle="validator">
@@ -68,18 +84,6 @@
 			</div>
 		</div>
 	</div>	
-	<div class="col-sm-12">	
-		<div class="clearfix" id="thegal">
-			<!-- BEGIN picrows -->
-			<p>
-				<a href="?page=pics&type=date&key={GAL_DATE}">
-					<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
-					<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
-				</a>		
-			</p>
-			<!-- END picrows -->
-		</div>
-	</div>
 </article>
 
 <style type="text/css" media="screen">
@@ -94,16 +98,24 @@
   bottom: 5px;
   left: 5px
 }
+.popover-content {}
+.popover-content ul {
+	margin-left: -2em;
+}
+
 .list_item {
 	padding: .5em 1em 1em;
 }
 #day_list {
-	padding: 10px;
+	padding: .8em 1em;
+	margin: .6em 0;
 	overflow: scroll;
 	overflow-x: hidden;
 	width: 100%;
 	max-height: 30vw;
-	border: 1px solid {BOLDCOLOR};
+/*	border: 1px solid {BOLDCOLOR};*/
+/*	background-color: #d5dFdF;*/
+	background-color: {BACKCOLOR};
 }
 
 .day_desc {
@@ -129,24 +141,53 @@
 #thegal>p img {
 	border: 1px solid #3A5950;		
 }
+#thegal>p strong {
+	position: absolute;
+	color: #f00;
+	font-size: 200%;
+}
+#thegal>p strong>img {
+	border: 0;		
+}
+
 .squareme {	object-fit: cover; }
 .hideme { display: none; }
 
 @media (max-width: 785px)  {	
-	#thegal>p { width: 78px; }
+	#thegal>p { 
+		width: 78px; 
+		margin-bottom: 2px;
+	}
+	#thegal>p strong {
+	  top: 10px;
+	  right: 30px;
+		font-size: 140%;
+	}
 	.squareme {
 		width: 76px;
 		height: 76px;
 	}
+	#day_list {
+		max-height: 50vw;
+	}
 }
 @media (min-width: 701px)  {	
-	#thegal>p { width: 126px; }
+	#thegal>p { 
+		width: 106px; 
+		margin-bottom: 6px;
+	}
+	#thegal>p strong {
+	  top: 8px;
+	  right: 36px;
+		font-size: 150%;
+	}
 	.squareme {
-		width: 120px;
-		height: 120px;
+		width: 100px;
+		height: 100px;
 /*		width: 160px;
 		height: 160px;
 */	}
+/*100, 106*/
 }
 
 </style>
