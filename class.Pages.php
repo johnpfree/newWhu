@@ -1180,18 +1180,7 @@ class HomeHome extends ViewWhu
 	// var $file = "blank.ihtml";
 	var $file = "homehome.ihtml";
 	function showPage()	
-	{
-		$rows = array(
-			'W_P', 
-			'W_T', 
-			'W_K', 
-			'W_IMG', 
-			'W_ALT', 
-			'W_CNT', 
-			'W_THING', 
-      'W_SUBT',
-		);
-		
+	{		
 		$site = $this->build('Trips');
 		$this->template->set_var('N_MAP', $site->numMaps());
 		$this->template->set_var('N_TXT', $site->numPosts());
