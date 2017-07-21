@@ -55,16 +55,11 @@ img.wp-post-image {
 
 .wp-caption {
 	max-width: 100%; /* Keep wide captions from overflowing their container. */
-	padding: 8px 6px 3px;
-	margin: 6px;
-	text-align: center;
-	border: 2px solid {BOLDCOLOR};
-/*	border: 2px solid #4D804C;*/
 }
 .wp-caption:hover {
-	background-color: {linkhover};
 	border: 2px solid #80003B;
 	text-shadow: 0 0 2px #999;
+	background-color: {LINKHOVER};
 }
 .wp-caption .wp-caption-text {
 	font-style: italic;
@@ -76,6 +71,13 @@ img.wp-post-image {
 }
 p.wp-caption-text {
 	margin: 0;				/* eliminate space under inset photos */
+}
+.whupic {           /* see media query below dfor mobile! */
+	padding: 6px;
+	margin: 6px 8px;
+	text-align: center;
+	width: 220px;
+	border: 2px solid {BOLDCOLOR};
 }
 
 h5 {
@@ -135,6 +137,15 @@ h5 {
 .entry-content ul, 
 .entry-content ol {
 	margin: .7em 0;
+}
+
+
+@media (max-width: 785px)  {	
+	
+	.whupic {
+		margin: -2px 6px;
+		width: 160px;
+	}
 }
 
 </style>

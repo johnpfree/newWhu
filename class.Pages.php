@@ -6,17 +6,17 @@ class ViewWhu extends ViewBase  // ViewDbBase
 {	
 	var $file = "UNDEF";
 	var $curpal = NULL;
-	var $pals =	array(
+	const pals =	array(
+			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#C1B0A6'),
+			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d5dFdF'),
+			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
 			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#868C1A', 'linkcolor' => '#33A672', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
 			"pic" => 		array('boldcolor' => '#4B3E0C', 'bordercolor' => '#655826', 'linkcolor' => '#1B4F24', 'linkhover' => '#6A5835', 'bbackcolor' => '#FFFFE7'),
 			"log" =>		array('boldcolor' => '#004151', 'bordercolor' => '#007383', 'linkcolor' => '#005A6A', 'linkhover' => '#33A6B6', 'bbackcolor' => '#E5FFFF'), 
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#b30000', 'linkhover' => '#593A43', 'bbackcolor' => '#d7e5e1'), 
 			// "deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'),
-			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d5dFdF'),
-			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
-			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#C1B0A6'),
 		);
-		var $sansFont = "font-family: Roboto, Arial, sans-serif";
+	var $sansFont = "font-family: Roboto, Arial, sans-serif";
 	
 	var $caption = '';		// if $caption is non-blank, use it in setCaption(). Otherwise call getCaption()
 
@@ -63,7 +63,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		if (isset($pagemap[$page]))					// map pages
 			$page = $pagemap[$page];
 
-		foreach ($this->pals as $k => $v)
+		foreach (self::pals as $k => $v)
 		{
 			// dumpVar($k, "pt= $page, k");
 			if (strpos($page, $k) !== false) {
@@ -72,7 +72,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			}
 		}	
 		if (!isset($this->curPal))
-			$this->curPal = new StyleProps($this->pals['deflt'], 'default');
+			$this->curPal = new StyleProps(self::pals['deflt'], 'default');
 		
 		$this->template->set_var('SANS_FONT', 	$this->sansFont);				// sometimes the serifs don't look good
 
@@ -114,7 +114,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("TYPE$i", 'id');
 			$this->template->set_var("KEY$i", $id);		
 				
-			$this->template->set_var("BACK$i", $this->pals[$paltag]['bbackcolor']);			
+			$this->template->set_var("BACK$i", self::pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
 	}
@@ -154,7 +154,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var("LABEL$i", $v);
 			$this->template->set_var("TYPE$i", 'date');
 			$this->template->set_var("KEY$i", $date);			
-			$this->template->set_var("BACK$i", $this->pals[$paltag]['bbackcolor']);			
+			$this->template->set_var("BACK$i", self::pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
 	}
@@ -494,6 +494,11 @@ class Gallery extends ViewWhu
 		$this->doNav();			// do nav (or not)
 
 		$visuals = $this->getPictures($this->key);
+		
+		// $path = $_SERVER['HTTP_HOST'] . '/~jf/cloudyhands.com/';
+		// // dumpVar($path, "path");
+		// // exit;
+		// $this->template->set_var('REL_PICPATH', $path);
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		
 		for ($i = 0, $rows = array(), $fold = ''; $i < $visuals->size(); $i++) 
@@ -504,7 +509,7 @@ class Gallery extends ViewWhu
 			if ($visual->isVideo())
 			{
 				$vid = $this->build('Video', $visual);
-				dumpVar($vid->token(), "vid->token()");
+				// dumpVar($vid->token(), "vid->token()");
 				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
 						'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
 				$rows[] = $row;	
@@ -525,6 +530,7 @@ class Gallery extends ViewWhu
 				$row['use_binpic'] = '';
 				$row['use_image']  = 'hideme';
 			} else {
+				dumpVar($row['PIC_NAME'], "binpic fail");
 				$row['use_binpic'] = 'hideme';
 				$row['use_image']  = '';
 			}
@@ -591,6 +597,27 @@ class CatGallery extends Gallery
 	function getCaption()				{	return "Pictures for category: " . $this->name;	}
 	function galleryTitle($key)	{	return ''; }
 	function getPictures($key)	{ return $this->pics; }	
+	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
+}
+class VideoGallery extends Gallery
+{
+	var $galtype = "vid";
+	var $message = '';
+	function showPage()	
+	{
+		$this->template->set_var("DATE_GAL_VIS", 'hideme');
+		$this->template->set_var("CAT_GAL_VIS" , '');
+		
+		$this->template->set_var("TRIP_ID", $this->key);
+		$this->template->set_var("TRIP_NAME", "Videos");		// save name for caption call below
+		$this->template->set_var("TODAY", '');
+		$this->template->set_var('LINK_BAR', '');
+		
+		parent::showPage();
+	}
+	function getCaption()				{	return "Videos";	}
+	function galleryTitle($key)	{	return ''; }
+	function getPictures($key)	{ return $this->build('Visuals', (array('vid' => 'all'))); }
 	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
 }
 
@@ -1018,7 +1045,7 @@ class OneSpot extends ViewWhu
 				if ($visual->isVideo())
 				{
 					$vid = $this->build('Video', $visual);
-					dumpVar($vid->token(), "vid->token()");
+					// dumpVar($vid->token(), "vid->token()");
 					$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
 							'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
 					$rows[] = $row;	
@@ -1090,7 +1117,7 @@ class TripStories extends ViewWhu
 			$str .= " - ";
 			$str .= Properties::prettyDate($wpdates[$i][1]);
 			$row['story_dates'] = $str;
-			$row['story_excerpt'] = $post->baseExcerpt($post->content(), 300);
+			$row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
 
 			if (is_null($pics[$i]))
 				$row['use_image']  = 'hideme';
@@ -1154,6 +1181,17 @@ class HomeHome extends ViewWhu
 	var $file = "homehome.ihtml";
 	function showPage()	
 	{
+		$rows = array(
+			'W_P', 
+			'W_T', 
+			'W_K', 
+			'W_IMG', 
+			'W_ALT', 
+			'W_CNT', 
+			'W_THING', 
+      'W_SUBT',
+		);
+		
 		$site = $this->build('Trips');
 		$this->template->set_var('N_MAP', $site->numMaps());
 		$this->template->set_var('N_TXT', $site->numPosts());
@@ -1177,6 +1215,14 @@ class Search extends ViewWhu
 {
 	var $file = "search.ihtml";   
 	var $caption = "Find Spots. Browse Pictures";   
+	function showPage()	
+	{
+		$this->template->set_var('SPOTS_BACK', self::pals['spot']['linkcolor' ]);
+		$this->template->set_var('SPOTS_FORE', self::pals['spot']['backcolor' ]);
+		$this->template->set_var('PICS_BACK' , self::pals['pic'] ['linkhover' ]);
+		$this->template->set_var('PICS_FORE' , self::pals['pic'] ['bbackcolor']);
+		parent::showPage();
+	}
 }
 class SearchResults extends ViewWhu
 {

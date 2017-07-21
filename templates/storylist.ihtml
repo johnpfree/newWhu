@@ -2,16 +2,18 @@
 
 <!-- BEGIN rows -->
 <hr />
-<div class="row">
-  <div class="col-sm-10">
-		<a href="?page=txt&type=wpid&key={STORY_ID}"><h3>{STORY_TITLE}</h3></a>
-		<p class="storydates">{STORY_DATES}</p>
-		<p class="storypart clearfix">{STORY_EXCERPT}</p>
+	<div class="row">
+	  <div class="col-sm-8">
+			<a class="story-title" href="?page=txt&type=wpid&key={STORY_ID}">{STORY_TITLE}</a>
+		</div>
+	  <div class="col-sm-4">
+			<p class="story-dates">{STORY_DATES}</p>
+		</div>
 	</div>
-  <div class="col-sm-2">
-		<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+	<div class="row">
+		<img class="story-image img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+		<p class="story-part ">{STORY_EXCERPT}</p>
 	</div>
-</div>
 <!-- END rows -->
 {LINK_BAR}
 
@@ -19,23 +21,38 @@
 #the_content hr {
 	margin: 4px 0 18px;
 	height: 2px;
-	background-color: #3A5950;
+	background-color: #684F22;
 }	
-#the_content h3 {
-	margin: -6px 0 0;
+.story-title {
+	font-size: 160%;
+	{SANS_FONT};
 }
-.storydates {
-	xfloat: right;
-	margin: 6px 0 0px;
+.story-dates {
+	text-align: right;
+	vertical-align: top;
+	font-size: 120%;
+	{SANS_FONT};
 }
-.storypart {
-	margin: 0px 0 22px;
+.story-image {
+	float: left;
+/*	margin: 0 .6em 0 15px;*/
+	margin: 0 .6em -5px 15px;
 }
+.story-part {
+	margin: 0 0 10px 15px;
+}
+	
 .hideme { display: none; }
 .squareme {
 	object-fit: cover;
-	width: 120px;
-	height: 120px;
+	width: 80px;
+	height: 80px;
+}
+
+@media (max-width: 785px)  {	
+	#the_content div[class^="col-"] {
+		margin-bottom: .4em;
+	}	
 }
 
 </style>

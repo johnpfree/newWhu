@@ -20,8 +20,6 @@
 				<i>gps</i>: {SPLAT},{SPLON}<br />
 				<i>bathroom</i>: {SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
-
-<!-- <a tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a> -->
 			
 			<div class="list_head">Spot keywords:
 			  <a {INFO_CLASS} href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul><li>Keywords can be contradictory, a spot might be '<em>noisy</em>' on a summer day and '<em>quiet</em>' on a winter day.</li><li>A lot of campgrounds are really quiet except when trucks (or trains) roll past, so they get both '<em>quiet</em>'and '<em>road noise</em>'!</li></ul>">
@@ -168,7 +166,7 @@
 		height: 76px;
 	}
 	#day_list {
-		max-height: 50vw;
+		max-height: 60vw;
 	}
 }
 @media (min-width: 701px)  {	

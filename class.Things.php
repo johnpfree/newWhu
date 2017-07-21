@@ -538,7 +538,7 @@
 
 			// dumpVar($this->lazyDays->data, "this->lazyDays->data");
 			// dumpVar(boolStr($this->lazyDays->isEmpty()), "this->lazyDays->isEmpty");
-			if ($this->lazyDays->isEmpty())		// return of FALSE means there are no Spot Days (enver visited here)
+			if ($this->lazyDays->isEmpty())		// return of FALSE means there are no Spot Days (i.e. I never visited here)
 				return FALSE;
 
 			for ($i = 0, $allkeys = array(); $i < $this->lazyDays->size(); $i++)
@@ -879,7 +879,7 @@
 	{
 		function getRecord($key)		// key = pic id
 		{
-			dumpVar(get_class($key), "get_classkey");
+			// dumpVar(get_class($key), "get_classkey");
 			if (is_object($key) && ((get_class($key) == 'WhuVisual') || (get_class($key) == 'WhuPic')))		// cast a Visual or Pic to a Video, add the video data
 			{
 				$item = $this->getOne("select * from wf_resources where wf_resources_id=" . $key->vidId());					
@@ -1073,10 +1073,16 @@
 		var $isCollection = true;
 		function getRecord($parm)
 		{
-			dumpVar($parm, "parm");
+			// dumpVar($parm, "parm");
 			if (isset($parm['date'])) 			// just date -> get all pics/vids for a date 
 			{
 				$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+				// dumpVar($q, "q");
+				return $this->getAll($q);
+			}
+			if (isset($parm['vid'])) 			// for now, 'vid' means get all videos
+			{
+				$q = sprintf("select * from wf_images where wf_resources_id>0");
 				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}

@@ -29,13 +29,13 @@ h2 {
 </style>
 <script>
 L.mapbox.accessToken = '{MAPBOX_TOKEN}';
-// var map = L.mapbox.map('map', 'mapbox.satellite');
-// var map = L.mapbox .map('map', 'mapbox.emerald');
-// var map = L.mapbox.map('map', 'mapbox.light');
-var map = L.mapbox.map('map', 'mapbox.streets', {
+/*var map = L.mapbox.map('map', 'mapbox.streets', {*/
+var map = L.mapbox.map('map', 'mapbox.high-contrast', {
   touchZoom: false, 
   scrollWheelZoom: false
 });
+L.mapbox.styleLayer('mapbox://styles/johnpfree/cj4zx6kjh14xb2smcu2bh9hho').addTo(map);
+
 console.log(map);
 
 {JSON_INSERT}

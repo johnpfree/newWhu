@@ -1,44 +1,100 @@
 
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	<h1>W H U F U</h1>
-	<div class="row">
-		<div class="col-md-6">
-			<ul id="biglist">
-				<li>We have <b>{N_MAP}</b> Maps.</li>
-				<li>We have <b>{N_TXT}</b> Stories.</li>
-				<li>We have <b>{N_PIC}</b> Pictures, <b>{N_VID}</b> Videos.</li>
-				<li>We have <b>{N_SPO}</b> Spots - <a href="?page=spots&type=home">campgrounds</a>, <a href="?page=spots&type=type&key=HOTSPR">hot springs</a>, <a href="?page=spots&type=type&key=NWR">wildlife refuges</a> and more.</li>
-			</ul>
-			<hr />
-			<p>It's all organized around trips.  A trip has:</p>
-			<ul>
-				<li>a <a href="?page=map&type=id&key=26"><i>map</i></a>, </li>
-				<li>a <a href="?page=log&type=id&key=26"><i>triplog</i></a> of the days of the trip, </li>
-				<li><a href="?page=txts&type=id&key=26"><i>stories</i></a>, </li>
-				<li>and a bunch of <a href="?page=pics&type=id&key=26"><i>pictures</i></a>. </li>	
-			</ul>
-			<p>There is almost sure to be something interesting for you here, the trick is finding it and convincing you that you want to find it!</p>
-			<hr />
-		</div> 
-		<div class="col-md-6">
-			<h3>Finding what you want in WHUFU</h3>
-			<ul id="findlist">
-				<li><a href="?page=search&type=home">Spot Search</a> &ndash; Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have a <a href="?page=search&type=home">boatload of ways</a> to search through the hundreds of spots.</li>
-				<li><a href="?page=search&type=home">Area Search</a> &ndash; Alternatively you can search for all the spots near your home, or any other place.</li>
-				<li>Text Search &ndash; The "search text" box above will look for text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I said anything mean about them. Enter the name of a town or a beach, or <em>hot springs</em> or <em>fishing</em> or whatever strikes your fancy.</li>
-			</ul>
-			<p>Whatever method you use, you will soon end up at something interesting. The whole point of WHUFU is that it is <em>rich in interconnections</em>. Related pictures, stories, maps shound be a click away no matter where you are. My hope is that you will be intrigued to follow those links for a while.</p>
-		</div> 
-	</div> 
-	</div> 
+	<h1 class="text-center">W H U F U</h1>
+	<div class="container">
+		<div id="card-row" class="row">
+			<div class="card text-center col-sm-6 col-md-3">
+				<a href="?page=pics&type=id&key=26">
+	        <h4 class="card-title">We have <b>{N_PIC}</b> Images.</h4>
+					<img class="card-img-top" src="../whuDev/resources/site-images/whupix.jpg" alt="pictures">
+	        <h6 class="card-subtitle text-muted">Only <b>18</b> Videos so far</h6>
+				</a>
+      </div> <!--/card-->
+			<div class="card text-center col-sm-6 col-md-3">
+				<a href="?page=map&type=id&key=26">
+	          <h4 class="card-title">We have <b>{N_MAP}</b> Maps.</h4>
+					<img class="card-img-top" src="../whuDev/resources/site-images/whumap.jpg" alt="map">
+				</a>
+      </div> <!--/card-->
+			<div class="card text-center col-sm-6 col-md-3">
+				<a href="?page=txts&type=id&key=26">
+	        <h4 class="card-title">We have <b>{N_TXT}</b> Stories.</h4>
+					<img class="card-img-top" src="../whuDev/resources/site-images/whutxt.jpg" alt="stories">
+				</a>
+			</div> <!--/card-->
+			<div class="card text-center col-sm-6 col-md-3">
+				<a href="?page=spots&type=home">
+	        <h4 class="card-title">We have <b>{N_SPO}</b> Spots.</h4>
+					<img class="card-img-top" src="../whuDev/resources/site-images/whulog.jpg" alt="spots">
+          <h6 class="card-subtitle text-muted"><a href="?page=spots&type=home">campgrounds</a>, <a href="?page=spots&type=type&key=HOTSPR">hot springs</a>, <a href="?page=spots&type=type&key=NWR">wildlife refuges</a> and more</h6>
+				</a>
+      </div> <!--/card-->
+	  </div> <!--/row--> 
+		
+		<hr />
+		
+		<div id="bigrow" class="row">
+			<div id="pane-1" class="col-md-4">
+				<div class="first-let">It's all organized around <b>trips</b>.  A trip has:</div>
+				<ul>
+					<li>a <a href="?page=map&type=id&key=26"><i>map</i></a>, </li>
+					<li>a <a href="?page=log&type=id&key=26"><i>triplog</i></a> of the days of the trip, </li>
+					<li>a <a href="?page=txts&type=id&key=26"><i>story</i></a> or two or ten, </li>
+					<li>and a bunch of <a href="?page=pics&type=id&key=26"><i>pictures</i></a>. </li>	
+				</ul>
+				<p>There is almost sure to be something interesting for you here, the trick is helping you find it!</p>
+			</div> 
+			<div id="pane-2" class="col-md-8">
+				<div class="first-let">Finding what you want in WHUFU:</div>
+				<ul id="findlist">
+					<li><a href="?page=search&type=home">Spot Search</a> &ndash; Our crack Marketing Research team has determined that most casual browsers just want to find cool places - places to camp, hot springs, that sort of thing. For that we have a <a href="?page=search&type=home">boatload of ways</a> to search through the hundreds of spots.</li>
+					<li><a href="?page=search&type=home">Area Search</a> &ndash; Alternatively you can search for all the spots near your home, or any other place.</li>
+					<li>Text Search &ndash; The "search text" box in the header will search for text in all stories, picture labels, maps and trip logs. Friends can type their names in there to see if I've said anything mean about them. Enter the name of a town or a beach, or <em>hot springs</em> or <em>fishing</em> or whatever strikes your fancy.</li>
+				</ul>
+			</div> 
+		</div>  <!--/bigrow-->		
+		
+	</div><!--/container-->
+</div> 
+
 <style type="text/css" media="screen">
 
-#main_item h1 {	color: {BOLDCOLOR};	}
+#main_item h1 {	
+	color: {BOLDCOLOR};	
+	padding-bottom: .4em;
+}
+.first-let::first-letter {
+  font-size: 160%;
+	padding-right: .1em;
+}
+.first-let {
+}
 
-,#biglist {
-	font-size: 120%;
+#card-row>div:nth-child(1) { background-color: #FFFFE7; }
+#card-row>div:nth-child(2) { background-color: #dbecdc; }
+#card-row>div:nth-child(3) { background-color: #FFFFD4; }
+#card-row>div:nth-child(4) { background-color: #f0f0f0; }
+
+#card-row>div { 
+  height: 234px;
+	padding: 10px;
+	border: 2px solid #3A5950;
+	border-radius: 18px;
 }
-#biglist li,#findlist li {
-	margin-bottom: .8rem;
+
+.card-img-top {
+  width: 210px;
+  height: 140px;
 }
-</style>
+
+#bigrow {	
+	margin-top: 20px;
+	{SANS_FONT} 
+}
+
+#pane-1 li {
+	list-style-type: square;
+}
+#biglist li,#findlist li {}
+
+	</style>
