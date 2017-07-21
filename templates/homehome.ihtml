@@ -6,26 +6,26 @@
 			<div class="card text-center col-sm-6 col-md-3">
 				<a href="?page=pics&type=id&key=26">
 	        <h4 class="card-title">We have <b>{N_PIC}</b> Images.</h4>
-					<img class="card-img-top" src="../whuDev/resources/site-images/whupix.jpg" alt="pictures">
+					<img class="card-img-top" src="./resources/site-images/whupix.jpg" alt="pictures">
 	        <h6 class="card-subtitle text-muted">Only <b>18</b> Videos so far</h6>
 				</a>
       </div> <!--/card-->
 			<div class="card text-center col-sm-6 col-md-3">
 				<a href="?page=map&type=id&key=26">
 	          <h4 class="card-title">We have <b>{N_MAP}</b> Maps.</h4>
-					<img class="card-img-top" src="../whuDev/resources/site-images/whumap.jpg" alt="map">
+					<img class="card-img-top" src="./resources/site-images/whumap.jpg" alt="map">
 				</a>
       </div> <!--/card-->
 			<div class="card text-center col-sm-6 col-md-3">
 				<a href="?page=txts&type=id&key=26">
 	        <h4 class="card-title">We have <b>{N_TXT}</b> Stories.</h4>
-					<img class="card-img-top" src="../whuDev/resources/site-images/whutxt.jpg" alt="stories">
+					<img class="card-img-top" src="./resources/site-images/whutxt.jpg" alt="stories">
 				</a>
 			</div> <!--/card-->
 			<div class="card text-center col-sm-6 col-md-3">
 				<a href="?page=spots&type=home">
 	        <h4 class="card-title">We have <b>{N_SPO}</b> Spots.</h4>
-					<img class="card-img-top" src="../whuDev/resources/site-images/whulog.jpg" alt="spots">
+					<img class="card-img-top" src="./resources/site-images/whulog.jpg" alt="spots">
           <h6 class="card-subtitle text-muted"><a href="?page=spots&type=home">campgrounds</a>, <a href="?page=spots&type=type&key=HOTSPR">hot springs</a>, <a href="?page=spots&type=type&key=NWR">wildlife refuges</a> and more</h6>
 				</a>
       </div> <!--/card-->
@@ -65,6 +65,7 @@
 }
 .first-let::first-letter {
   font-size: 160%;
+/*  font: 160% skolar-1, skolar-2, Georgia, "Times New Roman", serif;*/
 	padding-right: .1em;
 }
 .first-let {
@@ -97,4 +98,17 @@
 }
 #biglist li,#findlist li {}
 
-	</style>
+/*@media (max-width: 786px)  {
+	#card-row img { border: 1px solid #000;}
+	#card-row>div {
+	  height: 100px;
+		padding: 6px;
+	}
+	.card-img-top {
+	  width: 50px;
+	  height: 50px;
+	}
+}*/
+
+
+</style>
