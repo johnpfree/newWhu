@@ -65,7 +65,6 @@
 }
 .first-let::first-letter {
   font-size: 160%;
-/*  font: 160% skolar-1, skolar-2, Georgia, "Times New Roman", serif;*/
 	padding-right: .1em;
 }
 .first-let {
@@ -98,17 +97,4 @@
 }
 #biglist li,#findlist li {}
 
-/*@media (max-width: 786px)  {
-	#card-row img { border: 1px solid #000;}
-	#card-row>div {
-	  height: 100px;
-		padding: 6px;
-	}
-	.card-img-top {
-	  width: 50px;
-	  height: 50px;
-	}
-}*/
-
-
-</style>
+	</style>
