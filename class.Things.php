@@ -164,7 +164,7 @@
 
 		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
-		function isNewMap()		{ return (strlen($this->fid()) > 1); }
+		// function isNewMap()		{ return (strlen($this->fid()) > 1); }
 	}
 	class WhuTrip extends WhuDbTrip 
 	{
@@ -191,15 +191,6 @@
 			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
 			return $count['nposts'] > 0;
 		}
-		function hasMap()
-		{
-		// dumpVar($this->data['wf_trips_map_fid'], "this->data['wf_trips_map_fid']");
-			if ($this->isNewMap())			// cheapest test
-				return true;
-			return false;
-			// not a new map, look for routes for old map
-			return $this->getAll("select * from wf_routes where wf_trips_map=" . $this->id());				
-		}
 		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}
 		function hasGoogleMap()	{	return ($this->mapboxId() == 'kml');	}
 		
@@ -215,11 +206,9 @@
 			
 			$defaults = array('order' => "DESC", 'field' => 'wf_trips_start');
 			$qProps = new Properties($defaults, $parms);
-			// $qProps->dump('$qProps->');
-			$q = sprintf("select * from wf_trips ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));	
-			// dumpVar($q, "q");
+			// $q = sprintf("select * from wf_trips WHERE wf_trips_types REGEXP 'show' ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));
+			$q = sprintf("select * from wf_trips ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));
 			return $this->getAll($q);	
-			// return $this->getOne(sprintf("select * from wf_trips ORDER BY %s %s"), $qProps->get('field'), $qProps->get('order'));
 		}
 		// good a place as any to put the global queries for home page
 		function numPics() 	{	return $this->getOne("select count(*) RES from wf_images")['RES'];	}

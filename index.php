@@ -74,10 +74,10 @@ class WhuProps extends Properties
 class StyleProps extends WhuProps 
 {
 	var $palette = 'UNSET';
-	function __construct($props, $over = array())		// little hack, overload the $over array to pass the palette name
+	function __construct($props, $over)		// little hack, second parm of Properties is an array, I overloading it to pass the palette name
 	{
 		$this->palette = $over;
-		// dumpVar($over, "Set palette $over");
+		dumpVar($over, "Set palette $over");
 		parent::__construct($props);
 	}
 
@@ -115,8 +115,16 @@ if ($props->isProp('do_text_search'))	{				// text search
 }
 else if ($props->isProp('comment_form')) 		// comment form
 {
-	$savecmt = new SaveForm($props);
-	$savecmt->write($_REQUEST, 'cloudy');	
+	/* July2017 - I have left the math thing in the form, but am now ignoring it in favor of the hidden field trick. 
+		The field has name="email", and if it contains stuff I kill the program. Hope this works.
+	*/
+	if ($props->get('email') != '')
+		exit;
+	// if ($props->get('cap') == $props->get('user_id'))			// ignore if the math isn't correct
+	{
+		$savecmt = new SaveForm($props);
+		$savecmt->write($_REQUEST, 'cloudy');	
+	}
 	$props->set('type', 'thx');
 }
 else if ($props->isProp('search_near_spot')) {		// form has the correct parms as hidden data, nothing to do here

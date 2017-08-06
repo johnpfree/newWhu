@@ -7,7 +7,7 @@ for (var i = 0; i < markers.length; i++) {
 	// console.log(i, markers[i].properties.title);
 	// console.log(i, pt);
 	// console.log(i, bounds);
-	
+
 	// collect coords for pline
 	pline.push([markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]]);
 }

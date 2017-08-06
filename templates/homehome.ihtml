@@ -3,28 +3,28 @@
 	<h1 class="text-center">W H U F U</h1>
 	<div class="container">
 		<div id="card-row" class="row">
-			<div class="card text-center col-sm-6 col-md-3">
+			<div class="card text-center col-xs-6 col-md-3">
 				<a href="?page=pics&type=id&key=26">
-	        <h4 class="card-title">We have <b>{N_PIC}</b> Images.</h4>
+	        <h4 class="card-title"><b>{N_PIC}</b> Images.</h4>
 					<img class="card-img-top" src="./resources/site-images/whupix.jpg" alt="pictures">
 	        <h6 class="card-subtitle text-muted">Only <b>18</b> Videos so far</h6>
 				</a>
       </div> <!--/card-->
-			<div class="card text-center col-sm-6 col-md-3">
+			<div class="card text-center col-xs-6 col-md-3">
 				<a href="?page=map&type=id&key=26">
-	          <h4 class="card-title">We have <b>{N_MAP}</b> Maps.</h4>
+	          <h4 class="card-title"><b>{N_MAP}</b> Maps.</h4>
 					<img class="card-img-top" src="./resources/site-images/whumap.jpg" alt="map">
 				</a>
       </div> <!--/card-->
-			<div class="card text-center col-sm-6 col-md-3">
+			<div class="card text-center col-xs-6 col-md-3">
 				<a href="?page=txts&type=id&key=26">
-	        <h4 class="card-title">We have <b>{N_TXT}</b> Stories.</h4>
+	        <h4 class="card-title"><b>{N_TXT}</b> Stories.</h4>
 					<img class="card-img-top" src="./resources/site-images/whutxt.jpg" alt="stories">
 				</a>
 			</div> <!--/card-->
-			<div class="card text-center col-sm-6 col-md-3">
+			<div class="card text-center col-xs-6 col-md-3">
 				<a href="?page=spots&type=home">
-	        <h4 class="card-title">We have <b>{N_SPO}</b> Spots.</h4>
+	        <h4 class="card-title"><b>{N_SPO}</b> Spots.</h4>
 					<img class="card-img-top" src="./resources/site-images/whulog.jpg" alt="spots">
           <h6 class="card-subtitle text-muted"><a href="?page=spots&type=home">campgrounds</a>, <a href="?page=spots&type=type&key=HOTSPR">hot springs</a>, <a href="?page=spots&type=type&key=NWR">wildlife refuges</a> and more</h6>
 				</a>
@@ -77,15 +77,19 @@
 #card-row>div:nth-child(4) { background-color: #f0f0f0; }
 
 #card-row>div { 
-  height: 234px;
+/*  height: 234px;*/
+	height: 26vh;
+	
 	padding: 10px;
 	border: 2px solid #3A5950;
 	border-radius: 18px;
 }
 
 .card-img-top {
-  width: 210px;
-  height: 140px;
+  width: 85%;
+/*	padding-bottom: 90%;*/
+/*  width: 210px;
+  height: 140px;*/
 }
 
 #bigrow {	
@@ -98,7 +102,7 @@
 }
 #biglist li,#findlist li {}
 
-/*@media (max-width: 786px)  {
+@mxxxxedia (max-width: 786px)  {
 	#card-row img { border: 1px solid #000;}
 	#card-row>div {
 	  height: 100px;
@@ -108,7 +112,7 @@
 	  width: 50px;
 	  height: 50px;
 	}
-}*/
+}
 
 
 </style>
