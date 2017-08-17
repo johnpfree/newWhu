@@ -270,7 +270,6 @@ class SpotsHome extends ViewWhu
 				'spot_short' 	=> $spot->shortName(), 
 				'spot_name' 	=> $spot->name(),
 				'spot_part_of' => $spot->partof(),
-				// 'spot_times' 	=> $spot->visits(),
 				'spot_where' 	=> $spot->town(),
 				'spot_type' 	=> $spot->types(),
  				);
@@ -332,28 +331,40 @@ class AllTrips extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
-		$trips = $this->build('Trips');
-		// $trips->dump();
 		dumpVar(WP_PATH, "WP_PATH");
 		$this->template->set_var('WP_PATH', WP_PATH);
+		
+		$trips = $this->build('Trips', array('filter' =>'main'));
+		$this->oneGroup($trips, 0, 'main');
+		
+		$trips = $this->build('Trips', array('filter' =>'eka'));
+		$this->oneGroup($trips, 1, 'eka');
+		
+		$trips = $this->build('Trips', array('filter' =>'small'));
+		$this->oneGroup($trips, 2, 'small');
+	}
+	function getCaption()	{	return "Browse All Trips";	}
+	function oneGroup($trips, $index, $onerow)
+	{		
+		$this->template->set_var("GROUPTAG$index", $onerow);
+
 		for ($i = 0, $rows = array(); $i < $trips->size(); $i++) 
 		{
 			$trip = $trips->one($i);
-			$row = array('TRIP_DATE' => $trip->startDate(), 'TRIP_ID' => $trip->id(), 'TRIP_FOLDER' => $trip->folder());
-			$row['TRIP_NAME'] = $trip->name();
-			$row['MAP_CLASS'] = '';																					// everybody gets a map!
-			$row['PIC_CLASS'] = $trip->hasPics() ? '' : "class='hidden'";
-			$row['VID_CLASS'] = $trip->hasVideos() ? '' : "class='hidden'";
-			$row['STORY_CLASS'] = $trip->hasStories() ? '' : "class='hidden'";
+			$row = array("TRIP_DATE$index" => $trip->startDate(), "TRIP_ID$index" => $trip->id());
+			$row["TRIP_NAME$index"] = $trip->name();
+			$row["MAP_CLASS$index"] = '';																					// everybody gets a map!
+			$row["PIC_CLASS$index"] = $trip->hasPics() ? '' : "class='hidden'";
+			$row["VID_CLASS$index"] = $trip->hasVideos() ? '' : "class='hidden'";
+			$row["STORY_CLASS$index"] = $trip->hasStories() ? '' : "class='hidden'";
 
-			// if ($trip->hasMapboxMap())	$row['TRIP_NAME'] .= "-M";
-			// if ($trip->hasGoogleMap())	$row['TRIP_NAME'] .= "-G";
+			// if ($trip->hasMapboxMap())	$row["TRIP_NAME"] .= "-M";
+			// if ($trip->hasGoogleMap())	$row["TRIP_NAME"] .= "-G";
 			$rows[] = $row;
 		}
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => "{$onerow}_row", 'noFields' => true));                                
 		$loop->do_loop($rows);		
 	}
-	function getCaption()	{	return "Browse All Trips";	}
 }
 
 class OneTripLog extends ViewWhu
@@ -958,15 +969,15 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_ID', 		$spot->id());
 		$this->template->set_var('SPOT_TOWN', 	$spot->town());
 		$this->template->set_var('SPOT_PARTOF', $spot->partof());
-		$this->template->set_var('SPOT_NUM',  	$spot->visits());
+		$this->template->set_var('SPOT_NUM',  	$visits = $spot->visits());
 		
 		$this->template->set_var('SPLAT',  	$spot->lat());
 		$this->template->set_var('SPLON',  	$spot->lon());
-
-		// $spot->dump('spott');
-		
 		$this->template->set_var('SPBATH',  	$spot->bath());
 		$this->template->set_var('SPWATER',  	$spot->water());
+		$this->template->set_var('SPDESC',  	$desc = $spot->htmldesc());
+
+		$this->template->set_var('DFLT_LINKCOLOR', self::pals['deflt']['linkcolor' ]);
 
 		$types = $spot->prettyTypes();
 		// dumpVar($types, "types"); exit;
@@ -977,29 +988,34 @@ class OneSpot extends ViewWhu
 		}		
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
 
-		$keys = $spot->keywords();
-		// dumpVar($keys, "keys");
-		if ($keys)
+		if ($visits == 'never')
 		{
-			for ($i = 0; $i < sizeof($keys); $i++) 
+			$this->template->set_var('DAYS_INFO', 'hideme');								// NO Days!
+		}
+		else
+		{
+			$this->template->set_var('DAYS_INFO', '');											// yes, there are days
+
+			$keys = $spot->keywords();																			// ---------- keywords
+			for ($i = 0, $rows = array(); $i < sizeof($keys); $i++) 
 			{
 				// dumpVar($keys[$i], "keys[$i]");
 				$rows[] = array('spot_key' => $keys[$i]);
 			}
 			// dumpVar($rows, "rows");
-			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'noFields' => true));
+			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'none_msg' => "no keywords", 'noFields' => true));
 			$loop->do_loop($rows);
-		
-			$days = $this->build('DbSpotDays', $spot->id());	
-			$this->template->set_var('INFO_CLASS', '');
-			$this->template->set_var('INFO_CLASS2', ($days->size() > 1) ? '' : 'class="hideme"');
+
+			$days = $this->build('DbSpotDays', $spot->id());								// ---------- days loop NOTE that I collect pictures in this loop also
 			for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 			{
 				$day = $days->one($i);
 				// $day->dump($i);
 				$row = array('stay_date' => $date = $day->date());
 				$row['nice_date'] = Properties::prettyDate($date);
-				$row['spdesc'] = $day->htmldesc();
+				$row['spdaydesc'] = $day->htmldesc();
+				if ($row['spdaydesc'] == $desc || $row['spdaydesc'] == '') 			// don't repeat the main desc
+					$row['spdaydesc'] = "<em>(see main description above)</em>";
 
 				if (($cost = $day->cost()) > 0)
 				{
@@ -1028,7 +1044,6 @@ class OneSpot extends ViewWhu
 					$pics = $this->build('Pics', array('night' => $date));
 				}
 				else {
-					// dumpVar($date, "$i date");
 					$more = $this->build('Pics', array('night' => $date));
 					$pics->add($more);
 				}
@@ -1038,9 +1053,11 @@ class OneSpot extends ViewWhu
 		
 			$this->template->set_var('REL_PICPATH', iPhotoURL);
 			$pics->random(12);
+
 			for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
 			{
 				$visual = $pics->one($i);
+				// dumpVar($visual->id(), "$i picloop");
 			
 				if ($visual->isVideo())
 				{
@@ -1069,7 +1086,7 @@ class OneSpot extends ViewWhu
 			}
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
 			$loop->do_loop($rows);
-		}		
+		}
 
 		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
 		parent::showPage();

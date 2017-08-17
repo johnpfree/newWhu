@@ -28,8 +28,8 @@
 			 dumpVar($this->data, $txt);
 		 }
 		function assert($val, $txt = "Assert FAILED") {
-			if ($val) return;
-			jfDie($txt);
+			if ($val === true) return;
+			jfTrace($txt);
 		}
 		function assertIsCollection()  { $this->assert($this->isCollection, "NOT a Collection");  }
 
@@ -90,6 +90,22 @@
 		function massageDbText($txt) 
 		{
 			return stripslashes($txt);
+		}
+		function htmldesc()			// special massage for Spot/Spot Day descriptions
+		{ 
+			$this->assert(method_exists($this,'desc'));
+			
+			if (($desc = $this->desc()) == '')
+				return '';
+			
+			// $stuff = explode("\n\r\n", $desc);
+			$stuff = explode("\n", $desc);
+			// dumpVar($stuff, "stuff nrn, char=" . ord($stuff[1][0]));
+			for ($i = 0, $html = "\n"; $i < sizeof($stuff); $i++) 
+			{
+				$html .= sprintf("<p>%s</p>\n", $stuff[$i]);
+			}
+			return $html;
 		}
 	
 		// --------- collections
@@ -199,17 +215,25 @@
 	class WhuTrips extends WhuTrip 
 	{
 		var $isCollection = true;
-		function getRecord($parms = true)
+		function getRecord($parms)
 		{
-			if ($parms)			// little hack 'cuz I don't need data for functions below
+			if ($parms == '')			// little hack to create a Trips object w/o data to hang those numXX() fcns off of. They don't need data.
 				return true;
 			
-			$defaults = array('order' => "DESC", 'field' => 'wf_trips_start');
-			$qProps = new Properties($defaults, $parms);
-			// $q = sprintf("select * from wf_trips WHERE wf_trips_types REGEXP 'show' ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));
-			$q = sprintf("select * from wf_trips ORDER BY %s %s", $qProps->get('field'), $qProps->get('order'));
+			$this->assert(is_array($parms), "array expected for WhuTrips(parms)");
+		
+			$defaults = array('order' => "DESC", 'orderby' => 'wf_trips_start', 'where' => '');			// default query parms
+			$qProps = new Properties(array_merge($defaults, $parms));
+			// $qProps->dump('WhuTrips');
+			if (($filter = $qProps->get('filter')) != '')
+			{
+				$qProps->set('where', "WHERE wf_trips_sort='$filter'");
+			}
+			// $q = sprintf("select * from wf_trips WHERE wf_trips_types REGEXP 'show' ORDER BY %s %s", $qProps->get('orderby'), $qProps->get('order'));
+			$q = sprintf("select * from wf_trips %s ORDER BY %s %s", $qProps->get('where'), $qProps->get('orderby'), $qProps->get('order'));
 			return $this->getAll($q);	
 		}
+		
 		// good a place as any to put the global queries for home page
 		function numPics() 	{	return $this->getOne("select count(*) RES from wf_images")['RES'];	}
 		function numVids() 	{	return $this->getOne("select count(*) RES from wf_resources")['RES'];	}
@@ -451,12 +475,13 @@
 
 			return $this->getOne($q = "select * from wf_spots where wf_spots_id=$key");	
 		}
-		function id()				{ return $this->dbValue('wf_spots_id'); }
-		function name()			{ return $this->massageDbText($this->dbValue('wf_spots_name')); }
-		function town()			{ return $this->massageDbText($this->dbValue('wf_spots_town')); }
-		function partof()		{ return $this->dbValue('wf_spots_partof'); }
-		function types()		{ return $this->dbValue('wf_spots_types'); }
-		function status()		{ return $this->dbValue('wf_spots_status'); }
+		function id()			{ return $this->dbValue('wf_spots_id'); }
+		function name()		{ return $this->massageDbText($this->dbValue('wf_spots_name')); }
+		function town()		{ return $this->massageDbText($this->dbValue('wf_spots_town')); }
+		function partof()	{ return $this->dbValue('wf_spots_partof'); }
+		function types()	{ return $this->dbValue('wf_spots_types'); }
+		function status()	{ return $this->dbValue('wf_spots_status'); }
+		function desc()		{ return $this->massageDbText($this->dbValue('wf_spots_desc')); }
 		
 		function shortName() 
 		{
@@ -544,7 +569,7 @@
 		function lat()		{ return $this->dbValue('wf_spots_lat'); }
 		function lon()		{ return $this->dbValue('wf_spots_lon'); }
 		function bath()		{ return $this->dbValue('wf_spots_bath'); }
-		function water()	{ return $this->dbValue('wf_spots_water'); }
+		function water()	{ return (($val = $this->dbValue('wf_spots_water')) == '') ? 'no' : $val; }
 
 		function getInRadius($dist = 100.)		// returns an array of spot records, suitable for creating a DbSpots collection
 		{
@@ -665,16 +690,6 @@
 		function cost()		{ return $this->dbValue('wf_spot_days_cost'); }
 		function senior()		{ return $this->dbValue('wf_spot_days_senior'); }
 		function desc()		{ return $this->massageDbText($this->dbValue('wf_spot_days_desc')); }
-		function htmldesc()	
-		{ 
-			$stuff = explode("\n\r\n", $this->desc());
-			// dumpVar($stuff, "stuff nrn, char=" . ord($stuff[1][0]));
-			for ($i = 0, $html = "\n"; $i < sizeof($stuff); $i++) 
-			{
-				$html .= sprintf("<p>%s</p>\n", $stuff[$i]);
-			}
-			return $html;
-		}
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));
@@ -698,12 +713,12 @@
 			if ($key > 0)
 			{
 				$items = $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
-
-				if (sizeof($items) == 0)		// return now if there's nothing to shift
-					return $items;
-
-				$first = array_pop($items);
-				array_unshift($items, $first);
+				// not using the shift any more
+				// if (sizeof($items) == 0)		// return now if there's nothing to shift
+				// 	return $items;
+				//
+				// $first = array_pop($items);
+				// array_unshift($items, $first);
 				return $items;
 			}
 

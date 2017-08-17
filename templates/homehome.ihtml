@@ -94,7 +94,7 @@
 
 #bigrow {	
 	margin-top: 20px;
-	{SANS_FONT} 
+	{SANS_FONT};
 }
 
 #pane-1 li {

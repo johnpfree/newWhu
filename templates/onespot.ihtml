@@ -10,75 +10,97 @@
 <article class="jumbotron jumbotron-fluid" id="main_item">
 	<h1>{SPOT_NAME}</h1>
 	<div class="row">
-		<div class="col-sm-12">
-			<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
-		</div>
-	</div>
-	<div class="row">
 		<div class="col-sm-8">
+			<div class="row">
+				<div class="col-sm-12">
+					<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
+				</div>
+			</div>
 			<p><i>Number of visits</i>: {SPOT_NUM}<br />
 				<i>gps</i>: {SPLAT},{SPLON}<br />
 				<i>bathroom</i>: {SPBATH} &bull; <i> water: </i>{SPWATER}
 			</p>
 			
-			<div class="list_head">Spot keywords:
-			  <a {INFO_CLASS} href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul><li>Keywords can be contradictory, a spot might be '<em>noisy</em>' on a summer day and '<em>quiet</em>' on a winter day.</li><li>A lot of campgrounds are really quiet except when trucks (or trains) roll past, so they get both '<em>quiet</em>'and '<em>road noise</em>'!</li></ul>">
-          <span class="glyphicon glyphicon-info-sign"></span>
-			  </a>
-			</div>
-			<div class="list_item">
-				<!-- BEGIN keyrows -->
-				&bull; <a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
-				<!-- END keyrows -->	
-				&bull; 
+			<div id="descr">
+				{SPDESC}
 			</div>
 			
-			<div class="">Days visited (posted cost | senior cost):
-			  <a {INFO_CLASS2} href="#" data-toggle="popover" data-trigger="click" data-html="true" data-placement="left" data-content="<ul><li>The first time I visited is listed first 'cuz that's when I write the most.</li><li>After that visits are listed most recent first!</li></ul>If the visit was part of a trip the date will link to that WhuDay page.">
-          <span class="glyphicon glyphicon-info-sign"></span>
-			  </a>
+			<div class="{DAYS_INFO}">
+				<div class="list_head">Spot keywords:
+				  <a href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul>Keywords can be contradictory:<li>They are recorded for each visit, so a spot might be '<em>noisy</em>' during peak season and '<em>quiet</em>' on a winter day.</li><li>A frequent combo is '<em>quiet</em>'and '<em>road noise</em>'. Many places aree perfectly serene until a big rig or a train rumbles past.</li></ul>">
+	          <span class="glyphicon glyphicon-info-sign"></span>
+				  </a>
+				</div>
+				<div class="list_item">
+					<!-- BEGIN keyrows -->
+					&bull; <a href="?page=spots&type=key&key={SPOT_KEY}">{SPOT_KEY}</a>		
+					<!-- END keyrows -->	
+					&bull; 
+				</div>
+			
+				<div class="">Notes on each visit (posted cost | senior cost):
+				</div>
+				<div id="day_list" class="list_item">
+					<!-- BEGIN rows -->
+						<span class="{USE_LINK}" style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
+						<span class="{NOT_LINK}" style="white-space: nowrap;">{NICE_DATE} ({SPCOSTS})</span>
+						<div class="day_desc">{SPDAYDESC}</div>
+						<!-- END rows -->	
+				</div>
 			</div>
-			<div id="day_list" class="list_item">
-				<!-- BEGIN rows -->
-					<span class="{USE_LINK}" style="white-space: nowrap;"><a href="?page=day&type=date&key={STAY_DATE}">{NICE_DATE}</a> ({SPCOSTS})</span>
-					<span class="{NOT_LINK}" style="white-space: nowrap;">{NICE_DATE} ({SPCOSTS})</span>
-					<div class="day_desc">{SPDESC}</div>
-					<!-- END rows -->	
-			</div>
-		</div>
-		<div class="col-sm-4">		
-			<div class="clearfix" id="thegal">
-				<!-- BEGIN picrows -->
-				<p>
-					<a href="?page=vis&type=id&key={PIC_ID}">
-						<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
-						<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
-						<img class="img-rounded img-responsive squareme {USE_VIDTMB}" src='http://img.youtube.com/vi/{VID_TOKEN}/0.jpg' border="0" />
-					</a>		
-					{PANO_SYMB}
-				</p>
-				<!-- END picrows -->
-			</div>
-			<!-- <hr />	 -->
-			{MAP_INSET}
-			<div id="formbox">
-			  <form role="form" id="nearform" method="get" data-toggle="validator">
-					<h4>Find Spots near here:</h4>
-			    <div class="form-group row">
-			      <label for="search_radius" class="col-sm-12 col-form-label">Show all spots within:</label>
-			    </div>
-			    <div class="form-group row">
-			      <div class="col-sm-6">
-			        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
-			      </div>
-			      <div class="col-sm-6" id="search_near">         
-			        <button type="submit" name="search_near_spot" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
-			      </div>
-			    </div>
-					<input type="hidden" name="page" value="map" />
-					<input type="hidden" name="type" value="spot" />
-					<input type="hidden" name="key" value="{SPOT_ID}" />
-			  </form>
+		</div>		
+		<div class="col-sm-4">
+			
+			<ul class="nav nav-tabs">
+			  <li class="active"><a data-toggle="tab" href="#home">Location</a></li>
+			  <li><a data-toggle="tab" href="#men-pics">Pictures</a></li>
+			  <li><a data-toggle="tab" href="#men-weat">Weather</a></li>
+			</ul>
+			
+			<div class="tab-content">
+			  <div id="home" class="tab-pane fade in active">
+			
+					{MAP_INSET}
+					<div id="formbox">
+					  <form role="form" id="nearform" method="get" data-toggle="validator">
+							<h4>Find Spots near here:</h4>
+					    <div class="form-group row">
+					      <label for="search_radius" class="col-sm-12 col-form-label">Show all spots within:</label>
+					    </div>
+					    <div class="form-group row">
+					      <div class="col-sm-6">
+					        <input type="number" class="form-control" name="search_radius" id="search_radius" placeholder="Miles" max="200" required>
+					      </div>
+					      <div class="col-sm-6" id="search_near">         
+					        <button type="submit" name="search_near_spot" class="btn btn-primary">&nbsp; Find Spots &nbsp;</button>
+					      </div>
+					    </div>
+							<input type="hidden" name="page" value="map" />
+							<input type="hidden" name="type" value="spot" />
+							<input type="hidden" name="key" value="{SPOT_ID}" />
+					  </form>
+					</div>
+					
+			  </div>
+			  <div id="men-pics" class="tab-pane fade">					
+			
+					<div class="clearfix {DAYS_INFO}" id="thegal">
+						<!-- BEGIN picrows -->
+						<p>
+							<a href="?page=vis&type=id&key={PIC_ID}">
+								<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
+								<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
+								<img class="img-rounded img-responsive squareme {USE_VIDTMB}" src='http://img.youtube.com/vi/{VID_TOKEN}/0.jpg' border="0" />
+							</a>{PANO_SYMB}
+						</p>
+						<!-- END picrows -->
+					</div>
+			
+			  </div>				
+			  <div id="men-weat" class="tab-pane fade">
+			    <h3>Menu 2</h3>
+			    <p>Some content in menu 2.</p>
+			  </div>
 			</div>
 		</div>
 	</div>	
@@ -104,6 +126,17 @@
 .list_item {
 	padding: .5em 1em 1em;
 }
+#descr {
+	background-color: #FFF;
+/*	background-color: #E5FFFF;*/
+	padding: .8em 1em;
+}
+#descr>p {
+	margin-bottom: 0;
+}
+#descr>p:first-letter {
+  text-transform: uppercase;
+}
 #day_list {
 	padding: .8em 1em;
 	margin: .6em 0;
@@ -119,9 +152,20 @@
 .day_desc {
 	border-bottom: 1px solid {BOLDCOLOR};
 }
-.day_desc:first-letter {
+.day_desc>p:first-letter {
   text-transform: uppercase;
 }
+.nav-tabs>li>a {
+	{SANS_FONT};
+	color: {LINKCOLOR};
+}	
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+	color: {DFLT_LINKCOLOR};
+	background-color: {BACKCOLOR};
+}	
+
 
 #formbox {
 	padding: .8em 1em .8em;
