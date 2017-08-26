@@ -52,13 +52,13 @@
 		<div class="col-sm-4">
 			
 			<ul class="nav nav-tabs">
-			  <li class="active"><a data-toggle="tab" href="#home">Location</a></li>
+			  <li class="active"><a data-toggle="tab" href="#men_loc">Location</a></li>
 			  <li><a data-toggle="tab" href="#men-pics">Pictures</a></li>
 			  <li><a data-toggle="tab" href="#men-weat">Weather</a></li>
 			</ul>
 			
 			<div class="tab-content">
-			  <div id="home" class="tab-pane fade in active">
+			  <div id="men_loc" class="tab-pane fade in active">
 			
 					{MAP_INSET}
 					<div id="formbox">
@@ -107,7 +107,7 @@
 </article>
 
 <style type="text/css" media="screen">
-#main_item h1 {	color: {BOLDCOLOR};	}
+	#main_item h1 {	color: {BOLDCOLOR};	}
 
 .list_head {
 	margin: 1em 0 0;
