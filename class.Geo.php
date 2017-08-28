@@ -1,7 +1,6 @@
 <?php
-/* Orphans that don't fit into the class structure:
-
--- mostly because I don't need to instantiate a WhuThing to use them
+/* 
+Orphans that don't fit into the class structure. Mostly because I don't need to instantiate a WhuThing to use them
 
 -- getGeocode()       uses Google location services to get the GPS of a place
 
@@ -30,6 +29,23 @@ function getGeocode($name)
 		$res['stat'] = "yes";
 	}
 	return $res;
+}
+// ---------------------------------------------------------------------------------------  
+function getWeatherInfo($lat, $lon)
+{
+  $json_string = file_get_contents("http://api.wunderground.com/api/1d24ab90ef8f01c8/geolookup/conditions/almanac/forecast/q/$lat,$lon.json");
+	// $php = json_decode(json_encode(json_decode($json_string)), true);
+	$php = json_decode($json_string, true);
+	
+	$info = array('W_CITY' => $php['location']['city'], 'W_STATE' => $php['location']['state']
+					, 'W_LAT' => $php['location']['lat'], 'W_LON' => $php['location']['lon']
+					, 'W_W' => $php['current_observation']['weather'], 'W_TEMP' => $php['current_observation']['temperature_string']
+					, 'W_REL' => $php['current_observation']['relative_humidity'], 'W_WIND' => $php['current_observation']['wind_string']
+					, 'W_WDIR' => $php['current_observation']['wind_dir'], 'W_MPH' => $php['current_observation']['wind_mph']
+					, 'W_FEEL' => $php['current_observation']['feelslike_f'], 'W_URL' => $php['current_observation']['forecast_url']
+					, 'W_HIST' => $php['current_observation']['history_url']);
+		
+	return $info;
 }
 // ---------------------------------------------------------------------------------------  
 function getAllSpotKeys($db)
@@ -83,7 +99,7 @@ class SaveForm
 	{
 		// date time, purpose, name, email, topic, content, url
 		$str = sprintf("%s,%s,%s,%s,%s,%s,%s", date("Y-m-d H:i:s"),
-						$this->props->get('choose_purpose'), $this->massageForCsv('f_name'), $this->props->get('f_email'), 
+						$this->props->get('choose_purpose'), $this->massageForCsv('f_ndata'), $this->props->get('f_edata'), 
 						$this->massageForCsv('f_topic'), $this->massageForCsv('f_comment'), $this->props->get('f_url'));
 		
 		$this->out->write("$str");

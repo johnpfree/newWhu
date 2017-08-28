@@ -117,8 +117,13 @@ else if ($props->isProp('comment_form')) 		// comment form
 {
 	/* July2017 - I have left the math thing in the form, but am now ignoring it in favor of the hidden field trick. 
 		The field has name="email", and if it contains stuff I kill the program. Hope this works.
+	Aug 2017 - didn't work. Juggling names: former real names are now dummy names, they all have value...
 	*/
-	if ($props->get('email') != '')
+	if ($props->get('email') != '.')
+		exit;
+	if ($props->get('f_email') != '.')
+		exit;
+	if ($props->get('f_name') != '.')
 		exit;
 	// if ($props->get('cap') == $props->get('user_id'))			// ignore if the math isn't correct
 	{

@@ -504,19 +504,22 @@
 		function prettyTypes()		// an array of types, suitable for printing
 		{
 			$types = WhuProps::parseKeys($this->types());	
+			dumpVar($types, "types");
 			foreach ($types as $k => $v) 
 			{
 				if ($v == 'CAMP')
 				{
 					$stats = WhuProps::parseParms($this->status());	
-					// dumpVar($stats, "this->status");
+					dumpVar($stats, "this->status");
 					foreach ($stats as $k1 => $v1) 
 					{
-						// dumpVar($v1, "v1 $k1");
-						if ($k1 == 'CAMP' && isset($this->CAMPTYPES[$v1]))
+						dumpVar(WhuDbSpot::$CAMPTYPES[$v1], "$v1 $k1");
+						dumpVar(boolStr(in_array($v1, WhuDbSpot::$CAMPTYPES)), "in_array($v1, ...)");
+						dumpVar(WhuDbSpot::$CAMPTYPES, "WhuDbSpot::CAMPTYPES");
+						if ($k1 == 'CAMP' && in_array($v1, WhuDbSpot::$CAMPTYPES))
 						{
 							$ret[$v] = $this->CAMPTYPES[$v1];
-							// dumpVar($ret[$v], "Cret[$v]");
+							dumpVar($ret[$v], "Cret[$v]");
 							continue 2;
 						}
 					}

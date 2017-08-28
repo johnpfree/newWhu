@@ -98,8 +98,18 @@
 			
 			  </div>				
 			  <div id="men-weat" class="tab-pane fade">
-			    <h3>Menu 2</h3>
-			    <p>Some content in menu 2.</p>
+			    <h3>Weather for {W_CITY}, {W_STATE}</h3>
+					<ul>
+						<li>{W_W}, {W_TEMP}</li>
+						<li>{W_REL} relative humidity</li>
+						<li>wind is {W_WIND} from the {W_WDIR} at {W_MPH}mph</li>    
+						<li>Feels like {W_FEEL}°</li>    
+					</ul>          
+					<p><a target="_blank" href="{W_URL}">{W_CITY}</a> is the closest weather station to {SPOT_NAME}.
+						<br /><a target="_blank" href="{W_HIST}">Weather History</a></p>
+					<p>
+						<img id="wulogo" src="resources/icons/wundergroundLogo_4c_horz.png" width="100%" alt="WundergroundLogo 4c Horz">
+					</p>
 			  </div>
 			</div>
 		</div>
@@ -107,7 +117,17 @@
 </article>
 
 <style type="text/css" media="screen">
-	#main_item h1 {	color: {BOLDCOLOR};	}
+#men-weat li:first-letter {
+  text-transform: uppercase;
+}
+#men-weat li {
+	list-style-type: square;
+}
+#men-weat p {
+	margin-bottom: 0;
+}
+
+#main_item h1 {	color: {BOLDCOLOR};	}
 
 .list_head {
 	margin: 1em 0 0;

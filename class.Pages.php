@@ -980,13 +980,18 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('DFLT_LINKCOLOR', self::pals['deflt']['linkcolor' ]);
 
 		$types = $spot->prettyTypes();
-		// dumpVar($types, "types"); exit;
+		dumpVar($types, "types");// exit;
 		$str = '';
 		foreach ($types as $k => $v) 
 		{
 			$str .= $v . ', ';
 		}		
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
+		
+		//----------------------------- weather ---------------
+		$info = getWeatherInfo($spot->lat(), $spot->lon());
+		// dumpVar($info, "info");
+		$this->template->set_var($info);								// NO Days!
 
 		if ($visits == 'never')
 		{
