@@ -980,7 +980,7 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('DFLT_LINKCOLOR', self::pals['deflt']['linkcolor' ]);
 
 		$types = $spot->prettyTypes();
-		dumpVar($types, "types");// exit;
+		// dumpVar($types, "types"); exit;
 		$str = '';
 		foreach ($types as $k => $v) 
 		{
