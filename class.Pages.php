@@ -665,10 +665,7 @@ dumpVar($fullpath, "Mapbox fullpath");
 		}	
 		else if ($trip->hasGoogleMap())
 		{
-			$filename = $trip->folder();
-			$fullpath = 'data/' . $filename;
-dumpVar($fullpath, "Google fullpath");
-			$this->template->set_var("KML_FILE", $fullpath);
+			$this->template->set_var("KML_FILE", $trip->gMapPath());
 			$this->template->setFile('JSON_INSERT', 'mapkml.js');
 			$this->template->set_var("CONNECT_DOTS", 'false');		// no polylines
 		}	
@@ -1177,7 +1174,6 @@ class TripStory extends ViewWhu
 		$pageprops['nlab'] = $navpost->title();
 		$pageprops['nkey'] = $navid;
 		$this->pagerBar('txt', 'wpid', $pageprops);		
-
 		// $dates = $post->dates();
 		// $days = $this->build('DbDays', $dates);
 		// dumpVar($post->firstDate(), "post->firstDate()");

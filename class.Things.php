@@ -207,9 +207,16 @@
 			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
 			return $count['nposts'] > 0;
 		}
-		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}
-		function hasGoogleMap()	{	return ($this->mapboxId() == 'kml');	}
 		
+		function gMapPath()			{ return sprintf("data/%s", $this->folder()); }
+		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}		
+		function hasGoogleMap()	
+		{
+			// $mapfile = sprintf("data/%s.kml", $this->folder());
+			$mapfile = $this->gMapPath() . ".kml";
+			dumpVar($mapfile, "mapfile exists?>");
+			return file_exists($mapfile);
+		}		
 		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
 	}
 	class WhuTrips extends WhuTrip 
@@ -264,7 +271,7 @@
 		function spotId()			{ return $this->dbValue('wf_spots_id'); }
 		function hasSpot()		{ return $this->spotId() > 0; }
 		function dayName()		{ return $this->dbValue('wf_route_name'); }
-		function dayDesc()		{ return $this->dbValue('wf_route_desc'); }
+		function dayDesc()		{ return (($desc = $this->dbValue('wf_route_desc')) == '') ? $this->dayName() : $desc; }
 		function nightName()	{ return $this->massageDbText($this->dbValue('wf_stop_name')); }
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
@@ -406,8 +413,6 @@
 		function getSpotandDaysArranged($key)
 		{
 			$keys = array(
-				// 'dayName' => 'wf_route_name',
-				// 'dayDesc' => 'wf_route_desc',
 				'nightName' => 'wf_stop_name',
 				'nightDesc' => 'wf_stop_desc',
 				'lat' => 'wf_days_lat',
@@ -768,10 +773,14 @@
 		function wpid()				{ return $this->data[0]['wpid']; }
 		function title()			{ return $this->data[0]['title']; }
 		function content()		{ return $this->data[0]['content']; }		
-		function date()				{ return $this->data[0]['date']; }						// NOTE! this is the wordpress date, NOT the dateS that ref this post
+		function date()				{ return $this->data[0]['date']; }			// NOTE! this is the wordpress date, NOT the dates that ref this post
 		function firstDate()	{	return $this->dates()[0]['wf_days_date'];	}	// first date for post - this is the one ypu want		
 		
-		function next()			{	return explode('=', $this->data[0]['next'])[1];	}
+		function next()			{																					// if this wpid is not used, don't show it!
+			$wpid = explode('=', $this->data[0]['next'])[1];	
+			$posts = $this->getAll("SELECT * from wf_days where wp_id=$wpid");
+			return (sizeof($posts) > 0) ? $wpid : 0;
+		}
 		function previous() {	return explode('=', $this->data[0]['prev'])[1];	}
 
 		function dates()

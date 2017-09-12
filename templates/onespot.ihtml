@@ -27,7 +27,7 @@
 			
 			<div class="{DAYS_INFO}">
 				<div class="list_head">Spot keywords:
-				  <a href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul>Keywords can be contradictory:<li>They are recorded for each visit, so a spot might be '<em>noisy</em>' during peak season and '<em>quiet</em>' on a winter day.</li><li>A frequent combo is '<em>quiet</em>'and '<em>road noise</em>'. Many places aree perfectly serene until a big rig or a train rumbles past.</li></ul>">
+				  <a href="#" data-toggle="popover" data-trigger="click" data-html="true" data-content="<ul>Keywords can be contradictory:<li>They are recorded for each visit, so a spot might be '<em>noisy</em>' during peak season and '<em>quiet</em>' on a winter day.</li><li>A frequent combo is '<em>quiet</em>'and '<em>road noise</em>'. Many places are perfectly serene until a big rig or a train rumbles past.</li></ul>">
 	          <span class="glyphicon glyphicon-info-sign"></span>
 				  </a>
 				</div>
