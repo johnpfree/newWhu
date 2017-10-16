@@ -28,8 +28,12 @@ var markers = [
 				'marker-symbol': 'star',
 				'marker-color': '#8c54ba'
 		}
-	},
-	{
+	}
+];
+
+if ({WEATHER_MARK})	
+{
+	markers.push({
 		type: 'Feature',
 			zIndexOffset: 20, 
 		geometry: {
@@ -42,8 +46,8 @@ var markers = [
 				'marker-symbol': 'w',
 				'marker-color': '#18AADB'
 		}
-	},
-];
+	});
+}
 
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);

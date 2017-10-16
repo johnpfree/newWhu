@@ -31,13 +31,25 @@ function getGeocode($name)
 	return $res;
 }
 // ---------------------------------------------------------------------------------------  
-function getWeatherInfo($lat, $lon)
+function getWeatherInfo($doit = FALSE, $lat = 0, $lon = 0)
 {
+	dumpVar(boolStr($doit), "doit?");
+  if ($doit) {			// NO Weather!
+		return array('W_CITY' => "OFF"
+						, 'WEATHER_MARK' => 0
+						, 'W_LAT' => '' 
+						, 'W_W'	 	=> ''
+						, 'W_REL' => ''
+						, 'W_WDIR' => ''
+						, 'W_FEEL' => ''
+						, 'W_HIST' => '');
+  }
   $json_string = file_get_contents("http://api.wunderground.com/api/1d24ab90ef8f01c8/geolookup/conditions/almanac/forecast/q/$lat,$lon.json");
 	// $php = json_decode(json_encode(json_decode($json_string)), true);
 	$php = json_decode($json_string, true);
 	
 	$info = array('W_CITY' => $php['location']['city'], 'W_STATE' => $php['location']['state']
+		, 'WEATHER_MARK' => 1
 					, 'W_LAT' => $php['location']['lat'], 'W_LON' => $php['location']['lon']
 					, 'W_W' => $php['current_observation']['weather'], 'W_TEMP' => $php['current_observation']['temperature_string']
 					, 'W_REL' => $php['current_observation']['relative_humidity'], 'W_WIND' => $php['current_observation']['wind_string']
@@ -133,6 +145,24 @@ class AjaxCode
 		<button class="btn btn-outline-success" type="button"><a href="?page=%s&type=%s&key=%s">%s (%s)</a></button>
 HTML;
 }
+
+class SpotWeather extends AjaxCode 		// ?page=weather&lat=xx%&lon=xx
+{
+	var $type = 'place';
+	function result($props)
+	{
+		$info = getWeatherInfo(1, $props->get('lat'), $props->get('lon'));
+		// dumpVar($info, "info");
+
+		$templ = new Template('./templates');
+		$templ->set_file('main', 'weatherpane.ihtml');
+		
+		$templ->set_var($info);
+
+		return $templ->parse('MAIN', 'main');
+	}
+}
+
 class SpotLocation extends AjaxCode 
 {
 	var $type = 'place';

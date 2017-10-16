@@ -4,7 +4,7 @@
 			<td class="table-caption" colspan="11"><h1>{TRIP_NAME}</h1></td>
 		</tr>
 		<tr id=triptablehead>
-			<td>#</td>
+			<td>day</td>
 			<td align=right>date</td>
 			<td>stop</td>
 			<td class="dropout">miles</td>

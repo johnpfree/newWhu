@@ -28,6 +28,9 @@ class ViewWhu extends ViewBase  // ViewDbBase
 dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>");
 	}
 	function showPage()	{}
+		
+	function isRunningOnServer() { return (HOST == 'cloudy'); }
+	
 	function setCaption()		// also handy place for bookkeeping shared for all pages
 	{
 		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
@@ -52,6 +55,10 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$this->template->set_var('FROM_K', $this->props->get('key'));
 			$this->template->set_var('FROM_I', $this->props->get('id'));
 		}
+		if ($this->isRunningOnServer())
+			$this->template->setFile('GOOGLE_ANALYTICS', 'googleBlock.ihtml');
+		else
+			$this->template->set_var('GOOGLE_ANALYTICS', '');
 	}
 	function getCaption()	
 	{
@@ -408,9 +415,12 @@ class OneTripLog extends ViewWhu
 			{
 				if ($prevPostId != $row['wp_id']) {
 					$prevPostId = $row['wp_id'];
+					// $post = $this->build('Post', array('wpid' => $prevPostId));
+					// $pName = $post->baseExcerpt($post->content(), 15);
 					$iPost++;
 				}
 				$row['day_post'] = $iPost;
+				// $row['day_post'] = $pName;
 				$row['POST_CLASS'] = '';
 			}
 			else
@@ -986,9 +996,9 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
 		
 		//----------------------------- weather ---------------
-		$info = getWeatherInfo($spot->lat(), $spot->lon());
+		$info = getWeatherInfo(($this->props->get("weather") != 1), $spot->lat(), $spot->lon());
 		// dumpVar($info, "info");
-		$this->template->set_var($info);								// NO Days!
+		$this->template->set_var($info);
 
 		if ($visits == 'never')
 		{
@@ -1124,6 +1134,7 @@ class TripStories extends ViewWhu
 			$pics[] = ($dpics->size() > 0) ? $dpics->favored() : NULL;
 		}
 		$wpdates[] = $wpdate;
+		// dumpVar($wpids, "wpids");
 
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		// now fill the loop

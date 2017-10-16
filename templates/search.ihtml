@@ -1,27 +1,26 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		console.log('ready');
-	    $('[data-toggle="collapse"]').click(function(){
-				console.log('click', this, $(this).attr('class'), 'href', $(this).attr('href'));
-						
-				var section = $(this).attr('href');
-				
-				var sectKey = section.substr(9);
-				if (sectKey == 1) return;		// no ajax for this one
-				if (sectKey == 4) return;		// no ajax for this one
-				
-				var sectElem = section + ">div>div";
-				var sectUrl = "?page=search&type=ajax&key=" + sectKey;
-
-				console.log('this: ', section, sectElem, sectUrl);
+    $('[data-toggle="collapse"]').click(function(){
+			console.log('click', this, $(this).attr('class'), 'href', $(this).attr('href'));
+					
+			var section = $(this).attr('href');
 			
-        $.ajax({url: sectUrl, success: function(result){
-            $(sectElem).html(result);
-        }});
-				
-				console.log('done');
-	    });
+			var sectKey = section.substr(9);
+			if (sectKey == 1) return;		// no ajax for this one
+			if (sectKey == 4) return;		// no ajax for this one
+			
+			var sectElem = section + ">div>div";
+			var sectUrl = "?page=ajax&type=search&key=" + sectKey;
 
+			console.log('this: ', section, sectElem, sectUrl);
+		
+      $.ajax({url: sectUrl, success: function(result){
+          $(sectElem).html(result);
+      }});
+			
+			console.log('done');
+    });
 	});
 	
 </script>
@@ -139,7 +138,7 @@
 	  <div class="panel panel-default">
 	    <div class="panel-heading" data-toggle="collapse" href="#collapsePicCat">
 	      <h4 class="panel-title">
-					<a data-toggle="collapse" href="#collapsePicCat">Find Pictures by Category:</a>
+					<a data-toggle="collapse" href="#collapsePicCat">Find Pictures by Keyword:</a>
 				</h4>
 	    </div>
 	    <div id="collapsePicCat" class="panel-collapse collapse">

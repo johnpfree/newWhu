@@ -368,7 +368,9 @@
 							JOIN wf_spot_days sd ON sd.wf_spot_days_date=d.wf_days_date
 							WHERE d.wf_stop_name LIKE '$qterm' OR d.wf_stop_desc LIKE '$qterm'
 							OR d.wf_route_name LIKE '$qterm' OR d.wf_route_desc LIKE '$qterm'
-							OR s.wf_spots_name LIKE '$qterm' OR sd.wf_spot_days_desc LIKE '$qterm'";
+							OR s.wf_spots_name LIKE '$qterm' OR sd.wf_spot_days_desc LIKE '$qterm'
+							GROUP BY d.wf_days_date 
+							ORDER BY d.wf_days_date";
 				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}
@@ -607,7 +609,11 @@
 			
 			if (is_string($searchterms))												// for text search
 			{
-				$q = "SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE s.wf_spots_name LIKE '$searchterms' OR d.wf_spot_days_desc LIKE '$searchterms' GROUP BY s.wf_spots_id";
+				$q = "SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE 
+					s.wf_spots_name LIKE '$searchterms' OR 
+					s.wf_spots_partof LIKE '$searchterms' OR 
+					d.wf_spot_days_desc LIKE '$searchterms' 
+					GROUP BY s.wf_spots_id";
 				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}
@@ -826,7 +832,6 @@
 			{
 				return $this->doWPQuery("s={$parm['searchterm']}");
 			}
-
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}
@@ -1032,31 +1037,6 @@
 		function favored()					// returns a picture object for a favored picture
 		{	
 			$faves = $this->favorites();			
-			if (sizeof($faves) > 0)
-				$one = $faves[array_rand($faves)];
-			else
-				$one = $this->data[array_rand($this->data)];
-
-			return $this->build('Pic', $one);
-		}
-		function xxchoose($num)					// returns a picture collection of $num favored pictures 
-		{	
-			$faves = $this->favorites();		
-			$ret = array_rand($faves, $num);
-			
-			if (sizeof($ret) < $num)		// still need pics
-			{
-				$ids = array_column('wf_images_id');
-				$fids = array_flip($ids);
-				dumpVar($fids, "fids");
-				for ($i = 0; $i < sizeof($ret); $i++) 
-				{
-					unset($fids[$ret[$i]]);
-					dumpVar(sizeof($fids), "$i Nfids");
-				}
-				exit;
-			}
-
 			if (sizeof($faves) > 0)
 				$one = $faves[array_rand($faves)];
 			else

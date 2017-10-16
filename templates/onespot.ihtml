@@ -1,10 +1,35 @@
 <script type="text/javascript">
-	$(document).ready(function(){
-    $('[data-toggle="popover"]').popover();   
+	$(document).ready(function() {
+    $('[data-toggle="popover"]').popover();  
+		console.log("popover");
+    $('[data-toggle="tab"]').click(function(){
+			var section = $(this).attr('href');
+		// console.log("section", section);
+			if (section != '#men-weat')
+				return;
+			
+			var href = window.location.href;
+			if (href.includes("weather"))
+				return;
+			console.log('sect', section, href);
+			window.location.href = href + "&weather=1";
+
+			// var sectKey = section.substr(9);
+			// if (sectKey == 1) return;		// no ajax for this one
+			// if (sectKey == 4) return;		// no ajax for this one
+			//
+			// var sectElem = section + ">div>div";
+			// var sectUrl = "?page=ajax&type=search&key=" + sectKey;
+			//
+			// console.log('this: ', section, sectElem, sectUrl);
+			//
+			//       $.ajax({url: sectUrl, success: function(result){
+			//           $(sectElem).html(result);
+			//       }});
+			//
+			// console.log('done');
+    });		
 	});
-	// $('.popover-dismiss').popover({
-	//   trigger: 'focus'
-	// })
 </script>
 
 <article class="jumbotron jumbotron-fluid" id="main_item">
@@ -203,6 +228,7 @@
 #thegal>p {
 	float: left;
 	text-align: center;
+	position: relative;
 }
 #thegal>p img {
 	border: 1px solid #3A5950;		

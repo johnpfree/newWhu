@@ -13,7 +13,7 @@ include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
 if (isset($_GET['dbg'])) 
 	$noDbg = !$_GET['dbg'];				// force debugging (or not)
-if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'ajax')  $noDbg = TRUE;	// force clean page for ajax
+if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'ajax')  $noDbg = TRUE;	// force clean page for ajax
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 
@@ -147,20 +147,22 @@ else if ($props->isProp('search_types')) {
 $curpage = $props->get('page');
 $curtype = $props->get('type');
 
-switch ("$curpage$curtype") 
-{
-	case 'searchajax':												// async requests on search page
+if ($curpage == 'ajax') {
 	$page = new HomeHome($props);							// need a simple page object to run build()
-	switch ($key = $props->get('key')) 
+	$curkey = $props->get('key');
+	switch ("$curtype$curkey") 
 	{
-		case 'SpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
-		case 'SpType':		$ajax = new SpotType();			echo $ajax->result($page);	exit;
-		case 'SpKey':			$ajax = new SpotKey();			echo $ajax->result($page);	exit;
-		case 'PicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
-		case 'PicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
+		case 'searchSpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
+		case 'searchSpType':		$ajax = new SpotType();			echo $ajax->result($page);	exit;
+		case 'searchSpKey':			$ajax = new SpotKey();			echo $ajax->result($page);	exit;
+		case 'searchPicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
+		case 'searchPicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
 	}
 	jfDie("unknown key-$key");
-	break;
+}
+
+switch ("$curpage$curtype") 
+{
 
 	case 'homehome':		$page = new HomeHome($props);			break;		
 	
