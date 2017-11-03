@@ -7,10 +7,12 @@
 		<div class="{DATE_GAL_VIS} col-lg-3">
 			<h3>{TODAY}</h3>
 		</div>
-		<h1 class="{CAT_GAL_VIS}">{TRIP_NAME}</h1>
+		<div class="{CAT_GAL_VIS} col-lg-12">
+			<h1>{TRIP_NAME}</h1>
+		</div>
 	</div>	      	
 	
-{PAGER_BAR}
+	<div>{PAGER_BAR}</div>
 
 	<!-- <h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2> -->
 	<div class="clearfix" id="thegal">
@@ -58,6 +60,10 @@ h1>i.small { color: {BOLDCOLOR}; }
 /*	position: absolute;
 	color: #f00;
 	font-size: 200%;*/
+}
+
+#shuffle-but {
+	text-align: right;
 }
 
 @media (max-width: 785px)  {	

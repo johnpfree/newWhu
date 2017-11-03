@@ -609,7 +609,18 @@ class CatGallery extends Gallery
 		$this->pics = $this->build('Pics', (array('cat' => $this->key))); 
 		if (($size = $this->pics->size()) > $this->maxGal)
 		{
-			$this->message = sprintf("A random selection of %s out of %s.", $this->maxGal, $size);
+			$row = 
+<<<HTML
+			<div class="row">
+				<div class="col-sm-12">
+					A selecton of %s out of %s &nbsp; &bull; &nbsp; 
+					<a href='?page=pics&type=cat&key=%s'>reselect<span class="genericon genericon-shuffle"></span></a>
+				</div>
+			</div>
+HTML;
+			$this->message = sprintf($row, $this->maxGal, $size, $this->key);			
+			// $this->message = sprintf("A random selection of %s out of %s.", $this->maxGal, $size);
+			// $this->message = sprintf("A random selection of %s out of %s. <a href='?page=pics&type=cat&key=%s'>SHUFFLE</a>", $this->maxGal, $size, $this->key);
 			$this->pics->random($this->maxGal);
 		}
 		
@@ -838,6 +849,7 @@ class OneVisual extends ViewWhu
 		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
 		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
 		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
+		$this->template->set_var('PICFILE_NAME', $vis->filename());
 		
 		if ($vis->isImage())	// ==================================== picture ==============
 		{

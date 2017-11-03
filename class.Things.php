@@ -212,7 +212,6 @@
 		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}		
 		function hasGoogleMap()	
 		{
-			// $mapfile = sprintf("data/%s.kml", $this->folder());
 			$mapfile = $this->gMapPath() . ".kml";
 			dumpVar($mapfile, "mapfile exists?>");
 			return file_exists($mapfile);
@@ -224,7 +223,8 @@
 		var $isCollection = true;
 		function getRecord($parms)
 		{
-			if ($parms == '')			// little hack to create a Trips object w/o data to hang those numXX() fcns off of. They don't need data.
+			// little hack to create a Trips object w/o data to hang those numXX() fcns off of. They don't need any trip data.
+			if ($parms == '')	
 				return true;
 			
 			$this->assert(is_array($parms), "array expected for WhuTrips(parms)");

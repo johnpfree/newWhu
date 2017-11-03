@@ -1,5 +1,5 @@
 var bounds = L.latLngBounds(L.latLng(markers[0].geometry.coordinates[1], markers[0].geometry.coordinates[0]));
-// console.log('11', bounds.toString());
+// console.log('pre', bounds);
 var pline = [];
 for (var i = 0; i < markers.length; i++) {
 	var pt = L.latLng(markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]);
@@ -11,5 +11,6 @@ for (var i = 0; i < markers.length; i++) {
 	// collect coords for pline
 	pline.push([markers[i].geometry.coordinates[1], markers[i].geometry.coordinates[0]]);
 }
+// console.log('post', bounds);
 bounds.pad(30);
 map.fitBounds(bounds);	
