@@ -391,6 +391,10 @@ class OneTripLog extends ViewWhu
 
 			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => $day->cumulative(), 'map_marker' => $i+1);
 			$row['nice_date'] = Properties::prettyDate($row['day_date'] = $day->date(), "M"); 
+			$row['short_date'] = Properties::prettyShortest($row['day_date']); 
+			$row['trip_year'] = substr($row['day_date'], 0, 4); 
+
+			// dumpVar($row, "row");exit;
 
 			$parms = array('stop', 'date', $day->date());
 			if ($day->hasSpot())
@@ -415,12 +419,12 @@ class OneTripLog extends ViewWhu
 			{
 				if ($prevPostId != $row['wp_id']) {
 					$prevPostId = $row['wp_id'];
-					// $post = $this->build('Post', array('wpid' => $prevPostId));
-					// $pName = $post->baseExcerpt($post->content(), 15);
+					$post = $this->build('Post', array('wpid' => $prevPostId));
+					$pName = $post->baseExcerpt($post->title(), 15);
 					$iPost++;
 				}
-				$row['day_post'] = $iPost;
-				// $row['day_post'] = $pName;
+				// $row['day_post'] = $iPost;
+				$row['day_post'] = $pName;
 				$row['POST_CLASS'] = '';
 			}
 			else

@@ -4,8 +4,9 @@
 			<td class="table-caption" colspan="11"><h1>{TRIP_NAME}</h1></td>
 		</tr>
 		<tr id=triptablehead>
-			<td>day</td>
-			<td align=right>date</td>
+			<td class="smalldev">{TRIP_YEAR}<br />day</td>
+			<td class="largedev">day</td>
+			<td class="largedev" align=right>date</td>
 			<td>stop</td>
 			<td class="dropout">miles</td>
 			<td>total miles</td>
@@ -17,8 +18,9 @@
 	<tbody>
 		<!-- BEGIN rows -->
 		<tr>
-			<td>{MAP_MARKER}</td>
-			<td align=right><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{NICE_DATE}</a></td>
+			<td class="smalldev"><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{SHORT_DATE}</a><br />{MAP_MARKER}</td>
+			<td class="largedev">{MAP_MARKER}</td>
+			<td class="largedev" align=right><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{NICE_DATE}</a></td>
 			<td><a href="?page={SDPAGE}&type={SDTYPE}&key={SDKEY}" title="Spot or Day page">{STOP_NAME}</a></td>
 			<td class="dropout">{MILES}</td>
 			<td>{CUM_MILES}</td>
@@ -33,6 +35,15 @@
 
 
 <style type="text/css" media="screen">
+
+	@media (max-width: 700px)  {	
+		.smalldev { text-align: right;	white-space: nowrap;	}
+		.largedev { display: none; }
+	}
+	@media (min-width: 701px)  {	
+		.smalldev { display: none; }
+	}
+
 	#triptable {
 		margin: 0 auto;
 		width: auto;
@@ -40,6 +51,11 @@
 	#triptable td {
 		padding: 4px 6px;
 	}
+	#triptable td:nth-child(2) {	text-align: center;	white-space: nowrap;	}
+	#triptable td:nth-child(5) {	text-align: center;	}
+	#triptable td:nth-child(8) {	text-align: center;	}
+
+
 
 	thead { border-bottom: 2px solid {BORDERCOLOR};	}
 /*	thead { border-bottom: 2px solid #3A5950;	}*/
@@ -51,10 +67,5 @@
 		td.dropout {	display: none;	}
 	}
 
-	#triptable td:nth-child(2) {	text-align: center;	white-space: nowrap;	}
-	#triptable td:nth-child(4) {	text-align: center;	}
-	#triptable td:nth-child(5) {	text-align: center;	}
-	#triptable td:nth-child(7) {	text-align: center;	}
-	#triptable td:nth-child(8) {	text-align: center;	}
 
 </style>

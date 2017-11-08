@@ -612,6 +612,7 @@
 				$q = "SELECT * FROM wf_spots s JOIN wf_spot_days d ON s.wf_spots_id=d.wf_spots_id WHERE 
 					s.wf_spots_name LIKE '$searchterms' OR 
 					s.wf_spots_partof LIKE '$searchterms' OR 
+					s.wf_spots_town LIKE '$searchterms' OR 
 					d.wf_spot_days_desc LIKE '$searchterms' 
 					GROUP BY s.wf_spots_id";
 				// dumpVar($q, "q");

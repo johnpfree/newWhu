@@ -64,12 +64,12 @@
 	      </div>
 	    </div>
 	    <div class="panel panel-default">
-	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse4">
 	        <h4 class="panel-title">
-	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Why do I do this?</a>
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Why do I do this?</a>
 	        </h4>
 	      </div>
-	      <div id="collapse2" class="panel-collapse collapse">
+	      <div id="collapse4" class="panel-collapse collapse">
 	        <div class="panel-body">
 						<ul>
 							<p>Beavers are gonna build dams, programmers are gonna program.</p>
@@ -110,9 +110,17 @@
 										<ul>
 											<li>The overnight spots are plotted from GPS information in the WHUFU database.</li>
 											<li>I used to enter routes manually using Mapbox or Google Maps. I used Google forever, then I used Mapbox, then I discovered how use Google Directions correctly. Now, using Directions I make better maps in a fraction of the time.</li>
-											<li>Save the Directons map as KML.then Mapbox makes it very easy to render either JSON or KML geodata into a layer.</li>
+											<li>Save the Directons map as KML, then Mapbox makes it very easy to render either JSON or KML geodata into a layer.</li>
 											<li>A few trips don't have a map. For these I connect the overnight spots with straight lines ... better than nothing I think.</li>
 										</ul>
+									</dd>
+								</dl>
+							</li>
+							<li>
+								<dl>
+									<dt>weather:</dt>
+									<dd>
+										<p>I grab weather info for Spots from <a href="https://www.wunderground.com/weather/us/nv/reno">Weather Underground</a>. I have to do stupid coding tricks to not invoke it on a simple Spot page hit, because stupid bots blow my access limit. You have to hit the Weather tab to request the weather.</p>
 									</dd>
 								</dl>
 							</li>
@@ -133,12 +141,12 @@
 	      </div>
 	    </div>
 	    <div class="panel panel-default">
-	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+	      <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse5">
 	        <h4 class="panel-title">
-	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Backend tools, methods</a>
+	          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Backend tools, methods</a>
 	        </h4>
 	      </div>				
-	      <div id="collapse3" class="panel-collapse collapse">
+	      <div id="collapse5" class="panel-collapse collapse">
 	        <div class="panel-body">
 						<ul>
 							<li>
