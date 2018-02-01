@@ -201,6 +201,9 @@
 .day_desc {
 	border-bottom: 1px solid {BOLDCOLOR};
 }
+.day_desc:last-of-type {
+	border-bottom: inherit;
+}
 .day_desc>p:first-letter {
   text-transform: uppercase;
 }

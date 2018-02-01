@@ -16,5 +16,6 @@
 	}
 	#linkbar>div>h3 {
 		margin: 0;
+		font-size: 28px;
 	}
 </style>

@@ -440,10 +440,18 @@
 			$nightDay = $this->build('DbSpotDay', array('spotId' => $this->spotId(), 'date' => $this->date()));
 			// does it exist?
 			if ($nightDay->hasData)
-				return $nightDay->desc();
+				return $nightDay->htmlDesc();
 			// if not, return the day's night desc
 			return parent::nightDesc();
 		}
+		// function nightDesc()	{
+		// 	$this->dump('zz');
+		// 	if ($this->hasSpot()) {
+		// 		return $this->spotId()->htmlDesc();
+		// 	}
+		// 	return $this->dbValue('wf_stop_desc');
+		// }
+		
 		
 		function strLatLon($precision = 5)
 		{
@@ -697,11 +705,17 @@
 			}
 			WhuThing::getRecord($key);
 		}
-		function id()			{ return $this->dbValue('wf_spots_id'); }
+		function spotId()			{ return $this->dbValue('wf_spots_id'); }
 		function date()		{ return $this->dbValue('wf_spot_days_date'); }
 		function cost()		{ return $this->dbValue('wf_spot_days_cost'); }
 		function senior()		{ return $this->dbValue('wf_spot_days_senior'); }
-		function desc()		{ return $this->massageDbText($this->dbValue('wf_spot_days_desc')); }
+		function desc()	
+		{ 
+			if (($desc = $this->dbValue('wf_spot_days_desc')) == '') {
+				return $this->build('DbSpot', $this->spotId())->desc();
+			}
+			return $this->massageDbText($desc); 
+		}
 		function keywords()	
 		{
 			return WhuProps::parseKeys($this->dbValue('wf_spot_days_keywords'));

@@ -396,7 +396,7 @@ class OneTripLog extends ViewWhu
 
 			// dumpVar($row, "row");exit;
 
-			$parms = array('stop', 'date', $day->date());
+			$parms = array('day', 'date', $day->date());
 			if ($day->hasSpot())
 				$parms = array('spot', 'id', $day->spotId());
 			// $parms = $day->hasSpot() ? array('spot', 'id', $day->spotId()) : array('stop', 'date', $day->date());
@@ -671,8 +671,7 @@ class OneMap extends ViewWhu
 		$this->template->set_var('MARKER_COLOR', $this->marker_color);
 		
 		// cheeseball trick to use http locally and https on server :<
-		$this->template->set_var('WHU_URL', $foo = sprintf("http%s://%s%s", (HOST == 'cloudy') ? 's' : '', $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
-		dumpVar($foo, "WHU_URL");
+		$this->template->set_var('WHU_URL', sprintf("http%s://%s%s", (HOST == 'cloudy') ? 's' : '', $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
 
 		$tripid = $this->trip();		// local function		
  	 	$trip = $this->build('Trip', $tripid);		
@@ -735,7 +734,9 @@ dumpVar($fullpath, "Mapbox fullpath");
 		// 	dumpVar($eventLog, "Event Log");
 		parent::showPage();
 	}
-	function trip()		{ return $this->key; }
+	function trip()		{ 
+		return $this->key; 
+	}
 }
 class DateMap extends OneMap
 {

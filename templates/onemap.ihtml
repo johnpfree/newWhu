@@ -38,8 +38,8 @@ L.mapbox.tileLayer('mapbox.high-contrast').addTo(map);
 L.mapbox.styleLayer('mapbox://styles/johnpfree/cj7vzbf0y3pi52rqzqrij9dhn', {
 	attributionControl: false,
 }).addTo(map);
-mapbox://styles/johnpfree/
 /*
+mapbox://styles/johnpfree/
 using whu-outdoors
 cj4zx6kjh14xb2smcu2bh9hho ??
 cj7sz84p50wkd2so6c49xh2ml tutorial style
