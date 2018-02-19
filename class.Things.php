@@ -782,6 +782,7 @@
 		var $lazyPostRec = 0;
 		function getRecord($parm)	//  parm = array('wpid' => wpid)  OR jsut the wpid
 		{
+			// dumpVar($parm, "WhuPost parm");
 			if (is_array($parm) && isset($parm['wpid']))
 			{
 				return $this->doWPQuery("p={$parm['wpid']}");
@@ -810,24 +811,27 @@
 			return $this->getAll($q);
 		}
 		
-		function doWPQuery($args)
+		function doWPQuery($wpa)
 		{
 			// invoke the WP loop right here and now!
 			define('WP_USE_THEMES', false);
+			dumpVar($wpa, "doWPQuery IN");
 			require(WP_PATH . 'wp-load.php');											// Include WordPress			
-			query_posts($args);																	// get collection (of 1) post
+
+			$the_query = new WP_Query( $wpa );
+			// dumpVar($the_query, "the_query");
 			$posts = array();
-			while (have_posts()): the_post();										// The Loop
+			while ( $the_query->have_posts() ) : $the_query->the_post();									// The Loop
 				$posts[] = array(
-					'title' 	=> the_title('', '', false),				// first two can return a string
-					'date'		=> the_date('Y-m-d', '', '', false), 
 					'wpid'		=> get_the_ID(),
+					'title' 	=> the_title('', '', false),					// false == return a string
+					'date'		=> the_date('Y-m-d', '', '', false), 	// false == return a string
+					'content' => $this->the_content(),							// the_content() does NOT return a string, so copy/modify below to do so
 					'prev' 	 	=> get_permalink(get_adjacent_post(false,'',true)),			// remember, WP's default is newest to oldest
 					'next' 	 	=> get_permalink(get_adjacent_post(false,'',false)),
-					'content' => $this->the_content(),						// the_content does NOT, so copy/modify below to do so
 				);
 			endwhile;
-			// dumpVar(sizeof($posts), "N posts");
+			dumpVar(sizeof($posts), "N posts");
 			return $posts;
 		}
 		// straight outta Wordpress:

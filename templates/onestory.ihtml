@@ -21,7 +21,7 @@
 	overflow: scroll;
 	overflow-x: hidden;
 	width: 100%;
-	max-height: 70vw;
+	max-height: 60vw;
 	border: 1px solid {BOLDCOLOR};
 }
 .whuspotdesc {
@@ -34,6 +34,7 @@
 
 @media (max-width: 700px)  {	
 	.pager:nth-of-type(1) { display: none; }
+	.entry-content { max-height: 90vw; }
 }
 
 	/* ----------------------- from Wordpress ----------------------------- */
