@@ -420,7 +420,9 @@ class OneTripLog extends ViewWhu
 				if ($prevPostId != $row['wp_id']) {
 					$prevPostId = $row['wp_id'];
 					$post = $this->build('Post', array('wpid' => $prevPostId));
+					// dumpVar($post->title(), "post->title()");
 					$pName = $post->baseExcerpt($post->title(), 15);
+					// dumpVar($pName, "pName");
 					$iPost++;
 				}
 				// $row['day_post'] = $iPost;
@@ -1188,8 +1190,7 @@ class TripStory extends ViewWhu
 	var $file = "onestory.ihtml";   
 	function showPage()	
 	{
-		$postid = $this->key;
- 	 	$post = $this->build('Post', array('wpid' => $postid));	
+ 	 	$post = $this->build('Post', array('wpid' => $this->key));	
 
 		$this->template->set_var('POST_TITLE', $this->caption = $post->title());
 		$this->template->set_var('POST_CONTENT', $post->content());

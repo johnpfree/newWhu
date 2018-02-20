@@ -79,12 +79,14 @@
 		}
 		function baseExcerpt($str, $chop=400)
 		{
-	// dumpVar($str, "str");
+	// dumpVar($str, "str chop=$chop");
 			$str = strip_tags($str);
 			if (strlen($str) < $chop)											// don't need to truncate?
 				return $str;
 			$chop -= 4;																		// lop off 4 more for " ..."
 			$newlen = strrpos(substr($str, 0, $chop), ' ');		// find the last space before limit
+			if ($newlen == 0)
+				$newlen = $chop;														// if there is no space in $chpo letters, use the whole thing
 			return substr($str, 0, $newlen) . " ...";
 		}
 		function massageDbText($txt) 
@@ -822,16 +824,17 @@
 			// dumpVar($the_query, "the_query");
 			$posts = array();
 			while ( $the_query->have_posts() ) : $the_query->the_post();									// The Loop
+			// dumpVar(the_date('Y-m-d', '', '', false), "id,date " . get_the_ID());
 				$posts[] = array(
 					'wpid'		=> get_the_ID(),
 					'title' 	=> the_title('', '', false),					// false == return a string
 					'date'		=> the_date('Y-m-d', '', '', false), 	// false == return a string
-					'content' => $this->the_content(),							// the_content() does NOT return a string, so copy/modify below to do so
 					'prev' 	 	=> get_permalink(get_adjacent_post(false,'',true)),			// remember, WP's default is newest to oldest
 					'next' 	 	=> get_permalink(get_adjacent_post(false,'',false)),
+					'content' => $this->the_content(),							// the_content() does NOT return a string, so copy/modify below to do so
 				);
 			endwhile;
-			dumpVar(sizeof($posts), "N posts");
+			// dumpVar($posts, "posts"); //exit;
 			return $posts;
 		}
 		// straight outta Wordpress:
