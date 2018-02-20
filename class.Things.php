@@ -85,6 +85,8 @@
 				return $str;
 			$chop -= 4;																		// lop off 4 more for " ..."
 			$newlen = strrpos(substr($str, 0, $chop), ' ');		// find the last space before limit
+			if ($newlen == 0)
+				$newlen = $chop;														// if there is no space in $chpo letters, use the whole thing
 			return substr($str, 0, $newlen) . " ...";
 		}
 		function massageDbText($txt) 
