@@ -228,6 +228,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		return true;
 	}
 	
+	function makeWpPostLink($wpid) { return sprintf("%s/?p=%s", WP_PATH, $wpid);	}
 	
 	function build ($type = '', $key = '') 
 	{
@@ -425,6 +426,7 @@ class OneTripLog extends ViewWhu
 				}
 				// $row['day_post'] = $iPost;
 				$row['day_post'] = $pName;
+				$row['story_link'] = $this->makeWpPostLink($prevPostId);
 				$row['POST_CLASS'] = '';
 			}
 			else
@@ -952,6 +954,7 @@ class OneDay extends ViewWhu
 		if ($wpid > 0)
 			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
 		$this->template->set_var("VIS_CLASS_TXT", $day->hasStory() ? '' : "class='hidden'");
+		$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
 		
 		$this->template->set_var('DAY_DESC', $day->dayDesc());
 		$this->template->set_var('NIGHT_DESC', $day->nightDesc());
@@ -1158,7 +1161,8 @@ class TripStories extends ViewWhu
 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
 		{ 
 			$post = $this->build('Post', $wpids[$i]);
-			$row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
+			// $row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
+			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
 			
 			$str = Properties::prettyDate($wpdates[$i][0]);
 			$str .= " - ";
@@ -1304,7 +1308,8 @@ class SearchResults extends ViewWhu
 		for ($i = 0, $str = '&bull; ', $rows = array(); $i < $txts->size(); $i++)
 		{
 			$txt = $txts->one($i);
-			$str .= sprintf("<a href='?page=txt&type=wpid&key=%s'>%s</a> &bull; ", $txt->wpid(), $txt->title());
+			$str .= sprintf("<a href='%s'>%s</a> &bull; ", $this->makeWpPostLink($txt->wpid()), $txt->title());
+			// $str .= sprintf("<a href='?page=txt&type=wpid&key=%s'>%s</a> &bull; ", $txt->wpid(), $txt->title());
 		}	
 		$this->template->set_var('TXTLIST', $str);
 

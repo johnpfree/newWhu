@@ -4,7 +4,7 @@
 <hr />
 	<div class="row">
 	  <div class="col-sm-8">
-			<a class="story-title" href="?page=txt&type=wpid&key={STORY_ID}">{STORY_TITLE}</a>
+			<a class="story-title" href="{STORY_LINK}">{STORY_TITLE}</a>
 		</div>
 	  <div class="col-sm-4">
 			<p class="story-dates">{STORY_DATES}</p>

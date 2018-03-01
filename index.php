@@ -17,6 +17,11 @@ if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'ajax')  $noDbg = TRUE;	// 
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 
+// if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == 'http://www1.voanews.com/english/news/american-life/High-Costs-Drive-Americans-Overseas-for-Medical-Help-90226457.html')
+// {
+// 	header("Location: http://cloudyhands.com/wp/?p=10");
+// }
+
 // ---------------- Properties Class, to add useful functions -------------
 
 class WhuProps extends Properties

@@ -833,7 +833,6 @@
 					'next' 	 	=> get_permalink(get_adjacent_post(false,'',false)),
 				);
 			endwhile;
-			dumpVar(sizeof($posts), "N posts");
 			return $posts;
 		}
 		// straight outta Wordpress:
