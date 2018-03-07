@@ -818,7 +818,7 @@
 			// invoke the WP loop right here and now!
 			define('WP_USE_THEMES', false);
 			dumpVar($wpa, "doWPQuery IN");
-			require(WP_PATH . 'wp-load.php');											// Include WordPress			
+			require(WP_PATH . '/wp-load.php');											// Include WordPress			
 
 			$the_query = new WP_Query( $wpa );
 			// dumpVar($the_query, "the_query");

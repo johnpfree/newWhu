@@ -17,11 +17,6 @@ if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'ajax')  $noDbg = TRUE;	// 
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
 
-// if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == 'http://www1.voanews.com/english/news/american-life/High-Costs-Drive-Americans-Overseas-for-Medical-Help-90226457.html')
-// {
-// 	header("Location: http://cloudyhands.com/wp/?p=10");
-// }
-
 // ---------------- Properties Class, to add useful functions -------------
 
 class WhuProps extends Properties
@@ -111,7 +106,20 @@ $defaults = array(
 
 $props = new WhuProps($defaults);		// default settings
 $props->set($_POST);						// absorb web parms
-$props->set($_GET);							// ... but REQUEST has to much junk
+$props->set($_GET);							// ... but REQUEST has too much junk
+
+$curpage = $props->get('page');
+$curtype = $props->get('type');
+
+if ("$curpage$curtype" == 'txtdate')								// easiest way to handle these links
+{
+	$day = new WhuDbDay($props, $props->get('key'));
+	$link = ViewWhu::makeWpPostLink($day->postId());
+	header("Location: $link");
+}
+else if ($curpage == 'txt')
+	jfdie("this page should go to wordpress");
+
 $props->dump('props');
 
 // grab form requests and package them for the factory below
@@ -148,9 +156,6 @@ else if ($props->isProp('search_places')) {
 else if ($props->isProp('search_types')) {	
 	$props->pagetypekey('map', 'near', $props->get('search_types'));	
 }
-
-$curpage = $props->get('page');
-$curtype = $props->get('type');
 
 if ($curpage == 'ajax') {
 	$page = new HomeHome($props);							// need a simple page object to run build()

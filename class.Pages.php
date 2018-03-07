@@ -228,7 +228,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		return true;
 	}
 	
-	function makeWpPostLink($wpid) { return sprintf("%s/?p=%s", WP_PATH, $wpid);	}
+	static function makeWpPostLink($wpid) { return sprintf("%s/?p=%s", WP_PATH, $wpid);	}
 	
 	function build ($type = '', $key = '') 
 	{
