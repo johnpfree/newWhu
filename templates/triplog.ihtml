@@ -37,7 +37,7 @@
 <style type="text/css" media="screen">
 
 	@media (max-width: 700px)  {	
-		.smalldev { text-align: right;	white-space: nowrap;	}
+		.smalldev { text-align: right; white-space: nowrap;	}
 		.largedev { display: none; }
 	}
 	@media (min-width: 701px)  {	

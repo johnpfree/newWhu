@@ -27,9 +27,10 @@
 			$txt = (($txt == "")  ? "dump " : "$txt") . " -- class=" . get_Class($this);
 			 dumpVar($this->data, $txt);
 		 }
-		function assert($val, $txt = "Assert FAILED") {
-			if ($val === true) return;
-			jfTrace($txt);
+		function assert($val, $txt = "Assert FAILED") 
+		{
+			if ($val !== false) return;
+			jfdie($txt);
 		}
 		function assertIsCollection()  { $this->assert($this->isCollection, "NOT a Collection");  }
 
@@ -164,13 +165,14 @@
 	
 	class WhuDbTrip extends WhuThing 
 	{
-		var $lazyWpCat = 0;
 		function getRecord($key)
 		{
 			if ($this->isTripRecord($key))
 				return $key;
 
-			return $this->getOne("select * from wf_trips where wf_trips_id=$key");	
+			$rec = $this->getOne("select * from wf_trips where wf_trips_id=$key");
+			$this->assert($rec, "WhuDbTrip failed for id=$key");
+			return $rec;
 		}
 
 		function id()					{ return $this->dbValue('wf_trips_id'); }
@@ -817,11 +819,11 @@
 		{
 			// invoke the WP loop right here and now!
 			define('WP_USE_THEMES', false);
-			dumpVar($wpa, "doWPQuery IN");
+			// dumpVar($wpa, "doWPQuery IN");
 			require(WP_PATH . '/wp-load.php');											// Include WordPress			
 
 			$the_query = new WP_Query( $wpa );
-			// dumpVar($the_query, "the_query");
+
 			$posts = array();
 			while ( $the_query->have_posts() ) : $the_query->the_post();									// The Loop
 				$posts[] = array(
@@ -846,7 +848,7 @@
 	class WhuPosts extends WhuPost 
 	{
 		var $isCollection = true;
-		function getRecord($parm)	// key = trip id
+		function getRecord($parm)
 		{
 			if ($this->isTextSearch($parm))						// for text search
 			{
@@ -877,9 +879,9 @@
 		function camera()		{ return $this->dbValue('wf_images_origin'); }
 		function cameraDesc()
 		{
-			$names = array('Canon650' => 'my good ole Canon 650', 'Ericsson' => 'Ericsson W350i phone', 
-											'CanonG9X' => 'my state of the art Powershot G9X', 
-											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', );
+			$names = array('Canon650' => 'good ole Canon 650', 'Ericsson' => 'Ericsson W350i phone', 
+											'CanonG9X' => 'state of the art Powershot G9X', 
+											'iPhone4S' => 'iPhone 4S', 'iPhone6S' => 'iPhone 6S', 'iPhone7' => 'iPhone 7' );
 			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
 		}
 		function cameraDoesGeo() { 	return (strpos('iPhone', $this->camera()) !== false); }		// only iPhones do geolocation

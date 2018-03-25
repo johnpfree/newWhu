@@ -186,8 +186,7 @@ switch ("$curpage$curtype")
 	case 'picid':				// legacy, still used in Wordpress e.g.
 	case 'visid':				$page = new OneVisual($props);		break;	
 
-	case 'logid':				$page = new OneTripLog($props);		break;	
-	
+	case 'logid':				$page = new OneTripLog($props);		break;		
 	case 'mapid':				$page = new OneMap($props);			break;	
 	case 'mapdate':			$page = new DateMap($props);			break;	
 	case 'mapspot':			$page = new SpotMap($props);			break;	

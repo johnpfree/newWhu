@@ -19,7 +19,7 @@
 		<dd>{NIGHT_DESC}</dd> 
 	</dl>
 
-	<p {VIS_CLASS_TXT}>My story for this day is in the post: <span><a href="{STORY_LINK}#{DATE}">{STORY}</a></span>.</p>
+	<p {VIS_CLASS_TXT}>Story for today: <span><a href="{STORY_LINK}#{DATE}">{STORY}</a></span>.</p>
 
 {PAGER_BAR}
 	

@@ -1,72 +1,84 @@
+<!-- <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+<script src="js/vendor/jquery.mobile-1.4.5.js"></script> -->
+
+<!-- <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.css"> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.js"></script>
+
+
 <script type="text/javascript">
 $(document).ready(function() {
 	
-	$(document).keydown(function(event) { 	// $(document).keypress(function(event) - in Chrome, keydown works, keypress doesn't
+  $("#main_item" ).on( "swipeleft", swipeLeft ); // tap, click
+  // $("div#pichead" ).on( "swipe", swipeHandler ); // tap, click
+  // $("div#thepic" ).on( "swipeleft", swipeLeft ); // tap, click, swipe
+	
+	$(document).keydown(function(event) {
 		console.log("keyCode:", event.keyCode);
 		if (event.keyCode == 37)
 			window.location="?page={PAGER_PAGE}&type={PAGER_TYPE}&key={P_KEY}";
 		else if (event.keyCode == 39)
 			window.location="?page={PAGER_PAGE}&type={PAGER_TYPE}&key={N_KEY}";
-	});	
+	});
+	console.log('mobile loaded?', $.mobile, 'x');	
 });
+function swipeLeft(e) {
+	console.log('swipeLeft', e);
+	window.location="?page={PAGER_PAGE}&type={PAGER_TYPE}&key={P_KEY}";
+}
 </script>
 
 <div class="jumbotron jumbotron-fluid" id="main_item">
 
 	<div class="row" id="pichead">
-		<div class="col-lg-9">
+		<div class="col-sm-8">
 			<h3>{VIS_NAME}</h3>
 		</div>
-		<div class="col-lg-3">
+		<div class="col-sm-4">
 			<h3><a href="?page=pics&type=date&key={DATE}">{COLLECTION_NAME}</a></h3>
 		</div>
-	</div>	      	
+	</div>
+	
+	<div class="row" id="thepic">
+		<img class="{USE_PIC} img-rounded img-responsive" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />	
+		<iframe class="{USE_VID}" 
+			src="https://www.youtube.com/embed/{VID_TOKEN}?list=PLSQR0xDCyqtn4pZPocx92bcmrOBYS-wmi&controls=0&showinfo=0" frameborder="0" allowfullscreen>
+		</iframe>		
+	</div>
 
-	<img class="{USE_PIC} img-rounded img-responsive" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />	
-	<iframe class="{USE_VID}" 
-		src="https://www.youtube.com/embed/{VID_TOKEN}?list=PLSQR0xDCyqtn4pZPocx92bcmrOBYS-wmi&controls=0&showinfo=0" frameborder="0" allowfullscreen>
-	</iframe>
 	
 {PAGER_BAR}
-	<div class="panel-group">
-	  <div class="panel panel-default">
-	    <div class="panel-heading" data-toggle="collapse" href="#collapse1">
-	      <h4 class="panel-title">
-	        <a data-toggle="collapse" href="#collapse1">Details</a>
-	      </h4>
-	    </div>
-	    <div id="collapse1" class="panel-collapse collapse">
-	      <div class="panel-body">
-					<div class="row" id="infotable">
-						<div class="col-sm-8">
-							<p>{PICFILE_NAME} &ndash; <i>taken on</i> <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> <i>at</i> <b>{PIC_TIME}</b> <i>local time with my</i> <b>{PIC_CAMERA}</b></p>
-							<p class="{VID_SPOT_VIS}">This video was taken at <a href="?page=spot&type=id&key={SPOT_ID}">{SPOT_NAME}</a>.</p>
-							<p class="{GPS_VIS}">geolocation: {GPS_LAT}, {GPS_LON}</p>
-							<hr />
-							<i>keywords:</i><br />
-							&bull; 
-				<!-- BEGIN rows -->
-							<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 
-				<!-- END rows -->			
-						</div>
-						<div class="col-sm-4">
-							{MAP_INSET}
-						</div>
-					</div>	      	
-	      </div>
-	    </div>
-	  </div>
+	<div class="row">
+		<div class="col-sm-9">
+			<ul id="picdetails">
+				<li>Taken on: <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> at <b>{PIC_TIME}</b>,</li>
+				<li>with my: <b>{PIC_CAMERA}</b></li>
+				<li class="{GPS_VIS}">geolocation: <b>{GPS_LAT}, {GPS_LON}</b></li>
+				<li>
+					keywords:<br />
+					&bull; 
+		<!-- BEGIN rows -->
+					<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 
+		<!-- END rows -->
+				</li>
+				<li class="{STORY_VIS}">Story for today: <span><a href="{STORY_LINK}#{DATE}">{STORY}</a></span></li>
+				<li>{PICFILE_NAME}</li>			
+			</ul>
+    </div>
+		<div class="col-sm-3">
+			{MAP_INSET}
+		</div>
 	</div>
 </div>
 
 <style type="text/css" media="screen">
-	#pichead div {
+	#thepic {
+		border: 1px solid #999;
+		padding: 1em;
 	}
 	#pichead div:nth-child(2) {	
 		text-align: right;	
 		vertical-align: middle;
 	}
-
 	#main_item img {
 		margin: 0 auto;
 		width: 100%;
@@ -75,14 +87,6 @@ $(document).ready(function() {
 		width: 100%;
 		min-height: 700px;
 	}
-	.panel-default>.panel-heading { 
-		background-color: {BOLDCOLOR};
-		color: white;
-	}
+/*	ul { padding-left: 1em; }*/
+	#picdetails b { white-space: nowrap; }
 </style>
-<script type="text/javascript">
-$('#collapse1').on('shown.bs.collapse', function () {
-	console.log('shown.bs.collapse');
-	map._onResize();			// force window to completely render
-})
-</script>

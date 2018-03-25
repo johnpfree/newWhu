@@ -12,7 +12,7 @@
 		<link rel="icon" type="image/png" sizes="16x16 32x32" href="resources/favicon/boxes.png">
 
 		<link rel="stylesheet" href="css/normalize.min.css">		
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="js/main.js"></script>    
 
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">

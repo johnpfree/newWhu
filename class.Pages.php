@@ -9,7 +9,8 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	const pals =	array(
 			"search" => array('boldcolor' => '#D76824', 'bordercolor' => '#999999', 'linkcolor' => '#6D1D00', 'linkhover' => '#87371A', 'bbackcolor' => '#f4e3d9', 'backcolor' => '#C1B0A6'),
 			"spot" => 	array('boldcolor' => '#464646', 'bordercolor' => '#d0d0d0', 'linkcolor' => '#54736A', 'linkhover' => '#b0b0b0', 'bbackcolor' => '#f0f0f0', 'backcolor' => '#d5dFdF'),
-			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#FFE8BB', 'backcolor' => '#FFFFD4'),
+		// FFE8BB
+			"txt" => 		array('boldcolor' => '#4E3508', 'bordercolor' => '#684F22', 'linkcolor' => '#81683B', 'linkhover' => '#9B8255', 'bbackcolor' => '#fffff0', 'backcolor' => '#FFFFD4'), 
 			"map" => 		array('boldcolor' => '#6C7200', 'bordercolor' => '#868C1A', 'linkcolor' => '#33A672', 'linkhover' => '#afd6b1', 'bbackcolor' => '#dbecdc'), 
 			"pic" => 		array('boldcolor' => '#4B3E0C', 'bordercolor' => '#655826', 'linkcolor' => '#1B4F24', 'linkhover' => '#6A5835', 'bbackcolor' => '#FFFFE7'),
 			"log" =>		array('boldcolor' => '#004151', 'bordercolor' => '#007383', 'linkcolor' => '#005A6A', 'linkhover' => '#33A6B6', 'bbackcolor' => '#E5FFFF'), 
@@ -374,14 +375,13 @@ class AllTrips extends ViewWhu
 		$loop->do_loop($rows);		
 	}
 }
-
 class OneTripLog extends ViewWhu
 {
 	var $file = "triplog.ihtml";   
 	function showPage()	
 	{
 		$tripid = $this->key;
- 	 	$trip = $this->build('DbTrip', $tripid);		
+ 	 	$trip = $this->build('DbTrip', $tripid);	
 		$days = $this->build('DbDays', $tripid);	
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
 
@@ -857,6 +857,17 @@ class OneVisual extends ViewWhu
 		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
 		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
 		$this->template->set_var('PICFILE_NAME', $vis->filename());
+		
+ 	 	$day = $this->build('DayInfo', $date);
+		$this->template->set_var('WPID', $wpid = $day->postId());
+		if ($wpid > 0)
+		{
+			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+			$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
+			$this->template->set_var("STORY_VIS", '');
+		}
+		else
+			$this->template->set_var('STORY_VIS', 'hideme');
 		
 		if ($vis->isImage())	// ==================================== picture ==============
 		{
