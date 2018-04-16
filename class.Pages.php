@@ -619,7 +619,7 @@ class CatGallery extends Gallery
 <<<HTML
 			<div class="row">
 				<div class="col-sm-12">
-					A selecton of %s out of %s &nbsp; &bull; &nbsp; 
+					A selection of %s out of %s &nbsp; &bull; &nbsp; 
 					<a href='?page=pics&type=cat&key=%s'>reselect<span class="genericon genericon-shuffle"></span></a>
 				</div>
 			</div>
@@ -1148,6 +1148,8 @@ class TripStories extends ViewWhu
 		
 		// collect unique Post ids
 		$days = $this->build('DbDays', $tripid);
+		
+		// whiffle thru the days, 
 		for ($i = 0, $wpids = $wpdates = $wpdate = $pics = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);			
@@ -1173,13 +1175,15 @@ class TripStories extends ViewWhu
 		{ 
 			$post = $this->build('Post', $wpids[$i]);
 			// $row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
+						
 			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
 			
-			$str = Properties::prettyDate($wpdates[$i][0]);
+			$str = sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][0], Properties::prettyDate($wpdates[$i][0]));
 			$str .= " - ";
-			$str .= Properties::prettyDate($wpdates[$i][1]);
+			$str .= sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][1], Properties::prettyDate($wpdates[$i][1]));
 			$row['story_dates'] = $str;
-			$row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
+			$row['story_excerpt'] = $post->excerpt();
+			// $row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
 
 			if (is_null($pics[$i]))
 				$row['use_image']  = 'hideme';

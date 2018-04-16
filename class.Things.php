@@ -799,6 +799,7 @@
 		function wpid()				{ return $this->data[0]['wpid']; }
 		function title()			{ return $this->data[0]['title']; }
 		function content()		{ return $this->data[0]['content']; }		
+		function excerpt()		{ return $this->data[0]['excerpt']; }		
 		function date()				{ return $this->data[0]['date']; }			// NOTE! this is the wordpress date, NOT the dates that ref this post
 		function firstDate()	{	return $this->dates()[0]['wf_days_date'];	}	// first date for post - this is the one ypu want		
 		
@@ -819,21 +820,26 @@
 		{
 			// invoke the WP loop right here and now!
 			define('WP_USE_THEMES', false);
-			// dumpVar($wpa, "doWPQuery IN");
+			dumpVar($wpa, "doWPQuery IN");
 			require(WP_PATH . '/wp-load.php');											// Include WordPress			
 
 			$the_query = new WP_Query( $wpa );
 
 			$posts = array();
 			while ( $the_query->have_posts() ) : $the_query->the_post();									// The Loop
+			{
+				$c= $this->the_content();						// the_content() does NOT return a string, so copy/modify below to do so
 				$posts[] = array(
 					'wpid'		=> get_the_ID(),
 					'title' 	=> the_title('', '', false),					// false == return a string
 					'date'		=> the_date('Y-m-d', '', '', false), 	// false == return a string
-					'content' => $this->the_content(),							// the_content() does NOT return a string, so copy/modify below to do so
+					'content' => $c,
+					// 'excerpt'	=> wp_trim_words($c, 60, ' ...' ),
+					'excerpt'	=> get_the_excerpt(),
 					'prev' 	 	=> get_permalink(get_adjacent_post(false,'',true)),			// remember, WP's default is newest to oldest
 					'next' 	 	=> get_permalink(get_adjacent_post(false,'',false)),
 				);
+			}
 			endwhile;
 			return $posts;
 		}

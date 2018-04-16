@@ -117,11 +117,25 @@ if ("$curpage$curtype" == 'txtdate')								// easiest way to handle these links
 	$link = ViewWhu::makeWpPostLink($day->postId());
 	header("Location: $link");
 }
+
 else if ($curpage == 'txt')
-	jfdie("this page should go to wordpress");
+	jfdie("this page - $curpage$curtype - should go to wordpress");
+
+else if ($curpage == 'ajax') {
+	$page = new HomeHome($props);							// need a simple page object to run build()
+	$curkey = $props->get('key');
+	switch ("$curtype$curkey") 
+	{
+		case 'searchSpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
+		case 'searchSpType':		$ajax = new SpotType();			echo $ajax->result($page);	exit;
+		case 'searchSpKey':			$ajax = new SpotKey();			echo $ajax->result($page);	exit;
+		case 'searchPicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
+		case 'searchPicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
+	}
+	jfDie("unknown key-$key");
+}
 
 $props->dump('props');
-
 // grab form requests and package them for the factory below
 if ($props->isProp('do_text_search'))	{				// text search
 	$props->pagetypekey('results', 'text', $props->get('search_text'));
@@ -157,19 +171,8 @@ else if ($props->isProp('search_types')) {
 	$props->pagetypekey('map', 'near', $props->get('search_types'));	
 }
 
-if ($curpage == 'ajax') {
-	$page = new HomeHome($props);							// need a simple page object to run build()
-	$curkey = $props->get('key');
-	switch ("$curtype$curkey") 
-	{
-		case 'searchSpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
-		case 'searchSpType':		$ajax = new SpotType();			echo $ajax->result($page);	exit;
-		case 'searchSpKey':			$ajax = new SpotKey();			echo $ajax->result($page);	exit;
-		case 'searchPicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
-		case 'searchPicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
-	}
-	jfDie("unknown key-$key");
-}
+$curpage = $props->get('page');	// again! in case the blocks above modified them
+$curtype = $props->get('type');
 
 switch ("$curpage$curtype") 
 {
