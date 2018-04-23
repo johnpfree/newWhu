@@ -211,7 +211,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	function addDollarSign($s)	{ return "&#36;$s"; }
 	
 	// 	array('zoom' => 7, 'lat' => $center->lat, 'lon' => $center->lon, 'name' => 'Center of the area for this story');
-	function setLittleMap($coords)
+	function setLittleMap($coords, $weathermark = 'false')
 	{
 // dumpVar($coords, "setLittleMap");
 		if (!isset($coords['lat']))
@@ -221,7 +221,8 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 					"<i class=smaller><br />This camera doesn't do geolocation.</i>");
 			return false;
 		}
-		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');
+		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');		
+		$this->template->set_var('WEATHER_MARK', $weathermark);
 		foreach ($coords as $k => $v) 
 		{
 			$this->template->set_var("PT_$k", addslashes($v));
@@ -517,24 +518,20 @@ class Gallery extends ViewWhu
 		$this->template->set_var('GAL_TITLE', $this->galleryTitle($this->key));
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		
 		$this->doNav();			// do nav (or not)
 
 		$visuals = $this->getPictures($this->key);
-		
-		// $path = $_SERVER['HTTP_HOST'] . '/~jf/cloudyhands.com/';
-		// // dumpVar($path, "path");
-		// // exit;
-		// $this->template->set_var('REL_PICPATH', $path);
-		$this->template->set_var('REL_PICPATH', iPhotoURL);
-		
+				
 		for ($i = 0, $rows = array(), $fold = ''; $i < $visuals->size(); $i++) 
 		{
-			// dumpVar($i, "i");
 			$visual = $visuals->one($i);
+			// dumpVar(sprintf("id %s, vid? %s: %s", $visual->id(), $visual->dbValue('wf_resources_id'), $visual->caption()), "$i Gallery");
 			
 			if ($visual->isVideo())
 			{
+				continue;			// Apr 2018 no videos in gallery for now
 				$vid = $this->build('Video', $visual);
 				// dumpVar($vid->token(), "vid->token()");
 				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
@@ -547,7 +544,7 @@ class Gallery extends ViewWhu
 			if ($fold == '')
 		 		$this->template->set_var('WF_IMAGES_PATH', $fold = $pic->folder());
 			
-			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'USE_VIDTMB' => 'hideme');
+			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'PIC_DESC' => $pic->caption(), 'USE_VIDTMB' => 'hideme');
 			
 			// $row['pano_symb'] = $pic->isPano() ? '<strong><img src="resources/pano/pano0.png" width="48" height="48" alt="panorama"></strong>' : '';
 			$row['pano_symb'] = $pic->picPanoSym();
@@ -588,7 +585,7 @@ class DateGallery extends Gallery
 	function doNav()
 	{
 		$date = $this->build('DbDay', $this->key);
-		$pageprops = array();
+		$pageprops = array('middle' => true);
 		$pageprops['plab'] = Properties::prettyDate($pageprops['pkey'] = $date->previousDayGal(), "M");
 		$pageprops['nlab'] = Properties::prettyDate($pageprops['nkey'] = $date->nextDayGal(), "M");
 		$pageprops['mlab'] = $this->galleryTitle($this->key);
@@ -1122,8 +1119,7 @@ class OneSpot extends ViewWhu
 					$row['use_binpic'] = 'hideme';
 					$row['use_image']  = '';
 				}
-					// $row['use_binpic'] = 'hideme';
-					// $row['use_image']  = '';
+
 				$row['pano_symb'] = $visual->picPanoSym();
 				$rows[] = $row;
 			}
@@ -1194,7 +1190,9 @@ class TripStories extends ViewWhu
 				$row['use_image']  = '';
 			}
 			$rows[] = $row;
-		}          
+		}      
+		// dumpVar($rows, "rows");
+		    
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);
 		$this->tripLinkBar('txts', $tripid);		

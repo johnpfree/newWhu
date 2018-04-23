@@ -1,11 +1,8 @@
 <div class="jumbotron jumbotron-fluid" id="main_item">
 	
 	<div class="row" id="pichead">
-		<div class="{DATE_GAL_VIS} col-lg-9">
+		<div class="{DATE_GAL_VIS} col-lg-12">
 			<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
-		</div>
-		<div class="{DATE_GAL_VIS} col-lg-3">
-			<h3>{TODAY}</h3>
 		</div>
 		<div class="{CAT_GAL_VIS} col-lg-12">
 			<h1>{TRIP_NAME}</h1>
@@ -14,70 +11,103 @@
 	
 	<div>{PAGER_BAR}</div>
 
-	<!-- <h2>{GAL_COUNT} Pictures for: {GAL_TITLE}</h2> -->
-	<div class="clearfix" id="thegal">
-		<!-- BEGIN rows -->
-		<p>
-			<a href="?page=vis&type=id&key={PIC_ID}">
-			<!-- <a href="?page={VIS_PAGE}&type={GAL_TYPE}&key={GAL_KEY}&id={PIC_ID}"> -->
-				<img class="img-rounded img-responsive squareme {USE_IMAGE}" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}' border="0" />
-				<img class="img-rounded img-responsive squareme {USE_BINPIC}" src="data:image/jpg;base64,{BINPIC}">
-				<img class="img-rounded img-responsive squareme {USE_VIDTMB}" src='http://img.youtube.com/vi/{VID_TOKEN}/0.jpg' border="0" />				
-			</a>		
-			{PANO_SYMB}
-		</p>
-		<!-- END rows -->
+	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/demo.css" />
+	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/elastislide.css" />
+
+	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.elastislide.js"></script>
+	<script type="text/javascript" src="./ResponsiveImageGallery/js/gallery.js"></script>
+
+	<script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">	
+	<div class="rg-image-wrapper">
+		{{if itemsCount > 1}}
+			<div class="rg-image-nav">
+				<a href="#" class="rg-image-nav-prev">Previous Image</a>
+				<a href="#" class="rg-image-nav-next">Next Image</a>
+			</div>
+		{{/if}}
+		<div class="rg-image"></div>
+		<div class="rg-loading"></div>
+		<div class="rg-caption-wrapper">
+			<div class="rg-caption" style="display:none;">
+				<p></p>
+			</div>
+			<div class="rg-deets" style="display:none;">
+				<p></p>
+			</div>
+		</div>
 	</div>
+	</script>
+
+<style type="text/css" media="screen">
+	body {
+		background-color: #FFFFE7;
+		color: #684F22;
+	}
+	.es-carousel-wrapper, .es-carousel {
+		background-color: transparent;
+	}
+	#rg-gallery {}	
+	.rg-caption p {
+		font-size: 140%;
+		line-height: 1.3;
+		color: #4E3508;
+		text-transform: none;
+	}
+	.rg-deets {
+		text-align:center;
+		position:relative;
+	}
+	.jumbotron p {
+     margin-bottom: 0;
+	}
+</style>
+
+		<div class="clearfix" id="thegal">
+			<div class="content">
+				<div id="rg-gallery" class="rg-gallery">
+					<div class="rg-thumbs">
+						<!-- Elastislide Carousel Thumbnail Viewer -->
+						<div class="es-carousel-wrapper">
+							<div class="es-nav">
+								<span class="es-nav-prev">Previous</span>
+								<span class="es-nav-next">Next</span>
+							</div>
+							<div class="es-carousel">
+								<ul>
+	<!-- BEGIN rows -->
+    <li><a href="#"><img src="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" data-large="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}"  data-id="{PIC_ID}" data-description="{PIC_DESC}"></a></li>
+	<!-- END rows -->
+								</ul>
+							</div>
+						</div>
+						<!-- End Elastislide Carousel Thumbnail Viewer -->
+					</div><!-- rg-thumbs -->
+				</div><!-- rg-gallery -->
+			</div><!-- content -->
+		</div><!-- thegal -->
+
 {LINK_BAR}
 </div>
 
 <style type="text/css" media="screen">
-
+	
+	#middle { 
+		font-size: 22px;
+		font-family: "Pacifico", Georgia, "Times New Roman", serif;
+	}
+	
 	#main_item h1 a 			{ color: {BOLDCOLOR}; }
 	#main_item h1 a:hover { color: {LINKCOLOR}; }
 
-h1>i.small { color: {BOLDCOLOR}; }
-#pichead div {}
-#pichead div:nth-child(2) {	
-	text-align: right;
-	vertical-align: bottom;	
-	padding-top: 13px;
-}
+.es-carousel ul li { height: inherit; 	}
+.es-carousel ul li.selected a { border: none; }
+/*.es-carousel ul li.selected a { border-color: #1B4F24; }*/
+/*.es-carousel ul li.selected a { border-color: #b30000; }*/
 
-#thegal>p {
-	float: left;
-	text-align: center;
-	position: relative;
-}
-#thegal>p img {
-	border: 1px solid #3A5950;		
-}
-.squareme {	object-fit: cover; }
-
-#thegal>p strong {
-  top: 8px;
-  right: 16px;
-/*	position: absolute;
-	color: #f00;
-	font-size: 200%;*/
-}
-
-#shuffle-but {
-	text-align: right;
-}
-
-@media (max-width: 785px)  {	
-	#thegal>p { width: 78px; }
-	.squareme {
-		width: 76px;
-		height: 76px;
-	}
-}
-@media (min-width: 701px)  {	
-	#thegal>p { width: 168px; }
-	.squareme {
-		width: 160px;
-		height: 160px;
-	}
-}
 </style>
+    <!-- <li><a href="#"><img src="data:image/jpg;base64,{BINPIC}" data-id="{PIC_ID}" data-large="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" data-description="{PIC_DESC}"></a></li> -->
+
+

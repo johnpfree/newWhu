@@ -23,6 +23,9 @@
 
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		
+		<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow&v1' rel='stylesheet' type='text/css' />
+		<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css' />
+		
 		<style type="text/css" media="screen">
 		/* ================================= 
 		 CSS for color themes (needs to be in a file know tot he template engine)
@@ -32,7 +35,8 @@
 				color: {BODYCOLOR};
 				background-color: {BBACKCOLOR};
 /*			  font: 16px/26px Roboto, Arial, sans-serif;*/
-			  font: 16px/26px skolar-1, skolar-2, Georgia, "Times New Roman", serif;
+/*			  font: 16px/26px skolar-1, skolar-2, Georgia, "Times New Roman", serif;*/
+				font: 16px/26px 'PT Sans Narrow', Arial, sans-serif;
 			}
 			h1,h2,h3,h4,h5,h6,b,strong {	
 				color: {BOLDCOLOR};

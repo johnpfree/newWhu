@@ -7,12 +7,15 @@
 <script type="text/javascript" charset="utf-8">
 L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
 
-var map = L.mapbox.map('mapinsert', 'mapbox.streets')
-		.setView([{PT_lat}, {PT_lon}], 12);
+console.log('type0', (typeof map == 'object'));
 
+if (typeof map != 'object') {
+	var map = L.mapbox.map('mapinsert', 'mapbox.streets')
+			.setView([{PT_lat}, {PT_lon}], 12);
+	}
 map._onResize();			// force window to completely render
 
-console.log(map);
+console.log('mapbox.map', map);
 
 var markers = [
 	{
