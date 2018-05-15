@@ -185,9 +185,15 @@ switch ("$curpage$curtype")
 	case 'picsid':			$page = new TripPictures($props);		break;	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
-	case 'picsvids':		$page = new VideoGallery($props);		break;	
 	case 'picid':				// legacy, still used in Wordpress e.g.
 	case 'visid':				$page = new OneVisual($props);		break;	
+
+	case 'vidshome':		$page = new VideoGallery($props);		break;	
+	case 'vidsid':			$page = new TripVideos($props);		break;	
+	case 'vidid':				$page = new OneVideo($props);		break;	
+	
+	case 'vidsdate':		$page = new DateVideos($props);		break;	
+	case 'vidscat':			$page = new CatVideos($props);		break;	
 
 	case 'logid':				$page = new OneTripLog($props);		break;		
 	case 'mapid':				$page = new OneMap($props);			break;	

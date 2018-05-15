@@ -38,7 +38,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 
 		// set active menu
 		$page = $this->props->get('page');
-		foreach (array('home', 'trips', 'spots', 'about', 'search') as $k => $v) 
+		foreach (array('home', 'trips', 'spots', 'about', 'vids', 'search') as $k => $v) 
 		{
 			$this->template->set_var("ACTIVE_$v", ($page == $v) ? "active" : '');
 		}
@@ -168,10 +168,10 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function pagerBar($page, $type, $settings = array())
 	{
-		$props = array_merge(array('middle' => false, 'pkey' => 0, 'nkey' => 0, 'plab' => "previous", 'nlab' => "next"), $settings);
+		$props = array_merge(array('pager_tag' => 'PAGER_BAR', 'middle' => false, 'pkey' => 0, 'nkey' => 0, 'plab' => "previous", 'nlab' => "next"), $settings);
 		// dumpVar($props, "pager props");
 		
-		$ok = $this->template->setFile('PAGER_BAR', 'pagerbar.ihtml');
+		$ok = $this->template->setFile($props['pager_tag'], 'pagerbar.ihtml');
 
 		$this->template->set_var("PAGER_PAGE", $page);
 		$this->template->set_var("PAGER_TYPE", $type);
@@ -245,6 +245,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			if (class_exists($className)) {
 				return new $className($this->props, $key);
 			} else {
+				dumpVar( debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), "");
 				throw new Exception("Thing type $className not found.");
 			}
 		}
@@ -372,6 +373,7 @@ class AllTrips extends ViewWhu
 			// if ($trip->hasGoogleMap())	$row["TRIP_NAME"] .= "-G";
 			$rows[] = $row;
 		}
+		// dumpVar($rows, "rows");
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => "{$onerow}_row", 'noFields' => true));                                
 		$loop->do_loop($rows);		
 	}
@@ -470,16 +472,19 @@ class TripPictures extends ViewWhu
 		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);
-			$pics = $day->pics();		
-			$row = array('gal_date' => $date = $day->date(), 'date_count' => $dc = $pics->size());
-			
-			if ($dc == 0 && $dc == 0)		// all done if there's no pix or vids
+			$row = array('gal_date' => $date = $day->date());
+			$pics = $this->build('Pics', array('date' => $date));
+			$row['date_count'] = $dc = $pics->size()	;
+								
+			if ($dc == 0)		// all done if there's no pix or vids
 				continue;
 			
-			// start with the trip collection and return the collection for that day
-			// $dayvids = $this->build('Vids', array('date' => $day->date(), 'collection' => $tripvids));
-
-			$row['vid_count'] = ($nvid = $day->hasVideos()) ? '|' . $nvid : '';
+			if (($nvid = $day->hasVideos()) > 0)
+			{
+				$row['vid_link'] = sprintf(" &bull; <a href='?page=vids&type=date&key=%s'>video%s</a>", $date, (($nvid > 1) ? 's' : ''));
+			}
+			else 
+				$row['vid_link'] = '';
 			
 			$row['nice_date'] = Properties::prettyShortest($date);
 			$pic = $pics->favored();		// returns one picture
@@ -507,6 +512,129 @@ class TripPictures extends ViewWhu
  		$this->tripLinkBar('pics', $this->props->get('key'));
 	}
 }
+class VideoGallery extends ViewWhu
+{
+	var $file = "videos.ihtml";   
+	var $galtype = "vid";
+	var $message = '';
+	function showPage()	
+	{
+		parent::showPage();
+		
+		$videos = $this->build('Visuals', (array('vid' => 'all'))); 	
+		// dumpVar($videos->data[0], "vids->data[0]");
+		
+		for ($i = 0, $rows = array(), $fold = ''; $i < $videos->size(); $i++) 
+		{
+			$video = $videos->one($i);
+			// dumpVar(sprintf("id %s, vid? %s: %s", $video->id(), $video->dbValue('wf_resources_id'), $video->caption()), "$i Gallery");
+			
+			$vid = $this->build('Video', $video);
+			// $vid->dump('VideoGallery');
+			// dumpVar($vid->token(), "vid->token()");
+			$row = array('PIC_ID' => $vid->id(), 'VID_TOKEN' => $vid->token(), 'VID_CAPTION' => $vid->caption());
+			$rows[] = $row;	
+
+			$this->collectHilites($i, $vid);
+		}
+		dumpVar($rows[0], "rows");
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop($rows);
+
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true, 'one' => 'hilite_row'));
+		$loop->do_loop($this->showHilites());
+	}
+	function collectHilites($i, $vid) {}
+	function showHilites() { return array(array()); }
+}
+class TripVideos extends VideoGallery
+{
+	// var $hilites = array();
+	// function collectHilites($i, $vid) {
+	// 	$trip = $this->build('DbTrip', $vid->date());
+	// 	dumpVar(boolStr($trip->hasData), "collectHilites($i) " . $vid->date());
+	// 	dumpVar($trip->data, "trip->data");
+	// 	exit;
+	// 	if ($trip->hasData) {
+	// 		$this->hilites[] = array('vindex' => $i + 1);
+	// 	}
+	// }
+	// function showHilites() { return array($this->hilites); }
+}
+class OneVideo extends ViewWhu
+{
+	var $file = "onevid.ihtml";   
+	function showPage()	
+	{
+		parent::showPage();
+ 	 	$vid = $this->build('Video', $this->build('Visual', $vidid = $this->key));
+		// $vid->dump("OneVideo");
+		
+		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $vid->date()));
+		$this->template->set_var('DATE', $date);
+		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
+		$this->template->set_var('PIC_TIME', Properties::prettyTime($vid->time()));
+		$this->template->set_var('PIC_CAMERA', $vid->cameraDesc());
+		$this->template->set_var('VIS_NAME', $vid->name());
+		$this->template->set_var('VID_TOKEN', $vid->token());
+		
+ 	 	$trip = $this->build('DbTrip', $date);
+		$this->template->set_var('PIC_TRIP', $trip->name());
+		$this->template->set_var('TRIPID', $trip->id());
+		
+ 	 	$day = $this->build('DayInfo', $date);
+		$this->template->set_var('WPID', $wpid = $day->postId());
+		if ($wpid > 0)
+		{
+			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+			$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
+			$this->template->set_var("STORY_VIS", '');
+		}
+		else
+			$this->template->set_var('STORY_VIS', 'hideme');
+
+		if (($spotId = $vid->spotId()) > 0)
+		{
+			$this->template->set_var('SPOT_ID', $spotId);
+			$this->template->set_var('SPOT_NAME', $this->build('DbSpot', $spotId)->name());
+			$this->template->set_var("SPOT_VIS", '');
+		}
+		else
+			$this->template->set_var('SPOT_VIS', 'hideme');
+			
+		if ($this->setLittleMap(
+							array('lat' => $vid->lat(), 'lon' => $vid->lon(), 'name' => Properties::prettyDate($date), 'desc' => $vid->name())))
+		{
+			$this->template->set_var('GPS_VIS', '');
+			$this->template->set_var('GPS_LAT', $vid->lat());
+			$this->template->set_var('GPS_LON', $vid->lon());
+		}
+		else
+			$this->template->set_var('GPS_VIS', 'hideme');
+		
+		if ($id = $vid->spotId())
+		{
+			$this->template->set_var('VID_SPOT_VIS', '');
+			$spot = $this->build('DbSpot', $id);
+			$this->template->set_var('SPOT_ID', $id);
+			$this->template->set_var('SPOT_NAME', $spot->name());				
+		}
+		
+		// no keywords for now
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop(array());
+
+		$this->caption = sprintf("%s on %s", $vid->kind(), Properties::prettyShort($date));
+
+		$pageprops = array();
+		$pageprops['pkey'] = $vid->prev()->id();
+		$pageprops['nkey'] = $vid->next()->id();
+		$pageprops['middle'] = true;		
+		$pageprops['mlab'] = '<a href="?page=vids&type=home">back to Videos page</a>';		
+		$this->pagerBar('vid', 'id', $pageprops);	
+	}
+}
+
 class Gallery extends ViewWhu
 {
 	var $file = "gallery.ihtml";   
@@ -634,8 +762,9 @@ HTML;
 	function getPictures($key)	{ return $this->pics; }	
 	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
 }
-class VideoGallery extends Gallery
+class XXXVideoGallery extends Gallery
 {
+	var $file = "videos.ihtml";   
 	var $galtype = "vid";
 	var $message = '';
 	function showPage()	

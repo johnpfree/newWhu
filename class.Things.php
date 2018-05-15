@@ -143,7 +143,7 @@
 		}
 	
 		// --------- factory
-		function build ($type = '', $key) 
+		function build($type = '', $key) 
 		{
 			// dumpVar($type, "THING Build: type key=$key");
 			if ($type == '') {
@@ -169,6 +169,10 @@
 		{
 			if ($this->isTripRecord($key))
 				return $key;
+			
+			if ($this->isDate($key)) {		// $key == date?
+				return $this->getRow("select * from wf_trips where '$key' between wf_trips_start and wf_trips_end");
+			}
 
 			$rec = $this->getOne("select * from wf_trips where wf_trips_id=$key");
 			$this->assert($rec, "WhuDbTrip failed for id=$key");
@@ -294,7 +298,6 @@
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
-		function pics() 		{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		function hasVideos()
 		{
@@ -502,7 +505,7 @@
 		function status()	{ return $this->dbValue('wf_spots_status'); }
 		function desc()		{ return $this->massageDbText($this->dbValue('wf_spots_desc')); }
 		
-		function shortName() 
+		function shortName() 			// for listing, removes the "type" for brevity
 		{
 			$name = $this->name();
 			// $n0 = $name;
@@ -867,6 +870,7 @@
 	class WhuVisual extends WhuThing 
 	{
 		var $prvnxt = NULL;
+		var $whereClause = '';
 		function getRecord($key)
 		{
 			if ($this->isPicRecord($key))
@@ -910,19 +914,20 @@
 		}
 		function getPrvNxtPic()
 		{
-			$q = sprintf("select * from wf_images where wf_images_localtime > '%s%s' order by wf_images_localtime ASC LIMIT 3", $this->date(), $this->time());
+			$q = sprintf("select * from wf_images where wf_images_localtime > '%s%s'%s order by wf_images_localtime ASC LIMIT 3", $this->date(), $this->time(), $this->whereClause);
 			$items = $this->getAll($q);
 			// dumpVar($items, "Pitems $q");
 			$this->prvnxt = array('next' => $this->build('Pic', $items[0]));
 			
-			$q = sprintf("select * from wf_images where wf_images_localtime < '%s%s' order by wf_images_localtime DESC LIMIT 3", $this->date(), $this->time());
+			$q = sprintf("select * from wf_images where wf_images_localtime < '%s%s'%s order by wf_images_localtime DESC LIMIT 3", $this->date(), $this->time(), $this->whereClause);
 			$items = $this->getAll($q);
 			// dumpVar($items, "Nitems $q");
 			$this->prvnxt['prev'] = $this->build('Pic', $items[0]);
 		}
-	}			
+	}		
 	class WhuVideo extends WhuVisual 
 	{
+		var $whereClause = ' and wf_resources_id>0';
 		function getRecord($key)		// key = pic id
 		{
 			// dumpVar(get_class($key), "get_classkey");
@@ -1015,8 +1020,8 @@
 			}
 
 			if (isset($parm['date'])) 
-			{				
-				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+			{														// note videos are excluded (wf_resources_id=0)
+				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' AND wf_resources_id=0 order by wf_images_localtime", $parm['date']);
 			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
 			}
@@ -1103,7 +1108,7 @@
 			}
 			if (isset($parm['vid'])) 			// for now, 'vid' means get all videos
 			{
-				$q = sprintf("select * from wf_images where wf_resources_id>0");
+				$q = sprintf("select * from wf_images where wf_resources_id>0 order by wf_images_localtime");
 				// dumpVar($q, "q");
 				return $this->getAll($q);
 			}

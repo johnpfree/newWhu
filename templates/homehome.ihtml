@@ -7,7 +7,7 @@
 				<a href="?page=pics&type=id&key=26">
 	        <h4 class="card-title"><b>{N_PIC}</b> Images.</h4>
 					<img class="card-img-top" src="./resources/site-images/whupix.jpg" alt="pictures">
-	        <h6 class="card-subtitle text-muted">Only <b>18</b> Videos so far</h6>
+	        <a href="?page=vids&type=home"><h6 class="card-subtitle text-muted">Only <b>18</b> Videos so far</h6></a>
 				</a>
       </div> <!--/card-->
 			<div class="card text-center col-xs-6 col-md-3">
