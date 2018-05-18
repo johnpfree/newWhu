@@ -567,7 +567,7 @@ class OneVideo extends ViewWhu
 	function showPage()	
 	{
 		parent::showPage();
- 	 	$vid = $this->build('Video', $this->build('Visual', $vidid = $this->key));
+ 	 	$vid = $this->getVideo();
 		// $vid->dump("OneVideo");
 		
 		$this->template->set_var('COLLECTION_NAME', Properties::prettyDate($date = $vid->date()));
@@ -632,6 +632,19 @@ class OneVideo extends ViewWhu
 		$pageprops['middle'] = true;		
 		$pageprops['mlab'] = '<a href="?page=vids&type=home">back to Videos page</a>';		
 		$this->pagerBar('vid', 'id', $pageprops);	
+	}
+	function getVideo() 
+	{
+ 	 	return $this->build('Video', $this->build('Visual', $vidid = $this->key));
+	}
+}
+class DateVideos extends OneVideo
+{
+	function getVideo() 
+	{
+ 	 	$vids = $this->build('Videos', array('date' => $this->key));
+		// dumpVar($vids->data, "vids->data");
+		return $vids->one(0);
 	}
 }
 

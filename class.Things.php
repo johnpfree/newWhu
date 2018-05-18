@@ -930,7 +930,10 @@
 		var $whereClause = ' and wf_resources_id>0';
 		function getRecord($key)		// key = pic id
 		{
-			// dumpVar(get_class($key), "get_classkey");
+			// dumpVar(get_class($key), "get_class WhuVideo");
+			if ($this->isVidRecord($key))		// got it already
+				return $key;
+
 			if (is_object($key) && ((get_class($key) == 'WhuVisual') || (get_class($key) == 'WhuPic')))		// cast a Visual or Pic to a Video, add the video data
 			{
 				$item = $this->getOne("select * from wf_resources where wf_resources_id=" . $key->vidId());					
@@ -945,6 +948,23 @@
 		function lon()			{ return $this->dbValue('wf_resources_lon'); }
 		function spotId()		{ return $this->dbValue('wf_resources_spot_id'); }
 	}
+	class WhuVideos extends WhuVideo
+	{
+		var $isCollection = true;
+		function getRecord($parm)	//  tripid. folder, date
+		{
+			// dumpVar($parm, "WhuPics parm");
+			if (isset($parm['date'])) 
+			{														// note videos are excluded (wf_resources_id=0)
+				$q = sprintf("select * from wf_images i JOIN wf_resources r on i.wf_resources_id=r.wf_resources_id where date(i.wf_images_localtime)='%s' order by wf_images_localtime", $parm['date']);
+			// dumpVar($parm, "parm $q");
+				return $this->getAll($q);
+			}			
+			return $this->getAll($q = "select * from wf_images where wf_images_path='$folder' order by wf_images_localtime");
+			WhuThing::getRecord($parm);		// FAIL
+		}
+	}
+	
 	class WhuPic extends WhuVisual 
 	{
 		var $prvnxt = NULL;
