@@ -345,39 +345,45 @@ class AllTrips extends ViewWhu
 		dumpVar(WP_PATH, "WP_PATH");
 		$this->template->set_var('WP_PATH', WP_PATH);
 		
-		$trips = $this->build('Trips', array('filter' =>'main'));
-		$this->oneGroup($trips, 0, 'main');
+		$tripTypes = array(
+			array('tag' => 'main' , 'SHOWTAG' => 'in', 'TYPE_NAME' => 'Big Trips'),
+			array('tag' => 'eka'  , 'SHOWTAG' => '', 'TYPE_NAME' => 'Eureka Trips'),
+			array('tag' => 'small', 'SHOWTAG' => '', 'TYPE_NAME' => 'Short Trips')
+		);
 		
-		$trips = $this->build('Trips', array('filter' =>'eka'));
-		$this->oneGroup($trips, 1, 'eka');
-		
-		$trips = $this->build('Trips', array('filter' =>'small'));
-		$this->oneGroup($trips, 2, 'small');
+		$loop = new TripLooper($this);	
+		$loop->do_loop($tripTypes);
 	}
 	function getCaption()	{	return "Browse All Trips";	}
-	function oneGroup($trips, $index, $onerow)
+}
+class TripLooper extends MultiLooper
+{
+	var $viewHandle;				// need this for the build() function below
+	function __construct($t)
+	{
+		$this->viewHandle = $t;
+		parent::__construct(2, $t->template, NULL, 	// third param is db, but don't need it here
+				array('triptype_row', 'trip_row'), array('noFields' => true, 'noFields1' => true, 'parent' => 'the_content'));
+	}
+	function getInner($item)
 	{		
-		$this->template->set_var("GROUPTAG$index", $onerow);
-
+		$this->template->set_var("GROUPTAG", ($tag = $item['tag']));
+		$trips = $this->viewHandle->build('Trips', array('filter' => $tag));
 		for ($i = 0, $rows = array(); $i < $trips->size(); $i++) 
 		{
 			$trip = $trips->one($i);
-			$row = array("TRIP_DATE$index" => $trip->startDate(), "TRIP_ID$index" => $trip->id());
-			$row["TRIP_NAME$index"] = $trip->name();
-			$row["MAP_CLASS$index"] = '';																					// everybody gets a map!
-			$row["PIC_CLASS$index"] = $trip->hasPics() ? '' : "class='hidden'";
-			$row["VID_CLASS$index"] = $trip->hasVideos() ? '' : "class='hidden'";
-			$row["STORY_CLASS$index"] = $trip->hasStories() ? '' : "class='hidden'";
-
-			// if ($trip->hasMapboxMap())	$row["TRIP_NAME"] .= "-M";
-			// if ($trip->hasGoogleMap())	$row["TRIP_NAME"] .= "-G";
+			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id());
+			$row["TRIP_NAME"] = $trip->name();
+			$row["MAP_CLASS"] = '';																					// everybody gets a map!
+			$row["PIC_CLASS"] = $trip->hasPics() ? '' : "class='hidden'";
+			$row["VID_CLASS"] = $trip->hasVideos() ? '' : "class='hidden'";
+			$row["STORY_CLASS"] = $trip->hasStories() ? '' : "class='hidden'";
 			$rows[] = $row;
 		}
-		// dumpVar($rows, "rows");
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => "{$onerow}_row", 'noFields' => true));                                
-		$loop->do_loop($rows);		
+		return $rows;
 	}
 }
+
 class OneTripLog extends ViewWhu
 {
 	var $file = "triplog.ihtml";   

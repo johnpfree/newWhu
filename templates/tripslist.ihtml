@@ -1,71 +1,30 @@
 <table id="tripstable" border="0" cellspacing="5" cellpadding="5">
-	<tr class="clickable" data-toggle="collapse" data-target=".{GROUPTAG0}">		
+
+<!-- BEGIN triptype_rows -->
+	<tr class="clickable" data-toggle="collapse" data-target=".{GROUPTAG}">		
 		<td class="tbut" colspan="20"> 
-      <div class="panel-heading" data-toggle="collapse" href="#collapse0">
-				<button type="button" class="btn btn-block" data-toggle="collapse" href="#collapse0">Big Trips</button>
+      <div class="panel-heading" data-toggle="collapse" href="#collapseT">
+				<button type="button" class="btn btn-block" data-toggle="collapse" href="#collapseT">{TYPE_NAME}</button>
       </div>
 		</td>
 	</tr>
-	<!-- BEGIN main_rows -->
-	<tr class="collapse in {GROUPTAG0}">
-		<td align="right"><a href="?page=log&type=id&key={TRIP_ID0}" title="Trip Log">{TRIP_NAME0}</a></td>
+	<!-- BEGIN trip_rows -->
+	<tr class="collapse {SHOWTAG} {GROUPTAG}">
+		<td align="right"><a href="?page=log&type=id&key={TRIP_ID}" title="Trip Log">{TRIP_NAME}</a></td>
 		<td> &nbsp; </td>
-		<td><a {STORY_CLASS0} href="?page=txts&type=id&key={TRIP_ID0}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
-		<td><a {MAP_CLASS0} href="?page=map&type=id&key={TRIP_ID0}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
+		<td><a {STORY_CLASS} href="?page=txts&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
+		<td><a {MAP_CLASS} href="?page=map&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
 		<td>
-			<a href="?page=pics&type=id&key={TRIP_ID0}">
-				<img {PIC_CLASS0} src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures">
+			<a href="?page=pics&type=id&key={TRIP_ID}">
+				<img {PIC_CLASS} src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures">
 			</a>
-			<a href="?page=vids&type=id&key={TRIP_ID0}">
-				<img {VID_CLASS0} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">
-			</a>
-		</td>
-	</tr>
-	<!-- END main_rows -->
-	<tr class="clickable" data-toggle="collapse" data-target=".{GROUPTAG1}">		
-		<td class="tbut" colspan="20"> 
-      <div class="panel-heading" data-toggle="collapse" href="#collapse1">
-				<button type="button" class="btn btn-block" data-toggle="collapse" href="#collapse1">Eureka Trips</button>
-      </div>
-		</td>
-	</tr>
-	<!-- BEGIN eka_rows -->
-	<tr class="collapse {GROUPTAG1}">
-		<td align="right"><a href="?page=log&type=id&key={TRIP_ID1}" title="Trip Log">{TRIP_NAME1}</a></td>
-		<td> &nbsp; </td>
-		<td><a {STORY_CLASS1} href="?page=txts&type=id&key={TRIP_ID1}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
-		<td><a {MAP_CLASS1} href="?page=map&type=id&key={TRIP_ID1}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
-		<td>
-			<a href="?page=pics&type=id&key={TRIP_ID1}">
-				<img {PIC_CLASS1} src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures">
-			</a>
-			<a href="?page=vids&type=id&key={TRIP_ID1}">
-				<img {VID_CLASS1} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">
+			<a href="?page=vids&type=id&key={TRIP_ID}">
+				<img {VID_CLASS} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">
 			</a>
 		</td>
 	</tr>
-	<!-- END eka_rows -->
-	<tr class="clickable" data-toggle="collapse" data-target=".{GROUPTAG2}">		
-		<td class="tbut" colspan="20"> 
-      <div class="panel-heading" data-toggle="collapse" href="#collapse2">
-				<button type="button" class="btn btn-block" data-toggle="collapse" href="#collapse2">Small Trips</button>
-      </div>
-		</td>
-	</tr>
-	<!-- BEGIN small_rows -->
-	<tr class="collapse {GROUPTAG2}">
-		<td align="right"><a href="?page=log&type=id&key={TRIP_ID2}" title="Trip Log">{TRIP_NAME2}</a></td>
-		<td> &nbsp; </td>
-		<td><a {STORY_CLASS2} href="?page=txts&type=id&key={TRIP_ID2}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
-		<td><a {MAP_CLASS2} href="?page=map&type=id&key={TRIP_ID2}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
-		<td>
-			<a href="?page=pics&type=id&key={TRIP_ID2}">
-				<img {PIC_CLASS2} src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures">
-				<img {VID_CLASS2} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">
-			</a>
-		</td>
-	</tr>
-	<!-- END small_rows -->
+	<!-- END trip_rows -->
+<!-- END triptype_rows -->	
 </table>
 
 <style type="text/css" media="screen">
