@@ -34,9 +34,9 @@
 		    margin: 0;
 				color: {BODYCOLOR};
 				background-color: {BBACKCOLOR};
-/*			  font: 16px/26px Roboto, Arial, sans-serif;*/
+			  font: 16px/26px Roboto, Arial, sans-serif;
 /*			  font: 16px/26px skolar-1, skolar-2, Georgia, "Times New Roman", serif;*/
-				font: 16px/26px 'PT Sans Narrow', Arial, sans-serif;
+/*				font: 16px/26px 'PT Sans Narrow', Arial, sans-serif;*/
 			}
 			h1,h2,h3,h4,h5,h6,b,strong {	
 				color: {BOLDCOLOR};

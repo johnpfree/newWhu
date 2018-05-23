@@ -40,6 +40,11 @@
 		</div>
 	</div>
 	</script>
+	
+	<script type="text/javascript">
+		var startingIndex = {IPIC}, 
+		 rgViewMessage = '{RGMSG}';
+	</script>	
 
 <style type="text/css" media="screen">
 	body {
@@ -102,12 +107,10 @@
 	#main_item h1 a 			{ color: {BOLDCOLOR}; }
 	#main_item h1 a:hover { color: {LINKCOLOR}; }
 
-.es-carousel ul li { height: inherit; 	}
-.es-carousel ul li.selected a { border: none; }
-/*.es-carousel ul li.selected a { border-color: #1B4F24; }*/
-/*.es-carousel ul li.selected a { border-color: #b30000; }*/
+	.es-carousel ul li { height: inherit; 	}
+	.es-carousel ul li.selected a { border: none; }
 
 </style>
-    <!-- <li><a href="#"><img src="data:image/jpg;base64,{BINPIC}" data-id="{PIC_ID}" data-large="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" data-description="{PIC_DESC}"></a></li> -->
+
 
 

@@ -98,15 +98,24 @@
 							</li>
 							<li>
 								<dl>
+									<dt>picture galleries:</dt>
+									<dd>
+										I am finally learning to trust others. I am finally using a gallery plugin - <a href="https://tympanus.net/Tutorials/ResponsiveImageGallery/">Responsive Image Gallery</a>, which uses the <a href="https://tympanus.net/Development/Elastislide/">Elastislide</a> carousel. I like it. I threw consistency to the wind by keeping the <a href="?page=pics&type=date&key=2017-10-24">silly font</a> they use for titles.
+									</dd>                                             
+								</dl>
+							</li>
+							<li>
+								<dl>
 									<dt>videos:</dt>
 									<dd>
 										I play videos with embedded YouTube. They are all in <a href="https://www.youtube.com/playlist?list=PLSQR0xDCyqtn4pZPocx92bcmrOBYS-wmi">this playlist</a>. 
 									</dd>                                             
 								</dl>
 							</li>
+							<li>
 								<dl>
 									<dt>maps:</dt>
-									<dd>I render the maps with <a href="https://www.mapbox.com/">Mapbox</a>. It's really cool. 
+									<dd>I render the maps with <a href="https://www.mapbox.com/">Mapbox</a>. It's <a href="?page=map&type=id&key=44">really cool</a>. 
 										<ul>
 											<li>The overnight spots are plotted from GPS information in the WHUFU database.</li>
 											<li>I used to enter routes manually using Mapbox or Google Maps. I used Google forever, then I used Mapbox, then I discovered how use Google Directions correctly. Now, using Directions I make better maps in a fraction of the time.</li>
@@ -120,7 +129,7 @@
 								<dl>
 									<dt>weather:</dt>
 									<dd>
-										<p>I grab weather info for Spots from <a href="https://www.wunderground.com/weather/us/nv/reno">Weather Underground</a>. I have to do stupid coding tricks to not invoke it on a simple Spot page hit, because stupid bots blow my access limit. You have to hit the Weather tab to request the weather.</p>
+										<p>I grab weather info for Spots from <a href="https://www.wunderground.com/weather/us/nv/reno">Weather Underground</a>. I have to do stupid coding tricks to not invoke it on a simple Spot page hit, because stupid webbots blow my access limit. You have to hit the Weather tab to request the weather.</p>
 									</dd>
 								</dl>
 							</li>
@@ -156,9 +165,9 @@
 										<ul>
 											<li>I use an ancient templating class called <strong>template.inc</strong>. I’ve built my own set of classes around it, mostly to encapsulate it's non-user-friendly looping conventions. It does pretty much everything I need ... as long as I don't need anything too complicated :)</li>
 											<li>All the responsive behavior is from <strong>Bootstrap</strong>. It's annoying, but pretty powerful.</li>
-											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here, including some JQuery Ajax to to as-needed queries on the Search page, which I'm very pleased with.</li>
+											<li>Bootstrap has eliminated the need for much in the way of custom <strong>JQuery</strong>, but there's a little in here, including some JQuery Ajax to do as-needed queries on the Search page, which I'm very pleased with.</li>
 											<li>The social media symbols in the footer are from <a href="http://www.1001fonts.com/genericons-font.html" title="Genericons Font · 1001 Fonts">genericons</a>, which are very cool.</li>
-											<li>The WHUFU icon is the Microsoft Registry Editor recolored with the WHU palette. It has nothing to do with WHUFU, but it's a really strong graphic in a style quite similar to a design I did decades ago - that's my excuse anyway....</li>
+											<li>The WHUFU icon is the Microsoft Registry Editor logo recolored with the WHU palette. It has nothing to do with WHUFU, but it's a really strong graphic in a style quite similar to a design I did decades ago - that's my excuse anyway....</li>
 											<li>The WHUFU code is a <a href="https://github.com/johnpfree/newWhu"><strong>github</strong> project</a>. Without the database, pictures, maps, and blog posts you can't really do much with it, but it's there for all to see.</li>
 											<li><p>While travelling, I maintain a mileage log spreadsheet in Numbers (the poor man's Excel on Mac). Along with odometer readings and place names and notes it has columns for the blog post id for that day and the Spot id for where I stayed. Eventually I export the spreadsheet as a CSV file, then run a little PHP program to read the CSV and create day records in the database. This creates another updating issue. I tried reading the rows directly from the CSV file to avoid that but it was not cool.
 											</p>
@@ -198,7 +207,9 @@
 }
 li,ul,ol,dt 
 { 
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding: 3px 0;
+}
+dl {
+	margin-bottom: 4px;
 }
 </style>

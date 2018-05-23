@@ -24,10 +24,7 @@ $(document).ready(function() {
 	</div>
 	
 	<div class="row" id="thepic">
-		<img class="{USE_PIC} img-rounded img-responsive" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />	
-		<!-- <iframe class="{USE_VID}"
-			src="https://www.youtube.com/embed/{VID_TOKEN}?list=PLSQR0xDCyqtn4pZPocx92bcmrOBYS-wmi&controls=0&showinfo=0" frameborder="0" allowfullscreen>
-		</iframe>		 -->
+		<img class="img-rounded img-responsive" src='{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{WF_IMAGES_FILENAME}' border="0" />	
 	</div>
 
 	

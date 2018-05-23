@@ -659,6 +659,7 @@ class Gallery extends ViewWhu
 	var $file = "gallery.ihtml";   
 	var $galtype = "UNDEF";  
 	var $maxGal = 30; 
+	var $message = '';
 	function showPage()	
 	{
 		$this->template->set_var('GAL_TYPE', $this->galtype);
@@ -666,36 +667,20 @@ class Gallery extends ViewWhu
 		$this->template->set_var('GAL_COUNT', $this->props->get('extra'));
 		$this->template->set_var('TODAY', $this->galleryTitle($this->key));
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
+		$this->template->set_var('IPIC', 0);
+		$this->template->set_var('RGMSG', $this->message);	
 		
 		$this->doNav();			// do nav (or not)
 
-		$visuals = $this->getPictures($this->key);
+		$pics = $this->getPictures($this->key);
 				
-		for ($i = 0, $rows = array(), $fold = ''; $i < $visuals->size(); $i++) 
+		for ($i = 0, $rows = array(); $i < $pics->size(); $i++) 
 		{
-			$visual = $visuals->one($i);
-			// dumpVar(sprintf("id %s, vid? %s: %s", $visual->id(), $visual->dbValue('wf_resources_id'), $visual->caption()), "$i Gallery");
+			$pic = $pics->one($i);
+			// dumpVar(sprintf("id %s: %s", $pic->id(), $pic->caption()), "$i Gallery");
 			
-			if ($visual->isVideo())
-			{
-				continue;			// Apr 2018 no videos in gallery for now
-				$vid = $this->build('Video', $visual);
-				// dumpVar($vid->token(), "vid->token()");
-				$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
-						'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
-				$rows[] = $row;	
-				continue;			
-			}
-			
-			$pic = $this->build('Pic', $visual->data);		// using data avoids class check (cat sends pics, date sends visuals)
-			if ($fold == '')
-		 		$this->template->set_var('WF_IMAGES_PATH', $fold = $pic->folder());
-			
-			$row = array('VIS_PAGE' => 'pic', 'PIC_ID' => $pic->id(), 'PIC_NAME' => $pic->filename(), 'PIC_DESC' => $pic->caption(), 'USE_VIDTMB' => 'hideme');
-			
-			// $row['pano_symb'] = $pic->isPano() ? '<strong><img src="resources/pano/pano0.png" width="48" height="48" alt="panorama"></strong>' : '';
-			$row['pano_symb'] = $pic->picPanoSym();
-			
+			$row = array('PIC_ID' => $pic->id(), 'WF_IMAGES_PATH' => $pic->folder(), 'PIC_NAME' => $pic->filename(), 'PIC_DESC' => $pic->caption());
+
 			$row['binpic'] = $pic->thumbImage();
 			if (strlen($row['binpic']) > 100) {			// hack to just downsize the full image if the thumbnail fails on server
 				$row['use_binpic'] = '';
@@ -725,8 +710,8 @@ class DateGallery extends Gallery
 		$this->dayLinkBar('pics', $this->key);
 		parent::showPage();
 	}
-	function getPictures($key)	{ return $this->build('Visuals', (array('date' => $key))); }	// not just Pics, maybe Videos!
-	// function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }
+	// function getPictures($key)	{ return $this->build('Visuals', (array('date' => $key))); }	// not just Pics, maybe Videos!
+	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }
 	function getCaption()				{	return "Pictures for " . $this->key;	}
 	function galleryTitle($key)	{	return Properties::prettyDate($key); }
 	function doNav()
@@ -742,7 +727,6 @@ class DateGallery extends Gallery
 class CatGallery extends Gallery
 {
 	var $galtype = "cat";
-	var $message = '';
 	function showPage()	
 	{
 		$cat = $this->build('Category', $this->key);
@@ -759,18 +743,10 @@ class CatGallery extends Gallery
 		$this->pics = $this->build('Pics', (array('cat' => $this->key))); 
 		if (($size = $this->pics->size()) > $this->maxGal)
 		{
-			$row = 
-<<<HTML
-			<div class="row">
-				<div class="col-sm-12">
-					A selection of %s out of %s &nbsp; &bull; &nbsp; 
-					<a href='?page=pics&type=cat&key=%s'>reselect<span class="genericon genericon-shuffle"></span></a>
-				</div>
-			</div>
-HTML;
-			$this->message = sprintf($row, $this->maxGal, $size, $this->key);			
-			// $this->message = sprintf("A random selection of %s out of %s.", $this->maxGal, $size);
-			// $this->message = sprintf("A random selection of %s out of %s. <a href='?page=pics&type=cat&key=%s'>SHUFFLE</a>", $this->maxGal, $size, $this->key);
+// <span class="genericon genericon-shuffle"></span>
+
+			// $this->message = sprintf("A selection of %s out of %s &bull; <a href=\"?page=pics&type=cat&key=%s\">reselect</a>", $this->maxGal, $size, $this->key);			
+			$this->message = sprintf("A selection of %s out of %s, refresh to reselect.", $this->maxGal, $size, $this->key);			
 			$this->pics->random($this->maxGal);
 		}
 		
@@ -779,29 +755,7 @@ HTML;
 	function getCaption()				{	return "Pictures for category: " . $this->name;	}
 	function galleryTitle($key)	{	return ''; }
 	function getPictures($key)	{ return $this->pics; }	
-	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
-}
-class XXXVideoGallery extends Gallery
-{
-	var $file = "videos.ihtml";   
-	var $galtype = "vid";
-	var $message = '';
-	function showPage()	
-	{
-		$this->template->set_var("DATE_GAL_VIS", 'hideme');
-		$this->template->set_var("CAT_GAL_VIS" , '');
-		
-		$this->template->set_var("TRIP_ID", $this->key);
-		$this->template->set_var("TRIP_NAME", "Videos");		// save name for caption call below
-		$this->template->set_var("TODAY", '');
-		$this->template->set_var('LINK_BAR', '');
-		
-		parent::showPage();
-	}
-	function getCaption()				{	return "Videos";	}
-	function galleryTitle($key)	{	return ''; }
-	function getPictures($key)	{ return $this->build('Visuals', (array('vid' => 'all'))); }
-	function doNav() { $this->template->set_var('PAGER_BAR', $this->message); }
+	function doNav() { $this->template->set_var('PAGER_BAR', ''); }
 }
 
 class OneMap extends ViewWhu
@@ -988,7 +942,7 @@ class NearMap extends SpotMap
 	function markerColor($i) { return $this->marker_color; }
 }
 
-class OneVisual extends ViewWhu
+class OnePhoto extends ViewWhu
 {
 	var $file = "onepic.ihtml";   
 	function showPage()	
@@ -1002,6 +956,11 @@ class OneVisual extends ViewWhu
 		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
 		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
 		$this->template->set_var('PICFILE_NAME', $vis->filename());
+		$this->template->set_var('WF_IMAGES_PATH', $vis->folder());
+		$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
+		$this->template->set_var('VIS_NAME', $name = $vis->caption());
+		$this->template->set_var('REL_PICPATH', iPhotoURL);
+		$this->template->set_var('VID_SPOT_VIS', 'hideme');
 		
  	 	$day = $this->build('DayInfo', $date);
 		$this->template->set_var('WPID', $wpid = $day->postId());
@@ -1013,74 +972,31 @@ class OneVisual extends ViewWhu
 		}
 		else
 			$this->template->set_var('STORY_VIS', 'hideme');
-		
-		if ($vis->isImage())	// ==================================== picture ==============
-		{
-			$this->template->set_var('USE_PIC', '');
-			$this->template->set_var('USE_VID', 'hideme');
-			$this->template->set_var('WF_IMAGES_PATH', $vis->folder());
-			$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
-			$this->template->set_var('VIS_NAME', $name = $vis->caption());
-			$this->template->set_var('REL_PICPATH', iPhotoURL);
-			$this->template->set_var('VID_SPOT_VIS', 'hideme');
 
-			// Details info	- keywords
-			$keys = $this->build('Categorys', array('picid' => $visid));
-			for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
-			{
-				$key = $keys->one($i);	
-				$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
-				$rows[] = $row;
-			}
-			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-			$loop->do_loop($rows);
-		
-	 	 	$vis = $this->build('Pic', $vis);			// NOTE I am recasting my generic vis to a picture
-			$gps = $vis->latlon();
-			if ($vis->cameraDoesGeo())
-				$gps['geo'] = true;
-			if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
-			{
-				$this->template->set_var('GPS_VIS', '');
-				$this->template->set_var('GPS_LAT', $gps['lat']);
-				$this->template->set_var('GPS_LON', $gps['lon']);
-			}
-			else
-				$this->template->set_var('GPS_VIS', 'hideme');
-		}
-		else					// ============================================ video ==============================
+		// Details info	- keywords
+		$keys = $this->build('Categorys', array('picid' => $visid));
+		for ($i = 0, $rows = array(); $i < $keys->size(); $i++)
 		{
-			$this->template->set_var('USE_PIC', 'hideme');
-			$this->template->set_var('USE_VID', '');
-
-	 	 	$vis = $this->build('Video', $vis);					// NOTE I am recasting my generic vis to a video
-			$this->template->set_var('VIS_NAME', $vis->name());
-			$this->template->set_var('VID_TOKEN', $vis->token());
-		
-			if ($this->setLittleMap(array('name' => Properties::prettyDate($date), 'desc' => $vis->name())))
-			{
-				$this->template->set_var('GPS_VIS', '');
-				$this->template->set_var('GPS_LAT', $vis->lat());
-				$this->template->set_var('GPS_LON', $vis->lon());
-			}
-			else
-				$this->template->set_var('GPS_VIS', 'hideme');
-			
-			if ($id = $vis->spotId())
-			{
-				$this->template->set_var('VID_SPOT_VIS', '');
-				$spot = $this->build('DbSpot', $id);
-				$this->template->set_var('SPOT_ID', $id);
-				$this->template->set_var('SPOT_NAME', $spot->name());
-				
-			}
-			else
-				$this->template->set_var('VID_SPOT_VIS', 'hideme');
-			
-			// no keywords for now
-			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-			$loop->do_loop(array());
+			$key = $keys->one($i);	
+			$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name());
+			$rows[] = $row;
 		}
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop->do_loop($rows);
+	
+ 	 	$vis = $this->build('Pic', $vis);			// NOTE I am recasting my generic vis to a picture
+		$gps = $vis->latlon();
+		if ($vis->cameraDoesGeo())
+			$gps['geo'] = true;
+		if ($this->setLittleMap(array_merge($gps, array('name' => Properties::prettyDate($vis->date()), 'desc' => $name))))
+		{
+			$this->template->set_var('GPS_VIS', '');
+			$this->template->set_var('GPS_LAT', $gps['lat']);
+			$this->template->set_var('GPS_LON', $gps['lon']);
+		}
+		else
+			$this->template->set_var('GPS_VIS', 'hideme');
+
 		$this->caption = sprintf("%s on %s", $vis->kind(), Properties::prettyShort($date));
 
 		$pageprops = array();
