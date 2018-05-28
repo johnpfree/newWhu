@@ -1314,7 +1314,7 @@ class HomeHome extends ViewWhu
 		$this->template->set_var('N_VID', $site->numVids());
 		$this->template->set_var('N_SPO', $site->numSpots());
 
-		$this->template->set_var('WP_URL', WP_URL);
+		$this->template->set_var('WP_PATH', WP_PATH);
 		parent::showPage();
 	}
 }
@@ -1324,7 +1324,7 @@ class About extends ViewWhu
 	var $caption = "What is this?";   
 	function showPage()	
 	{
-		$this->template->set_var('WP_URL', WP_URL);
+		$this->template->set_var('WP_PATH', WP_PATH);
 		parent::showPage();
 	}
 }

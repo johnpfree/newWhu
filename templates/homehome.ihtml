@@ -17,7 +17,7 @@
 				</a>
       </div> <!--/card-->
 			<div class="card text-center col-xs-6 col-md-3">
-				<a href="{WP_URL}?page_id=567">
+				<a href="{WP_PATH}/?page_id=567">
 	        <h4 class="card-title"><b>{N_TXT}</b> Stories.</h4>
 					<img class="card-img-top" src="./resources/site-images/whutxt.jpg" alt="stories">
 				</a>
