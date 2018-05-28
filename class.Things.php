@@ -274,6 +274,7 @@
 
 			WhuThing::getRecord($key);		// FAIL
 		}
+		
 		function date()				{ return $this->dbValue('wf_days_date'); }
 		function tripId()			{ return $this->dbValue('wf_trips_id'); }
 		function spotId()			{ return $this->dbValue('wf_spots_id'); }
@@ -298,6 +299,7 @@
 		function lat()				{ return $this->dbValue('wf_days_lat'); }
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
+		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
 		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		function hasVideos()
 		{

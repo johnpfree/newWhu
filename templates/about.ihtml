@@ -100,7 +100,7 @@
 								<dl>
 									<dt>picture galleries:</dt>
 									<dd>
-										I am finally learning to trust others. I am finally using a gallery plugin - <a href="https://tympanus.net/Tutorials/ResponsiveImageGallery/">Responsive Image Gallery</a>, which uses the <a href="https://tympanus.net/Development/Elastislide/">Elastislide</a> carousel. I like it. I threw consistency to the wind by keeping the <a href="?page=pics&type=date&key=2017-10-24">silly font</a> they use for titles.
+										I am finally learning to trust others. I am finally using a gallery plugin: <a href="https://tympanus.net/Tutorials/ResponsiveImageGallery/">Responsive Image Gallery</a>, which uses the <a href="https://tympanus.net/Development/Elastislide/">Elastislide</a> carousel. I like it. I threw consistency to the wind by keeping the <a href="?page=pics&type=date&key=2017-10-24">silly font</a> they use for titles.
 									</dd>                                             
 								</dl>
 							</li>
@@ -117,10 +117,10 @@
 									<dt>maps:</dt>
 									<dd>I render the maps with <a href="https://www.mapbox.com/">Mapbox</a>. It's <a href="?page=map&type=id&key=44">really cool</a>. 
 										<ul>
+											<li>I used to enter routes manually using Mapbox or Google Maps. Last year I discovered how use Google Directions correctly. Now, using Directions I make better maps in a fraction of the time.</li>
+											<li>Save the Directions map as KML, then Mapbox makes it very easy to render either JSON or KML geodata into a layer.</li>
 											<li>The overnight spots are plotted from GPS information in the WHUFU database.</li>
-											<li>I used to enter routes manually using Mapbox or Google Maps. I used Google forever, then I used Mapbox, then I discovered how use Google Directions correctly. Now, using Directions I make better maps in a fraction of the time.</li>
-											<li>Save the Directons map as KML, then Mapbox makes it very easy to render either JSON or KML geodata into a layer.</li>
-											<li>A few trips don't have a map. For these I connect the overnight spots with straight lines ... better than nothing I think.</li>
+											<li>A few trips don't have a map. For these I connect the overnight spots with straight lines. Sometimes it looks kinda goofy, but better than no map at all I think.</li>
 										</ul>
 									</dd>
 								</dl>
@@ -136,10 +136,10 @@
 							<li>
 								<dl>
 									<dt>stories:</dt>
-									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. 
+									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. The naked blog, without its WHUFU wrapper is <a href="{WP_URL}?page_id=567">here</a>.
 										<ul>
 											<li>The good news is that I run a server and MYSQL on my laptop, so I can write at the campground without having to be connected to the internet.</li>
-											<li>The bad news is that I must therefore manually export them from my laptop to the server Wordpress in order to share them with you. This is technically the ugliest part of the process. Wordpress export/import is not awesome, and has no facility for updating. To my knowledge the only way to update is to Copy All from the laptop editor and Paste All into the server editor ... weak. If you know a better way, please tell me about it with the Feedback button in the footer below :)</li>
+											<li>The bad news is that I must therefore manually export them from my laptop to the server Wordpress in order to share them with you. This is technically the ugliest part of the process.<br />Wordpress export/import is not awesome, and has no facility for updating. I have hacked up something to read a post's contents from my laptop database and write it to the server database, but it ain't pretty.</li>
 										</ul>
 										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and day descriptions from WHUFU and inserting them in posts. The day name section headers are done by a shortcode which generates a "name" anchor tag so WHUFU may link directly to the part of the post for that day. I crank up Wordpress inside WHUFU any time I need its content. Wordpress is a lot of code, so there is sometimes a noticeable pause when viewing a Story page.
 									</dd>
@@ -211,5 +211,9 @@ li,ul,ol,dt
 }
 dl {
 	margin-bottom: 4px;
+}
+dd ul {
+	margin-left: 1em;
+	list-style-type: square;
 }
 </style>

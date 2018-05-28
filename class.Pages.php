@@ -618,17 +618,17 @@ class OneVideo extends ViewWhu
 		else
 			$this->template->set_var('GPS_VIS', 'hideme');
 		
-		if ($id = $vid->spotId())
+		// keywords
+		$keys = $this->build('Categorys', array('picid' => $vid->id()));
+		for ($i = 0, $rows = array(), $ksep = ''; $i < $keys->size(); $i++)
 		{
-			$this->template->set_var('VID_SPOT_VIS', '');
-			$spot = $this->build('DbSpot', $id);
-			$this->template->set_var('SPOT_ID', $id);
-			$this->template->set_var('SPOT_NAME', $spot->name());				
+			$key = $keys->one($i);	
+			$row = array('WF_CATEGORIES_ID' => $key->id(), 'WF_CATEGORIES_TEXT' => $key->name(), 'K_SEP' => $ksep);
+			$rows[] = $row;
+			$ksep = '&bull; ';
 		}
-		
-		// no keywords for now
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop(array());
+		$loop->do_loop($rows);
 
 		$this->caption = sprintf("%s on %s", $vid->kind(), Properties::prettyShort($date));
 
@@ -658,7 +658,6 @@ class Gallery extends ViewWhu
 {
 	var $file = "gallery.ihtml";   
 	var $galtype = "UNDEF";  
-	var $maxGal = 30; 
 	var $message = '';
 	function showPage()	
 	{
@@ -726,6 +725,7 @@ class DateGallery extends Gallery
 }
 class CatGallery extends Gallery
 {
+	var $maxGal = 40; 
 	var $galtype = "cat";
 	function showPage()	
 	{
@@ -1304,7 +1304,6 @@ class TripStoryByDate extends TripStory
 
 class HomeHome extends ViewWhu
 {
-	// var $file = "blank.ihtml";
 	var $file = "homehome.ihtml";
 	function showPage()	
 	{		
@@ -1315,6 +1314,7 @@ class HomeHome extends ViewWhu
 		$this->template->set_var('N_VID', $site->numVids());
 		$this->template->set_var('N_SPO', $site->numSpots());
 
+		$this->template->set_var('WP_URL', WP_URL);
 		parent::showPage();
 	}
 }
@@ -1324,7 +1324,8 @@ class About extends ViewWhu
 	var $caption = "What is this?";   
 	function showPage()	
 	{
-			parent::showPage();
+		$this->template->set_var('WP_URL', WP_URL);
+		parent::showPage();
 	}
 }
 class Search extends ViewWhu
