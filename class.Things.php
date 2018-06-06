@@ -171,7 +171,7 @@
 				return $key;
 			
 			if ($this->isDate($key)) {		// $key == date?
-				return $this->getRow("select * from wf_trips where '$key' between wf_trips_start and wf_trips_end");
+				return $this->getOne("select * from wf_trips where CAST('$key' AS date) between wf_trips_start and wf_trips_end");
 			}
 
 			$rec = $this->getOne("select * from wf_trips where wf_trips_id=$key");
@@ -208,6 +208,7 @@
 		function hasVideos()
 		{
 			$q = sprintf("select * from wf_images where wf_images_path='%s' and wf_resources_id>0", $this->folder());
+			// dumpVar($q, "q");
 			$items = $this->getAll($q);
 			return sizeof($items);				// note that I am returning the number of items
 		}
