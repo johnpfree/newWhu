@@ -374,7 +374,7 @@ class TripLooper extends MultiLooper
 			$trip = $trips->one($i);
 			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id());
 			$row["TRIP_NAME"] = $trip->name();
-			$row["MAP_CLASS"] = '';																					// everybody gets a map!
+			$row["MAP_CLASS"] = $trip->hasMap() ? '' : "class='hidden'";																					// everybody gets a map!
 			$row["PIC_CLASS"] = $trip->hasPics() ? '' : "class='hidden'";
 			$row["VID_CLASS"] = $trip->hasVideos() ? '' : "class='hidden'";
 			$row["STORY_CLASS"] = $trip->hasStories() ? '' : "class='hidden'";
@@ -1228,6 +1228,7 @@ class TripStories extends ViewWhu
 		}
 		$wpdates[] = $wpdate;
 		// dumpVar($wpids, "wpids");
+		// dumpVar($wpdates, "wpdates");
 
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		// now fill the loop

@@ -217,12 +217,13 @@
 			return $count['nposts'] > 0;
 		}
 		
+		function hasMap()				{	return ($this->hasMapboxMap() || $this->hasGoogleMap()); }
 		function gMapPath()			{ return sprintf("data/%s", $this->folder()); }
-		function hasMapboxMap()	{	return ((substr($this->mapboxId(), 0, 10) == 'johnpfree.') != '');	}		
+		function hasMapboxMap()	{	return (substr($this->mapboxId(), 0, 10) == 'johnpfree.');	}		
 		function hasGoogleMap()	
 		{
 			$mapfile = $this->gMapPath() . ".kml";
-			dumpVar($mapfile, "mapfile exists?>");
+			// dumpVar(boolStr(file_exists($mapfile)), $mapfile);
 			return file_exists($mapfile);
 		}		
 		function mapboxJson()		{ return $this->multiMaps[$this->mapboxId()]['file'];	}
