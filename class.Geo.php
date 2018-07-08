@@ -103,7 +103,8 @@ class SaveForm
 		$this->props = $p;
 		
 		$file = getcwd() . '/feedback.csv';
-		dumpVar($file, "file");
+		dumpVar($file, "file");include 'class.Geo.php';
+		
 		$this->out = new FileWrite($file, 'a');
 		$this->out->dodump = false;
 	}
@@ -121,6 +122,40 @@ class SaveForm
 		$txt = $this->props->get($prop);          // specialized, get the prop here
 		$txt = str_ireplace('"', '"""', $txt);    // double quotes in text are doubled
 		return '"' . $txt . '"';
+	}
+}
+
+// ---------------------------------------------------------------------------------------  
+
+class Flickr
+{
+	static function tripId() { return 55; }
+	function isActive($trip)	{	return ($trip->id() == $this->tripId());	}
+
+	var $tripIds = array(55);
+	function useFlickr($var)	
+	{
+		if ($var > 0) return compareId($var);			// passed an id
+		return compareId($var->id());							// if not, assume passed a trip object
+	}
+	function compareId($id)
+	{
+		return in_array($id, $this->tripIds);
+	}
+	function dates()
+	{
+		include_once("flicData.php");
+		$keys = array('date', 'album', 'pic');
+		for ($i = 0, $ret = array(); $i < sizeof($flicDates); $i++) 
+		{
+			$row = array();
+			for ($j = 0; $j < sizeof($flicDates[$i]); $j++) 
+			{
+				$row[$keys[$j]] = $flicDates[$i][$j];
+			}
+			$ret[] = $row;
+		}		
+		return $ret;
 	}
 }
 

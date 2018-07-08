@@ -9,7 +9,7 @@
 			<td class="largedev" align=right>date</td>
 			<td>stop</td>
 			<td class="dropout">miles</td>
-			<td>total miles</td>
+			<td>total</td>
 			<td class="dropout">day</td>
 			<td><img src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures"></td>
 			<td><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Story"></td>

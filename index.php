@@ -182,7 +182,9 @@ switch ("$curpage$curtype")
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
 
-	case 'picsid':			$page = new TripPictures($props);		break;	
+	case 'picsid':			
+		$page = ($props->get('key') == Flickr::tripId()) ? new TripFlickrs($props) : new TripPictures($props);		break;	
+	
 	case 'picsdate':		$page = new DateGallery($props);		break;	
 	case 'picscat':			$page = new CatGallery($props);		break;	
 	case 'picid':				// legacy, still used in Wordpress e.g.

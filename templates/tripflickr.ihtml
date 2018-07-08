@@ -1,0 +1,33 @@
+<div class="jumbotron jumbotron-fluid" id="main_item">
+	<h2><span>Flickr pictures for:</span> {GAL_TITLE}</h2>
+	<p>{NUM_DAYS} days. I posted pictures to Flickr for {NUM_PICS} days{NOPICS_MSG}.</p>
+
+	<div class="clearfix" id="thegal">
+		<!-- BEGIN rows -->
+		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+			<a target='_blank' href="https://flic.kr/s/{FLICALBUM}">
+				<img class="img-rounded img-responsive squareme" src='{FLICPIC}'>
+				<div>{T_DATE}</div>
+			</a>
+		</div>
+		<!-- END rows -->
+	</div>
+
+{LINK_BAR}
+</div>
+
+<style type="text/css" media="screen">
+	
+h2>span { 
+	font-size: 80%;
+	font-weight: light;
+	font-style: italic;
+}
+#thegal div {
+	text-align: center;
+}
+#thegal img {
+	border: 1px solid #3A5950;		
+}
+
+</style>

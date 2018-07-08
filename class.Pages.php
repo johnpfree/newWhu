@@ -374,8 +374,8 @@ class TripLooper extends MultiLooper
 			$trip = $trips->one($i);
 			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id());
 			$row["TRIP_NAME"] = $trip->name();
-			$row["MAP_CLASS"] = $trip->hasMap() ? '' : "class='hidden'";																					// everybody gets a map!
-			$row["PIC_CLASS"] = $trip->hasPics() ? '' : "class='hidden'";
+			$row["MAP_CLASS"] = $trip->hasMap() ? '' : "class='hidden'";
+			$row["PIC_CLASS"] = ($trip->hasPics() || (new Flickr)->isActive($trip)) ? '' : "class='hidden'";			
 			$row["VID_CLASS"] = $trip->hasVideos() ? '' : "class='hidden'";
 			$row["STORY_CLASS"] = $trip->hasStories() ? '' : "class='hidden'";
 			$rows[] = $row;
@@ -453,7 +453,7 @@ class OneTripLog extends ViewWhu
 
 class TripPictures extends ViewWhu
 {
-	var $file = "trippics.ihtml";   
+	var $file = "trippics.ihtml";
 	function showPage()	
 	{
 		parent::showPage();
@@ -514,6 +514,51 @@ class TripPictures extends ViewWhu
 		
 		$this->template->set_var('NUM_DAYS', $days->size());
 		$this->template->set_var('NUM_PICS', $count);
+		
+ 		$this->tripLinkBar('pics', $this->props->get('key'));
+	}
+}
+class Tripflickrs extends TripPictures
+{
+	var $file = "tripflickr.ihtml";
+	function showPage()	
+	{
+		ViewWhu::showPage();
+		
+		$trip = $this->build('Trip', $this->key);
+		$this->template->set_var('GAL_TITLE', $trip->name());
+		
+		$flic = new Flickr();
+		$flicDays = $flic->dates();
+		// dumpVar($flicDays, "flicDays");
+		
+		for ($i = 0, $rows = $nopics = array(); $i < sizeof($flicDays); $i++)
+		{
+			$flicDay = $flicDays[$i];
+			if (isset($flicDay['pic']))
+			{
+				$rows[] = array('t_date' => Properties::prettyShortest($flicDay['date'])
+											, 'flicalbum' => $flicDay['album']
+											, 'flicpic' => $flicDay['pic']
+										);
+			}
+			else
+				$nopics[] = $flicDay['date'];
+		}
+		for ($i = 0; $i < 11; $i++) 
+		{
+			$rows[] = $rows[$k = ($i % sizeof($rows))];
+			dumpVar($k, "k");
+		}
+		
+
+		// dumpVar($rows, "rows");
+		$loop = new Looper($this->template, array('parent' => 'the_content'));
+		$loop->do_loop($rows);
+		
+		$this->template->set_var('NUM_DAYS', sizeof($flicDays));
+		$this->template->set_var('NUM_PICS', $npic = sizeof($rows));
+		$this->template->set_var('NOPICS_MSG', ($npic == 0) ? '' : sprintf(", no pictures on %s days", $npic));
 		
  		$this->tripLinkBar('pics', $this->props->get('key'));
 	}
