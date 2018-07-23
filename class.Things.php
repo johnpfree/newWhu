@@ -38,7 +38,8 @@
 		function dbValue($key)   
 		{
 			$this->assert($this->hasData, sprintf("Object of class %s is empty, key=%s.", get_class($this), $key));
-			$this->assert(isset($this->data[$key]), "this->data[$key] not found for class=" . get_class($this));
+			$this->assert(array_key_exists($key, $this->data), "this->data[$key] not found for class=" . get_class($this));
+			// $this->assert(isset($this->data[$key]), "this->data[$key] not found for class=" . get_class($this));
 			return $this->data[$key];  
 		}
 
@@ -200,11 +201,13 @@
 		);
 		function makeStoriesLink()
 		{}
-		function hasPics()
+		function hasWhuPics()
 		{
 			$pics = $this->build('Pics', array('tripid' => $this->id())); 
 			return $pics->size() > 0;
 		}
+		function flickToken() { return $this->dbValue('wf_flickr_token'); }
+		function hasFlicks() { return ($this->flickToken() != ''); }
 		function hasVideos()
 		{
 			$q = sprintf("select * from wf_images where wf_images_path='%s' and wf_resources_id>0", $this->folder());
@@ -270,9 +273,9 @@
 			if (is_array($key))					// $key == the record?
 				return $key;
 
-			// dumpVar($key, "select * from wf_days where wf_days_date='$key'");
 			if ($this->isDate($key))		// $key == date?
-				return $this->getOne("select * from wf_days where wf_days_date='$key'");	
+				return $this->getOne("select f.*,d.* from wf_days d LEFT OUTER JOIN fl_days f ON d.wf_days_date=f.wf_days_date where d.wf_days_date='$key'");	
+				// return $this->getOne("select * from wf_days where wf_days_date='$key'");	
 
 			WhuThing::getRecord($key);		// FAIL
 		}
@@ -287,6 +290,9 @@
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
 		function hasStory()		{ return $this->postId() > 0; }
+		function flickAlbum()			{ return $this->dbValue('fl_album_id'); }
+		function hasFlick()				{ return $this->flickAlbum() != ''; }
+		function flickFavorite()	{ return $this->dbValue('fl_image_id'); }
 
 		function day()
 		{
@@ -302,7 +308,11 @@
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
-		function hasPics() 		{	return $this->pics()->size() > 0;	}
+		function hasPics() 		{	
+			if ((new Flickr)->hasDate($this->date()))
+				return true;
+			return $this->pics()->size() > 0;	
+		}
 		function hasVideos()
 		{
 			$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' and wf_resources_id>0", $this->date());
@@ -391,9 +401,9 @@
 				$this->assert(isset($parm[0]['wf_days_date']));
 				return $parm;
 			}
-
+			
 			$this->assert($parm > 0);
-			return $this->getAll("select * from wf_days where wf_trips_id=$parm order by wf_days_date");
+			return $this->getAll("select f.*,d.* from wf_days d LEFT OUTER JOIN fl_days f ON d.wf_days_date=f.wf_days_date where d.wf_trips_id=$parm order by d.wf_days_date");
 		}
 	}
 	class WhuDayInfo extends WhuDbDay // WhuDbDay collects all the day, spot, and spot_day shit together
@@ -982,6 +992,7 @@
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
 
+		function flickToken()	{ return $this->dbValue('fl_images_id'); }
 		function kind()			{ return "picture"; }
 		function isPano()
 		{
@@ -1045,7 +1056,8 @@
 
 			if (isset($parm['date'])) 
 			{														// note videos are excluded (wf_resources_id=0)
-				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' AND wf_resources_id=0 order by wf_images_localtime", $parm['date']);
+				// $q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' AND wf_resources_id=0 order by wf_images_localtime", $parm['date']);
+				$q = sprintf("select f.*,w.* from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id where date(w.wf_images_localtime)='%s' AND w.wf_resources_id=0 order by w.wf_images_localtime", $parm['date']);
 			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
 			}
@@ -1093,6 +1105,7 @@
 		
 		function favored()					// returns a picture object for a favored picture
 		{	
+			// dumpVar($this->size(), "this->size()");
 			$faves = $this->favorites();			
 			if (sizeof($faves) > 0)
 				$one = $faves[array_rand($faves)];

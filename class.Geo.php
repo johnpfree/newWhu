@@ -6,6 +6,8 @@ Orphans that don't fit into the class structure. Mostly because I don't need to 
 
 -- getAllSpotKeys()   returns an array of all spot keywords. It does need the database, which I hack up in the call.
 
+-- class Flickr				July 2018 - handle my new love affair with Flickr
+
 -- class AjaxCode			my cute ajax code for the Search page - cleaner, faster, better!
 */
 function getGeocode($name)
@@ -129,33 +131,54 @@ class SaveForm
 
 class Flickr
 {
-	static function tripId() { return 55; }
-	function isActive($trip)	{	return ($trip->id() == $this->tripId());	}
+	var $apiKey = "cb38cb087d9a8de4cf8ed798c149d1d6";
+	var $userid = '142792707@N04';
+	function __construct() 
+	{ 
+		include("libraries/mdp3_flickr.php");	
+		$this->flickr = new mdp3_flickr($this->apiKey); 
+	}
 
-	var $tripIds = array(55);
-	function useFlickr($var)	
+	function getPhoto($id)
 	{
-		if ($var > 0) return compareId($var);			// passed an id
-		return compareId($var->id());							// if not, assume passed a trip object
+		return $this->flickr->loadPhotoInfo($id);
 	}
-	function compareId($id)
+
+	function makeAlbumUrl($id)
 	{
-		return in_array($id, $this->tripIds);
+		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
 	}
-	function dates()
+	function makeCollectionUrl($id)
 	{
-		include_once("flicData.php");
-		$keys = array('date', 'album', 'pic');
-		for ($i = 0, $ret = array(); $i < sizeof($flicDates); $i++) 
-		{
-			$row = array();
-			for ($j = 0; $j < sizeof($flicDates[$i]); $j++) 
-			{
-				$row[$keys[$j]] = $flicDates[$i][$j];
-			}
-			$ret[] = $row;
-		}		
-		return $ret;
+		return sprintf("https://www.flickr.com/photos/%s/collections/%s/", $this->userid, $id);
+	}
+	function makeSmallSquareUrl($id)
+	{
+		$flpic = $this->getPhoto($id);
+		$url = $this->flickr->makePhotoImageURLfromArray($flpic['photo']);
+		// dumpVar($url, "url");
+		return $this->modifyUrl($url, 'sq150');			
+	}
+	
+	
+	function modifyUrl($url, $size = 'sq150') {
+		$sizes = array(
+				'sq75'  =>	's',	// small square 75x75
+				'sq150' =>	'q',	// large square 150x150
+				'i100'  =>	't',	// thumbnail, 100 on longest side
+				'i240'  =>	'm',	// small, 240 on longest side
+				'i320'  =>	'n',	// small, 320 on longest side
+				'i500'  =>	'-',	// medium, 500 on longest side
+				'i640'  =>	'z',	// medium 640, 640 on longest side
+				'i800'  =>	'c',	// medium 800, 800 on longest side
+				'i1024' =>	'b',	// large, 1024 on longest side
+				'i1600' =>	'h',	// large 1600, 1600 on longest side
+				'i2048' =>	'k',	// large 2048, 2048 on longest side
+			);
+		$ext = substr($url, -4);				// extension
+		$str = substr($url, 0, -4);			// main url
+		$mod = isset($sizes[$size]) ? $sizes[$size] : '';
+		return $str . "_$mod$ext";			// stuff in modifier and rebuild url
 	}
 }
 

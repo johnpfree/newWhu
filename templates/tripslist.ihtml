@@ -16,7 +16,7 @@
 		<td><a {MAP_CLASS} href="?page=map&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
 		<td>
 			<a href="?page=pics&type=id&key={TRIP_ID}">
-				<img {PIC_CLASS} src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures">
+				<img {PIC_CLASS} src="./resources/icons/{PICS_ICON}.png" width="26" height="20" title="Pictures">
 			</a>
 			<a href="?page=vids&type=id&key={TRIP_ID}">
 				<img {VID_CLASS} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">

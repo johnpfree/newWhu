@@ -13,6 +13,7 @@ include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
 if (isset($_GET['dbg'])) 
 	$noDbg = !$_GET['dbg'];				// force debugging (or not)
+
 if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'ajax')  $noDbg = TRUE;	// force clean page for ajax
 
 date_default_timezone_set('America/Los_Angeles');		// now required by PHP
@@ -110,20 +111,27 @@ $props->set($_GET);							// ... but REQUEST has too much junk
 
 $curpage = $props->get('page');
 $curtype = $props->get('type');
+$curkey  = $props->get('key');
 
-if ("$curpage$curtype" == 'txtdate')								// easiest way to handle these links
+// do some redirecting for Ajax and for going to Wordpress or Flickr, early before anything is written to page
+if ("$curpage$curtype" == 'picsdate')
 {
-	$day = new WhuDbDay($props, $props->get('key'));
+	$day = new WhuDbDay($props, $curkey);
+	if ($day->hasFlick()) {
+		$link = (new Flickr)->makeAlbumUrl($day->flickAlbum());	
+		header("Location: $link");
+	}
+}
+else if ("$curpage$curtype" == 'txtdate')								// easiest way to handle these links
+{
+	$day = new WhuDbDay($props, $curkey);
 	$link = ViewWhu::makeWpPostLink($day->postId());
 	header("Location: $link");
 }
-
 else if ($curpage == 'txt')
 	jfdie("this page - $curpage$curtype - should go to wordpress");
-
 else if ($curpage == 'ajax') {
 	$page = new HomeHome($props);							// need a simple page object to run build()
-	$curkey = $props->get('key');
 	switch ("$curtype$curkey") 
 	{
 		case 'searchSpLoc':			$ajax = new SpotLocation();	echo $ajax->result($page);	exit;
@@ -182,10 +190,10 @@ switch ("$curpage$curtype")
 	case 'spotid':			$page = new OneSpot($props);			break;	
 	case 'daydate':			$page = new OneDay($props);			break;	
 
-	case 'picsid':			
-		$page = ($props->get('key') == Flickr::tripId()) ? new TripFlickrs($props) : new TripPictures($props);		break;	
-	
-	case 'picsdate':		$page = new DateGallery($props);		break;	
+	case 'picsid':				
+		$page = ((new WhuTrip($props, $props->get('key')))->hasFlicks()) ? new TripFlickrs($props) : new TripPictures($props);		break;	
+
+	case 'picsdate':		$page = new DateGallery($props);		break;		// flickr picdate should have been captured above
 	case 'picscat':			$page = new CatGallery($props);		break;	
 	case 'picid':				// legacy, still used in Wordpress e.g.
 	case 'visid':				$page = new OnePhoto($props);		break;	

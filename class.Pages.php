@@ -111,7 +111,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$paltag = $k;
 			if ($k == $page)	continue;
 			switch ($k) {
-				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasPics();	break;
+				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasWhuPics() || $trip->hasFlicks();	break;
 				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
 				default:			$gotSome = TRUE;
 			}
@@ -372,12 +372,16 @@ class TripLooper extends MultiLooper
 		for ($i = 0, $rows = array(); $i < $trips->size(); $i++) 
 		{
 			$trip = $trips->one($i);
-			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id());
+			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id(), 'PICS_ICON' => 'glyphicons-12-camera');
 			$row["TRIP_NAME"] = $trip->name();
 			$row["MAP_CLASS"] = $trip->hasMap() ? '' : "class='hidden'";
-			$row["PIC_CLASS"] = ($trip->hasPics() || (new Flickr)->isActive($trip)) ? '' : "class='hidden'";			
 			$row["VID_CLASS"] = $trip->hasVideos() ? '' : "class='hidden'";
 			$row["STORY_CLASS"] = $trip->hasStories() ? '' : "class='hidden'";
+
+			$row["PIC_CLASS"] = ($trip->hasWhuPics() || $trip->hasFlicks()) ? '' : "class='hidden'";
+			if ($trip->hasFlicks())
+				$row["PICS_ICON"] = 'social-36-flickr';
+
 			$rows[] = $row;
 		}
 		return $rows;
@@ -479,9 +483,10 @@ class TripPictures extends ViewWhu
 		{
 			$day = $days->one($i);
 			$row = array('gal_date' => $date = $day->date());
+
 			$pics = $this->build('Pics', array('date' => $date));
-			$row['date_count'] = $dc = $pics->size()	;
-								
+			$row['date_count'] = $dc = $pics->size();
+
 			if ($dc == 0)		// all done if there's no pix or vids
 				continue;
 			
@@ -504,7 +509,8 @@ class TripPictures extends ViewWhu
 			} else {
 				$row['use_binpic'] = 'hideme';
 				$row['use_image']  = '';
-			}			
+			}		
+
 			$rows[] = $row;
 			$count += $dc;
 		}
@@ -528,38 +534,43 @@ class Tripflickrs extends TripPictures
 		$trip = $this->build('Trip', $this->key);
 		$this->template->set_var('GAL_TITLE', $trip->name());
 		
-		$flic = new Flickr();
-		$flicDays = $flic->dates();
-		// dumpVar($flicDays, "flicDays");
+		$flick = new Flickr();
 		
-		for ($i = 0, $rows = $nopics = array(); $i < sizeof($flicDays); $i++)
+		$days = $this->build('DbDays', $this->key);	
+		for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 		{
-			$flicDay = $flicDays[$i];
-			if (isset($flicDay['pic']))
-			{
-				$rows[] = array('t_date' => Properties::prettyShortest($flicDay['date'])
-											, 'flicalbum' => $flicDay['album']
-											, 'flicpic' => $flicDay['pic']
-										);
-			}
-			else
-				$nopics[] = $flicDay['date'];
-		}
-		for ($i = 0; $i < 11; $i++) 
-		{
-			$rows[] = $rows[$k = ($i % sizeof($rows))];
-			dumpVar($k, "k");
-		}
-		
+			$day = $days->one($i);
+			
+			$row = array('gal_date' => $date = $day->date());
+			$pics = $this->build('Pics', array('date' => $date));
+			$row['date_count'] = $dc = $pics->size();		
+									
+			if ($dc == 0)		// all done if there's no pix or vids
+				continue;
 
-		// dumpVar($rows, "rows");
+			$row['t_date']		= Properties::prettyShortest($date);
+			$row['flicalbum']	= $flick->makeAlbumUrl($day->flickAlbum());
+
+			if (($fid = $day->flickFavorite()) == '') {					// I try to name my flick faves!
+				$pic = $pics->favored();
+				$fid = $pic->flickToken();
+				// $fid = ($pics->favored())->flickToken();
+			}
+			$row['flicpic'] = $flick->makeSmallSquareUrl($fid);
+
+			$rows[] = $row;
+			$count += $dc;
+		}
+		
 		$loop = new Looper($this->template, array('parent' => 'the_content'));
 		$loop->do_loop($rows);
 		
-		$this->template->set_var('NUM_DAYS', sizeof($flicDays));
+		$this->template->set_var('NUM_DAYS', $nday = $days->size());
 		$this->template->set_var('NUM_PICS', $npic = sizeof($rows));
-		$this->template->set_var('NOPICS_MSG', ($npic == 0) ? '' : sprintf(", no pictures on %s days", $npic));
-		
+		$this->template->set_var('NOPICS_MSG', (($nopics = $nday - $npic) == 0) ? '' : sprintf(", nothing to post on %s days", $nopics));
+		$this->template->set_var('FLIK_COL_NAME', $trip->folder());
+		$this->template->set_var('FLIK_COL_URL', $flick->makeCollectionUrl($trip->flickToken()));
+			
  		$this->tripLinkBar('pics', $this->props->get('key'));
 	}
 }
