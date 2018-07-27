@@ -1143,7 +1143,7 @@ class OneSpot extends ViewWhu
 		}		
 		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
 		
-		//----------------------------- weather ---------------
+		//----------------------------- weather tab ---------------
 		$info = getWeatherInfo(($this->props->get("weather") != 1), $spot->lat(), $spot->lon());
 		// dumpVar($info, "info");
 		$this->template->set_var($info);
@@ -1166,7 +1166,8 @@ class OneSpot extends ViewWhu
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'none_msg' => "no keywords", 'noFields' => true));
 			$loop->do_loop($rows);
 
-			$days = $this->build('DbSpotDays', $spot->id());								// ---------- days loop NOTE that I collect pictures in this loop also
+			// ------------------------------------------------------------ days loop NOTE that I collect pictures in this loop also
+			$days = $this->build('DbSpotDays', $spot->id());								
 			for ($i = $count = 0, $rows = array(); $i < $days->size(); $i++)
 			{
 				$day = $days->one($i);
@@ -1202,45 +1203,58 @@ class OneSpot extends ViewWhu
 				// collect evening and morning pictures for each day
 				if ($i == 0) {
 					$pics = $this->build('Pics', array('night' => $date));
+					dumpVar($pics->size(), "000 pics->size()");
 				}
 				else {
-					$more = $this->build('Pics', array('night' => $date));
-					$pics->add($more);
+					$pics->add($this->build('Pics', array('night' => $date)));
+					dumpVar($pics->size(), "$i. pics->size()");
 				}
 			}
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 			$loop->do_loop($rows);
 		
+			//----------------------------- pictures tab ---------------
 			$this->template->set_var('REL_PICPATH', iPhotoURL);
-			$pics->random(12);
-
+			$pics->random(9);
+			dumpVar($pics->size(), "pics->size()");
+			
+			
 			for ($i = 0, $rows = array(); $i < $pics->size(); $i++)
 			{
-				$visual = $pics->one($i);
-				// dumpVar($visual->id(), "$i picloop");
-			
-				if ($visual->isVideo())
+				$pic = $pics->one($i);
+				$use_image = $use_binpic = $use_vidtmb = $use_flick = 'hideme';		// hide everbody, then un-hide one
+				$row = array('gal_date' => $day->date(), 'wf_images_path' => $pic->folder(), 'pic_name' => $pic->filename(), 'pic_id' => $pic->id(), 'pano_symb' => '');
+
+				if ($pic->isVideo())
 				{
-					$vid = $this->build('Video', $visual);
+					$use_vidtmb = '';
+					$vid = $this->build('Video', $pic);
 					// dumpVar($vid->token(), "vid->token()");
-					$row = array('VIS_PAGE' => 'vid', 'PIC_ID' => $vid->id(), 'PANO_SYMB' => '', 
-							'VID_TOKEN' => $vid->token(), 'USE_IMAGE' => 'hideme', 'USE_BINPIC' => 'hideme', 'USE_VIDTMB' => '', 'BIN_PIC' => '');
-					$rows[] = $row;	
-					continue;			
+					$row = array_merge(array('vis_page' => 'vid', 'pic_id' => $vid->id(), 'vid_token' => $vid->token(), 'bin_pic' => ''), $row);
+				}
+				else if ($pic->isFlick())
+				{
+					$use_flick = '';
+					if (empty($flick))
+						$flick = new Flickr();
+					$row['FLICPIC'] = $flick->makeSmallSquareUrl($pic->flickToken());
+				} 
+				else
+				{
+					$row['binpic'] = $pic->thumbImage();
+					if (strlen($row['binpic']) > 100) {			// hack to show the slow image if the thumbnail fails on server
+						$use_binpic = '';
+					} else {
+						$use_image = '';
+					}
 				}
 
-				$row = array('gal_date' => $day->date(), 'wf_images_path' => $visual->folder(), 'pic_name' => $visual->filename(), 'pic_id' => $visual->id(), 'use_vidtmb' => 'hideme');
+				$row['use_image'] = $use_image;
+				$row['use_binpic'] = $use_binpic;
+				$row['use_vidtmb'] = $use_vidtmb;
+				$row['use_flick'] = $use_flick;
+				$row['pano_symb'] = $pic->picPanoSym();
 				// dumpVar($row, "$i row");
-				$row['binpic'] = $visual->thumbImage();
-				if (strlen($row['binpic']) > 100) {			// hack to show the slow image if the thumbnail fails on server
-					$row['use_binpic'] = '';
-					$row['use_image']  = 'hideme';
-				} else {
-					$row['use_binpic'] = 'hideme';
-					$row['use_image']  = '';
-				}
-
-				$row['pano_symb'] = $visual->picPanoSym();
 				$rows[] = $row;
 			}
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'picrow', 'none_msg' => "no pics!", 'noFields' => true));
@@ -1273,18 +1287,25 @@ class TripStories extends ViewWhu
 			
 			if (in_array($wpid = $day->postId(), $wpids))
 				continue;
+			
 			// fall through => this is first date for this post. NOTE ALWAYS happens for first day
 			$wpids[] = $wpid;
 			if (isset($wpdate[0]))
 				$wpdates[] = $wpdate;
 			$wpdate[0] = $day->date();
-
-			$dpics = $day->pics();
-			$pics[] = ($dpics->size() > 0) ? $dpics->favored() : NULL;
+			
+			$fpic = NULL;
+			if ($day->hasFlick() && ($day->flickFavorite() != ''))
+				$fpic = $day->flickFavorite();
+			else 
+			{
+				$dpics = $day->pics();
+				if ($dpics->size() > 0)
+					$fpic = $dpics->favored();				
+			}
+			$pics[] = $fpic;
 		}
 		$wpdates[] = $wpdate;
-		// dumpVar($wpids, "wpids");
-		// dumpVar($wpdates, "wpdates");
 
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 		// now fill the loop
@@ -1302,8 +1323,14 @@ class TripStories extends ViewWhu
 			$row['story_excerpt'] = $post->excerpt();
 			// $row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
 
-			if (is_null($pics[$i]))
-				$row['use_image']  = 'hideme';
+			$row['use_flick']  = 'hideme';
+			$row['use_image']  = 'hideme';
+			if ($trip->hasFlicks())
+			{
+				$flick = new Flickr();
+				$row['flick_url'] = $flick->makeSmallSquareUrl($pics[$i]);
+				$row['use_flick']  = '';
+			}
 			else
 			{
 				$row['pic_name'] = $pics[$i]->filename();
@@ -1312,7 +1339,6 @@ class TripStories extends ViewWhu
 			}
 			$rows[] = $row;
 		}      
-		// dumpVar($rows, "rows");
 		    
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
 		$loop->do_loop($rows);

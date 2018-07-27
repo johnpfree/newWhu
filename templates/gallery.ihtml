@@ -11,14 +11,14 @@
 	
 	<div>{PAGER_BAR}</div>
 
-	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/demo.css" />
-	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/style.css" />
-	<link rel="stylesheet" type="text/css" href="./ResponsiveImageGallery/css/elastislide.css" />
+	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/demo.css" />
+	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/elastislide.css" />
 
-	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.tmpl.min.js"></script>
-	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.easing.1.3.js"></script>
-	<script type="text/javascript" src="./ResponsiveImageGallery/js/jquery.elastislide.js"></script>
-	<script type="text/javascript" src="./ResponsiveImageGallery/js/gallery.js"></script>
+	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.elastislide.js"></script>
+	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/gallery.js"></script>
 
 	<script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">	
 	<div class="rg-image-wrapper">

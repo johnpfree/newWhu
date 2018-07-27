@@ -190,6 +190,9 @@
 		function fid()				{ return $this->dbValue('wf_trips_map_fid'); }
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		// function isNewMap()		{ return (strlen($this->fid()) > 1); }
+		
+		function flickToken() { return $this->dbValue('wf_flickr_token'); }
+		function hasFlicks() { return ($this->flickToken() != ''); }
 	}
 	class WhuTrip extends WhuDbTrip 
 	{
@@ -206,8 +209,6 @@
 			$pics = $this->build('Pics', array('tripid' => $this->id())); 
 			return $pics->size() > 0;
 		}
-		function flickToken() { return $this->dbValue('wf_flickr_token'); }
-		function hasFlicks() { return ($this->flickToken() != ''); }
 		function hasVideos()
 		{
 			$q = sprintf("select * from wf_images where wf_images_path='%s' and wf_resources_id>0", $this->folder());
@@ -308,11 +309,7 @@
 		function lon()				{ return $this->dbValue('wf_days_lon'); }		
 
 		function pics() 			{	return $this->build('WhuPics', array('date' => $this->date()));	}
-		function hasPics() 		{	
-			if ((new Flickr)->hasDate($this->date()))
-				return true;
-			return $this->pics()->size() > 0;	
-		}
+		function hasPics() 		{	return $this->pics()->size() > 0;	}
 		function hasVideos()
 		{
 			$q = sprintf("select * from wf_images where DATE(wf_images_localtime)='%s' and wf_resources_id>0", $this->date());
@@ -485,24 +482,25 @@
 		var $lazyDays = NULL;
 		var $spottypes = array(
 					'CAMP'		=> 'Place to overnight in the van',
-					'LODGE'		=> 'Hotel/Motel',
 					'HOTSPR'	=> 'Hot Soak',
 					'HOUSE'		=> 'Somebody\'s house',
+					'LODGE'		=> 'Hotel/Motel',
+					'PICNIC'	=> 'Picnic Area',
 					'NWR'			=> 'Wildlife Refuge',
 					);
 		public static $CAMPTYPES = array(
-					'usfs'		=> 'Forest Service Campgrounds',
-					'usnp'		=> 'National Park Campgrounds',
-					'state'		=> 'State Park Campgrounds',
-					'blm'			=> 'Bureau of Land Management Campgrounds',
-					'ace'			=> 'Army Corps of Engineers Campgrounds',
-					'nwr'			=> 'Wildlife Refuge Campgrounds',
-					'county'	=> 'County Campgrounds',
-					'private'	=> 'private Campgrounds',
+					'usfs'		=> 'Forest Service Campground',
+					'usnp'		=> 'National Park Campground',
+					'state'		=> 'State Park Campground',
+					'blm'			=> 'Bureau of Land Management Campground',
+					'ace'			=> 'Army Corps of Engineers Campground',
+					'nwr'			=> 'Wildlife Refuge Campground',
+					'county'	=> 'County Campground',
+					'private'	=> 'private Campground',
 					'roadside' => 'pullover when there\'s no place to camp',
 					'parking'	=> 'parking lot',
 				);
-		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types NOT LIKE '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
+		var $excludeString = " wf_spots_types NOT LIKE '%DRIVE%' AND wf_spots_types NOT LIKE '%WALK%' AND wf_spots_types NOT LIKE '%HIKE%' AND wf_spots_types != '%PICNIC%' AND wf_spots_types NOT LIKE '%HOUSE%'";
 		
 		function getRecord($key)		// parm is spot id OR the record for iteration
 		{
@@ -557,6 +555,7 @@
 						}
 					}
 				}
+				// dumpVar($this->spottypes[$v], "this->spottypes[$v]");
 				$ret[$v] = $this->spottypes[$v];
 			}
 			return $ret;
@@ -760,12 +759,6 @@
 			if ($key > 0)
 			{
 				$items = $this->getAll($q = "select * from wf_spot_days where wf_spots_id=$key order by wf_spot_days_date DESC");
-				// not using the shift any more
-				// if (sizeof($items) == 0)		// return now if there's nothing to shift
-				// 	return $items;
-				//
-				// $first = array_pop($items);
-				// array_unshift($items, $first);
 				return $items;
 			}
 
@@ -890,6 +883,7 @@
 			if ($this->isPicRecord($key))
 				return $key;
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
+			// return $this->getOne("select * from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id where w.wf_images_id=$key");
 		}
 		function kind()			{ return "UNKNONM"; }
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
@@ -984,7 +978,6 @@
 		var $prvnxt = NULL;
 		function getRecord($key)		// key = pic id
 		{
-			// dumpVar($key, "key");
 			if (is_object($key) && (get_class($key) == 'WhuVisual'))		// cast a Visual to a Pic
 				return $key->data;
 			if ($this->isPicRecord($key))
@@ -993,7 +986,8 @@
 		}
 
 		function flickToken()	{ return $this->dbValue('fl_images_id'); }
-		function kind()			{ return "picture"; }
+		function isFlick()		{ return $this->flickToken() != ''; }
+		function kind()				{ return "picture"; }
 		function isPano()
 		{
 			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=155", $this->id());
@@ -1069,17 +1063,17 @@
 				if (!$day->hasData)						// I sometimes make spot_day entries for times I'm not on a trip, so handle it
 					return array();
 
-			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) > SEC_TO_TIME(3600 * %s)", $tonight, $day->dayend());
-				// dumpVar($q, "q pm");
+				$timeQuery = "SELECT f.*,w.* from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id WHERE DATE(w.wf_images_localtime)='%s' and TIME(w.wf_images_localtime) %s SEC_TO_TIME(3600 * %s)";
+			 	$q = sprintf($timeQuery, $tonight, ">", $day->dayend());
+				dumpVar($q, "q pm");
 				$pmpics = $this->getAll($q);
 
 				$tomorrow = Properties::sqlDate("$tonight +1 day");
 				$day = $this->build('WhuDbDay', $tomorrow);
 				if (!$day->hasData)          // I sometimes make spot_day entries for times I'm not on a trip, so handle it
 					return $pmpics;
-			 	$q = sprintf("SELECT * from wf_images WHERE DATE(wf_images_localtime)='%s' 
-							and TIME(wf_images_localtime) < SEC_TO_TIME(3600 * %s)", $tomorrow, $day->daystart());
-				// dumpVar($q, "q am");
+			 	$q = sprintf($timeQuery, $tomorrow, "<", $day->daystart());
+				dumpVar($q, "q am");
 				return array_merge($pmpics, $this->getAll($q));
 			}
 			
@@ -1117,7 +1111,10 @@
 		private function favorites()					// returns an array, NOT an object, of ids of favorites in this collection
 		{
 			for ($i = 0, $idlist = ''; $i < sizeof($this->data); $i++) {
-				$idlist .= $this->data[$i]['wf_images_id'] . ',';
+				$pic = $this->build('WhuPic', $this->data[$i]);
+				if ($pic->isPano())
+					continue;
+				$idlist .= $pic->id() . ',';
 			}
 			$idlist = substr($idlist, 0, -1);
 			// dumpVar($idlist, "idlist");

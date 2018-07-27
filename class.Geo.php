@@ -152,12 +152,12 @@ class Flickr
 	{
 		return sprintf("https://www.flickr.com/photos/%s/collections/%s/", $this->userid, $id);
 	}
-	function makeSmallSquareUrl($id)
+	function makeSmallSquareUrl($id, $mod = 'sq150')
 	{
 		$flpic = $this->getPhoto($id);
 		$url = $this->flickr->makePhotoImageURLfromArray($flpic['photo']);
 		// dumpVar($url, "url");
-		return $this->modifyUrl($url, 'sq150');			
+		return $this->modifyUrl($url, $mod);			
 	}
 	
 	
