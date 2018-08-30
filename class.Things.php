@@ -191,7 +191,8 @@
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		// function isNewMap()		{ return (strlen($this->fid()) > 1); }
 		
-		function flickToken() { return $this->dbValue('wf_flickr_token'); }
+		function flickToken() { return $this->dbValue('wf_trips_flickr'); }
+		// function flickToken() { return $this->dbValue('wf_trips_flickr'); }
 		function hasFlicks() { return ($this->flickToken() != ''); }
 	}
 	class WhuTrip extends WhuDbTrip 
@@ -793,13 +794,25 @@
 	}	
 	class WhuPost extends WhuThing 
 	{
-		var $lazyPostRec = 0;
 		function getRecord($parm)	//  parm = array('wpid' => wpid)  OR jsut the wpid
 		{
 			// dumpVar($parm, "WhuPost parm");
 			if (is_array($parm) && isset($parm['wpid']))
 			{
 				return $this->doWPQuery("p={$parm['wpid']}");
+			} 
+			else if (is_array($parm) && isset($parm['quickid']))		// for Post queries that just want the title this is much quicker
+			{
+				$wpdb = new DbWpNewBlog();
+				$item = $wpdb->getOne($q = sprintf("select * from %sposts where ID=%s", $wpdb->tablepref, $wpid = $parm['quickid']));
+				// dumpVar($q, "q-DbWpNewBlog");
+				return array(array(
+					'wpid'		=> $wpid,
+					'title' 	=> $item['post_title'],	
+					'date'		=> $item['post_date'],	
+					'content' => $item['post_content'],	
+					'excerpt'	=> $this->baseExcerpt($item['post_content']),	
+				));				
 			}
 			else if ($parm > 0)
 				return $this->doWPQuery("p=$parm");
@@ -832,7 +845,6 @@
 			define('WP_USE_THEMES', false);
 			dumpVar($wpa, "doWPQuery IN");
 			require(WP_PATH . '/wp-load.php');											// Include WordPress			
-
 			$the_query = new WP_Query( $wpa );
 
 			$posts = array();
@@ -1065,7 +1077,7 @@
 
 				$timeQuery = "SELECT f.*,w.* from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id WHERE DATE(w.wf_images_localtime)='%s' and TIME(w.wf_images_localtime) %s SEC_TO_TIME(3600 * %s)";
 			 	$q = sprintf($timeQuery, $tonight, ">", $day->dayend());
-				dumpVar($q, "q pm");
+				// dumpVar($q, "q pm");
 				$pmpics = $this->getAll($q);
 
 				$tomorrow = Properties::sqlDate("$tonight +1 day");
@@ -1073,7 +1085,7 @@
 				if (!$day->hasData)          // I sometimes make spot_day entries for times I'm not on a trip, so handle it
 					return $pmpics;
 			 	$q = sprintf($timeQuery, $tomorrow, "<", $day->daystart());
-				dumpVar($q, "q am");
+				// dumpVar($q, "q am");
 				return array_merge($pmpics, $this->getAll($q));
 			}
 			

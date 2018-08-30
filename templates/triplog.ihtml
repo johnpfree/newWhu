@@ -12,7 +12,7 @@
 			<td>total</td>
 			<td class="dropout">day</td>
 			<td><img src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures"></td>
-			<td><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Story"></td>
+			<td style='padding-left: 1.6em;'><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Story"></td>
 		</tr>
 	</thead>
 	<tbody>

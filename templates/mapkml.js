@@ -1,8 +1,7 @@
 
 var customLayer = L.geoJson(null, {
   filter: function(geoJsonFeature) {
-		// console.log('geoJsonFeature', geoJsonFeature);
-    return geoJsonFeature.geometry.type !== 'Point';    // do not display Points.
+    return geoJsonFeature.geometry.type !== 'Point';    // filter out Points.
   }
 });
 
@@ -10,9 +9,7 @@ var filename = '{KML_FILE}.kml';		// ka-ching!
 console.log('file', filename);
 var runLayer = omnivore.kml(filename, null, customLayer)
     .on('ready', function() {
-
       this.eachLayer(function (layer) {
-
 				if (layer.feature.geometry.type == 'LineString') {
             layer.setStyle({
               // color: '#535900',
@@ -21,7 +18,4 @@ var runLayer = omnivore.kml(filename, null, customLayer)
             });
 					}
       });
-
-
-    })
-    .addTo(map);
+    }).addTo(map);

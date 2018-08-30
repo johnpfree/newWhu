@@ -5,10 +5,10 @@
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
 
 <script type="text/javascript" charset="utf-8">
-L.mapbox.accessToken = 'pk.eyJ1Ijoiam9obnBmcmVlIiwiYSI6ImNpajF5OGk2YjAwY3J1OGx3N3hyNjFvNjUifQ.L8lYX2iaC1iXYY1UXOntzw';
+
+L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 
 console.log('type0', (typeof map == 'object'));
-
 if (typeof map != 'object') {
 	var map = L.mapbox.map('mapinsert', 'mapbox.streets')
 			.setView([{PT_lat}, {PT_lon}], 12);
@@ -54,7 +54,7 @@ if ({WEATHER_MARK})
 
 var markersLayer = L.mapbox.featureLayer().addTo(map);
 markersLayer.setGeoJSON(markers);
-
+console.log('markers', markers);
 </script>
 
 <style type="text/css" media="screen">

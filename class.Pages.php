@@ -214,11 +214,13 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	function setLittleMap($coords, $weathermark = 'false')
 	{
 // dumpVar($coords, "setLittleMap");
+		$this->template->set_var('MAPBOX_TOKEN', MAPBOX_TOKEN);
 		if (!isset($coords['lat']))
 		{
 			$this->template->set_var("MAP_INSET", isset($coords['geo']) ?
 					"<i class=smaller><br />Apparently the camera couldn't <br />geolocate this pic.</i>" :
 					"<i class=smaller><br />This camera doesn't do geolocation.</i>");
+					// "<i class=smaller><br />No geolocation data for this picture.</i>");
 			return false;
 		}
 		$this->template->setFile('MAP_INSET', 'mapInset.ihtml');		
@@ -230,7 +232,12 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 		return true;
 	}
 	
-	static function makeWpPostLink($wpid) { return sprintf("%s/?p=%s", WP_PATH, $wpid);	}
+	static function makeWpPostLink($wpid, $namelink = '') 
+	{ 
+		if ($namelink != '')
+			$namelink = "#$namelink";
+		return sprintf("%s/?p=%s%s", WP_PATH, $wpid, $namelink);	
+	}
 	
 	function build ($type = '', $key = '') 
 	{
@@ -433,13 +440,13 @@ class OneTripLog extends ViewWhu
 			{
 				if ($prevPostId != $row['wp_id']) {
 					$prevPostId = $row['wp_id'];
-					$post = $this->build('Post', array('wpid' => $prevPostId));
+					$post = $this->build('Post', array('quickid' => $prevPostId));
 					$pName = $post->baseExcerpt($post->title(), 15);
 					$iPost++;
 				}
 				// $row['day_post'] = $iPost;
 				$row['day_post'] = $pName;
-				$row['story_link'] = $this->makeWpPostLink($prevPostId);
+				$row['story_link'] = $this->makeWpPostLink($prevPostId, $row['day_date']);
 				$row['POST_CLASS'] = '';
 			}
 			else
@@ -648,7 +655,7 @@ class OneVideo extends ViewWhu
 		$this->template->set_var('WPID', $wpid = $day->postId());
 		if ($wpid > 0)
 		{
-			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+			$this->template->set_var('STORY', $this->build('Post', array('quickid' => $wpid))->title());
 			$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
 			$this->template->set_var("STORY_VIS", '');
 		}
@@ -930,6 +937,7 @@ class SpotMap extends OneMap
 		$items = $this->getSpots($rad);
 		
 		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 
+		$hiPriority = array('CAMP', 'LODGE', 'PARK');		// this type wins
 		
 		$rows = $this->initRows();
 		$spots = $this->build('DbSpots', $items);
@@ -943,11 +951,13 @@ class SpotMap extends OneMap
 			$row['marker_color'] = $this->markerColor($i);
 										
 			$types = $spot->prettyTypes();
-			// dumpVar($types, "types");
 			foreach ($types as $k => $v)	{
+				// dumpVar($v, "$i $k v");
 				if ($k == 'CAMP' && $v == 'parking lot')
 					$k = 'PARK';
-				$row['marker_val'] = $markers[$k];			// effectively, the marker is whichever TYPE was last in that field.
+				$row['marker_val'] = $markers[$k];
+				if (in_array($k, $hiPriority))			// this means I can control who wins by listing, say LODGE before CAMP
+					break;
 			}
 
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
@@ -1022,7 +1032,8 @@ class OnePhoto extends ViewWhu
 		$this->template->set_var('WPID', $wpid = $day->postId());
 		if ($wpid > 0)
 		{
-			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+			$this->template->set_var('STORY', $this->build('Post', array('quickid' => $wpid))->title());
+			// $this->template->set_var('STORY', $this->build('Post', $wpid)->title());
 			$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
 			$this->template->set_var("STORY_VIS", '');
 		}
@@ -1080,14 +1091,18 @@ class OneDay extends ViewWhu
 		
 		$this->template->set_var('WPID', $wpid = $day->postId());
 		if ($wpid > 0)
-			$this->template->set_var('STORY', $this->build('Post', $wpid)->title());
+			$this->template->set_var('STORY', $this->build('Post', array('quickid' => $wpid))->title());
+			// $this->template->set_var('STORY', $this->build('Post', $wpid)->title());
 		$this->template->set_var("VIS_CLASS_TXT", $day->hasStory() ? '' : "class='hidden'");
 		$this->template->set_var('STORY_LINK', $this->makeWpPostLink($wpid));
 		
+		$this->template->set_var('DAY_NAME', $day->dayName());
 		$this->template->set_var('DAY_DESC', $day->dayDesc());
-		$this->template->set_var('NIGHT_DESC', $day->nightDesc());
 		$this->template->set_var('PM_STOP', $day->nightNameUrl());
-	
+		
+		$this->template->set_var('NIGHT_DESC', $desc = $day->nightDesc());
+		$this->template->set_var('NIGHT_VIS', ($desc == '') ? 'hideme' : '');
+		
 		// do next|prev nav - as long as I have yesterday, show where I woke up today
 		$pageprops = array();
 		$navday = $this->build('DbDay', $d = $day->yesterday());
@@ -1308,11 +1323,11 @@ class TripStories extends ViewWhu
 		$wpdates[] = $wpdate;
 
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
+
 		// now fill the loop
 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
 		{ 
 			$post = $this->build('Post', $wpids[$i]);
-			// $row = array('story_title' => $post->title(), 'story_id' => $wpids[$i]);
 						
 			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
 			

@@ -29,11 +29,12 @@ h2 {
 </style>
 <script>
 L.mapbox.accessToken = '{MAPBOX_TOKEN}';
-var map = L.mapbox.map('map', '', {
-  touchZoom: false, 
+var map = L.mapbox.map('map', '');
+/*
+these eliminate annoying two-finger zoom on laptop, BUT also eliminate desired pinch zoom on mobile ... SIGH ...
+  touchZoom: false,
   scrollWheelZoom: false
-});
-
+*/
 L.mapbox.tileLayer('mapbox.high-contrast').addTo(map);
 L.mapbox.styleLayer('mapbox://styles/johnpfree/cj7vzbf0y3pi52rqzqrij9dhn', {
 	attributionControl: false,

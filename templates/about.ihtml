@@ -102,6 +102,9 @@
 									<dd>
 										I am finally learning to trust others. I am finally using a gallery plugin: <a href="https://tympanus.net/Tutorials/ResponsiveImageGallery/">Responsive Image Gallery</a>, which uses the <a href="https://tympanus.net/Development/Elastislide/">Elastislide</a> carousel. I like it. I threw consistency to the wind by keeping the <a href="?page=pics&type=date&key=2017-10-24">silly font</a> they use for titles.
 									</dd>                                             
+									<dd>
+										My new thing (all trips in 2018) is managing my photos thropugh Flickr. It's working real well so far.
+									</dd>                                             
 								</dl>
 							</li>
 							<li>
@@ -139,7 +142,7 @@
 									<dd>I write my stories as <a href="https://wordpress.com/com-vs-org/">Wordpress</a> blog posts. The naked blog, without its WHUFU wrapper is <a href="{WP_URL}?page_id=567">here</a>.
 										<ul>
 											<li>The good news is that I run a server and MYSQL on my laptop, so I can write at the campground without having to be connected to the internet.</li>
-											<li>The bad news is that I must therefore manually export them from my laptop to the server Wordpress in order to share them with you. This is technically the ugliest part of the process.<br />Wordpress export/import is not awesome, and has no facility for updating. I have hacked up something to read a post's contents from my laptop database and write it to the server database, but it ain't pretty.</li>
+											<li>There is now even more good news! I discovered a plug-in called <a href="https://wpsitesync.com/">Wpsitesync</a> that uploads changes from the laptop version to the server version at the mere touch of a button (when I am again conected to the internet). I still have to do a Wordpress export/import to move a new post the first time, but it's all easy peasy after that.</li>
 										</ul>
 										I have a suite of Wordpress <a href="https://codex.wordpress.org/Shortcode">shortcodes</a> for grabbing pictures and day descriptions from WHUFU and inserting them in posts. The day name section headers are done by a shortcode which generates a "name" anchor tag so WHUFU may link directly to the part of the post for that day. I crank up Wordpress inside WHUFU any time I need its content. Wordpress is a lot of code, so there is sometimes a noticeable pause when viewing a Story page.
 									</dd>

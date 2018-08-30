@@ -1,4 +1,18 @@
 <?php
+
+class DbWpNewBlog extends DbBase
+{
+	var $tablepref = '';
+	function __construct()
+	{
+		$data = new DbWpData();
+		$this->tablepref 	= $data->tablepref();
+    $this->dsn = array_merge($this->dsn, $data->dsn());
+		// dumpVar($this->dsn, "this->dsn");
+		parent::__construct();
+	}	
+}
+
 /* 
 Orphans that don't fit into the class structure. Mostly because I don't need to instantiate a WhuThing to use them
 
@@ -135,7 +149,6 @@ class Flickr
 	var $userid = '142792707@N04';
 	function __construct() 
 	{ 
-		include("libraries/mdp3_flickr.php");	
 		$this->flickr = new mdp3_flickr($this->apiKey); 
 	}
 

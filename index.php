@@ -8,7 +8,7 @@ include_once(INCPATH . "class.DBBase.php");
 include_once("class.Things.php");
 include_once("class.Pages.php");
 include_once("class.Geo.php");				// after Pages
-
+include_once("libraries/mdp3_flickr.php");	
 include_once(INCPATH . "jfdbg.php");
 $noDbg = NODBG_DFLT;
 if (isset($_GET['dbg'])) 
@@ -114,7 +114,14 @@ $curtype = $props->get('type');
 $curkey  = $props->get('key');
 
 // do some redirecting for Ajax and for going to Wordpress or Flickr, early before anything is written to page
-if ("$curpage$curtype" == 'picsdate')
+//
+if ("$curpage$curtype" == 'picsid&key56')		// one time only, go straight to the flic albom
+{
+	// $link = (new Flickr)->makeAlbumUrl();
+	$link = "https://www.flickr.com/photos/142792707@N04/albums";	
+	header("Location: $link");
+}
+else if ("$curpage$curtype" == 'picsdate')		// redirect FLiclr trips pics
 {
 	$day = new WhuDbDay($props, $curkey);
 	if ($day->hasFlick()) {

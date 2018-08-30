@@ -9,12 +9,12 @@
 	
 	<dl>
 		<dt>Here is a short description of the day:</dt>
-		<dd>{DAY_DESC}</dd>
+		<dd>{DAY_NAME}<br />{DAY_DESC}</dd>
 	</dl>
 	
 	<p>I started the day at {AM_STOP}. I ended the day at {PM_STOP}.</p>
 	
-	<dl>
+	<dl class="{NIGHT_VIS}">
 		<dt>Here is a short description of the evening:</dt>
 		<dd>{NIGHT_DESC}</dd> 
 	</dl>
