@@ -410,7 +410,7 @@ class OneTripLog extends ViewWhu
 			// $day = new WhuDayInfo($days->one($i));
 			$day = $this->build('DayInfo', $days->one($i));
 
-			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => $day->cumulative(), 'map_marker' => $i+1);
+			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => number_format($day->cumulative()), 'map_marker' => $i+1);
 			$row['nice_date'] = Properties::prettyDate($row['day_date'] = $day->date(), "M"); 
 			$row['short_date'] = Properties::prettyShortest($row['day_date']); 
 			$row['trip_year'] = substr($row['day_date'], 0, 4); 
@@ -432,6 +432,11 @@ class OneTripLog extends ViewWhu
 			$row['day_pics'] = $npics = $day->pics()->size();
 			$row['pics_msg'] = $npics;
 			$row['PIC_CLASS'] = $npics > 0 ? '' : "class='hidden'";
+			
+			// $picu = new WhuUrl('page', 'id', $day->date());
+			// $picu->addParam("extras", $npics);
+			// $picu->addClass($npics > 0 ? '' : "class='hidden'");
+			// $row['PIC_CLASS'] = $picu->url();
 			
 			$row['wp_id'] = $day->postId();
 // $day->postCatId();
@@ -1316,8 +1321,9 @@ class TripStories extends ViewWhu
 			{
 				$dpics = $day->pics();
 				if ($dpics->size() > 0)
-					$fpic = $dpics->favored();				
+					$fpic = $dpics->favored()->flickToken();				
 			}
+			// dumpVar($fpic, "$i fpic n=". sizeof($pics));
 			$pics[] = $fpic;
 		}
 		$wpdates[] = $wpdate;
@@ -1343,7 +1349,8 @@ class TripStories extends ViewWhu
 			if ($trip->hasFlicks())
 			{
 				$flick = new Flickr();
-				$row['flick_url'] = $flick->makeSmallSquareUrl($pics[$i]);
+				// dumpVar($pics[$i], "pics[$i]");
+				$row['flick_url'] = $flick->makeSmallSquareUrl($pics[$i]);    // ['fl_images_id']
 				$row['use_flick']  = '';
 			}
 			else

@@ -115,17 +115,22 @@ $curkey  = $props->get('key');
 
 // do some redirecting for Ajax and for going to Wordpress or Flickr, early before anything is written to page
 //
-if ("$curpage$curtype" == 'picsid&key56')		// one time only, go straight to the flic albom
+if ("$curpage$curtype" == 'picsid')			
 {
-	// $link = (new Flickr)->makeAlbumUrl();
-	$link = "https://www.flickr.com/photos/142792707@N04/albums";	
-	header("Location: $link");
+	$trip= new WhuDbTrip($props, $curkey);				// straight to the flic collection for new trips
+	if (($flik = $trip->flickToken()) != '') {
+		$link = "https://www.flickr.com/photos/142792707@N04/collections/$flik/";	
+		header("Location: $link");
+	}
 }
 else if ("$curpage$curtype" == 'picsdate')		// redirect FLiclr trips pics
 {
-	$day = new WhuDbDay($props, $curkey);
-	if ($day->hasFlick()) {
-		$link = (new Flickr)->makeAlbumUrl($day->flickAlbum());	
+	// $day = new WhuDbDay($props, $curkey);
+	// dumpVar($day->data, "day->data");
+	if (substr($curkey, 0, 4) == '2018') {
+	// if ($day->hasFlick()) {
+		exit;
+		$link = (new Flickr)->makeDateUrl($curkey);	
 		header("Location: $link");
 	}
 }

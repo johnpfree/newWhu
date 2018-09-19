@@ -13,6 +13,65 @@ class DbWpNewBlog extends DbBase
 	}	
 }
 
+// ---------------------------------------------------------------------------------------  
+class WhuUrl
+{
+	var $classes = '';
+	var $params = '';
+	function __construct($p, $t, $k, $msg, $ex = array())
+	{
+		$this->page = $p;
+		$this->type = $t;
+		$this->key  = $k;
+		$this->extras = $ex;
+	}
+	function url()
+	{
+		$curpage = $props->get('page');
+		$curtype = $props->get('type');
+		$curkey  = $props->get('key');
+		$curmsg  = $props->get('msg');
+
+		if ("$this->page$this->type" == 'picsid')			
+		{
+			$trip= new WhuDbTrip($props, $this->key);				// straight to the flic collection for new trips
+			if (($flik = $trip->flickToken()) != '') {
+				return "https://www.flickr.com/photos/142792707@N04/collections/$flik/";	
+			}
+		}
+		else if ("$this->page$this->type" == 'picsdate' && substr($curkey, 0, 4) == '2018')		//flickr day pics?
+		{
+			if (substr($curkey, 0, 4) == '2018') {
+				return (new Flickr)->makeDateUrl($curkey);	
+			}
+			$flik = new Flickr();
+			if ($flik->hasAlbum($curkey)) 
+			{
+				$url = $flik->makeDateUrl($curkey);	
+			}
+			else
+			{
+				$url = $flik->makeFirstPicUrl($curkey);
+			}
+			$img = "<img src='./resources/icons/social-36-flickr.png' width='26' height='20' title='Pictures'>";
+			return sprintf("<a> %s href='%s'>%s</a>", $this->classes, $url, $mg);
+			/*
+			old:
+			<td><a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a></td>
+			flik first of the day
+			http://jfmac.local/~jf/dev/flickr.php?act=getfordayraw&s=2018-09-05&e=2018-09-06
+			flik album
+		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
+			*/
+		}
+		return sprintf("<a> %s href='?page=%s&type=%s&key=%s%s'>%s</a>", $this->classes, $curpage, $curtype, $curkey, $this->params, $this->msg);
+		// <a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a>
+	}
+	function addClass($str)	{	if ($this->classes != '') $this->classes .= ' '; $this->classes .= $str;	}
+	function addParam($k,$v)	{	$this->params .= "&$k=$v";	}
+}
+
+
 /* 
 Orphans that don't fit into the class structure. Mostly because I don't need to instantiate a WhuThing to use them
 
@@ -156,7 +215,11 @@ class Flickr
 	{
 		return $this->flickr->loadPhotoInfo($id);
 	}
-
+	
+	function makeDateUrl($id)
+	{
+		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
+	}
 	function makeAlbumUrl($id)
 	{
 		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
