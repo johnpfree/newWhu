@@ -115,19 +115,24 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
 				default:			$gotSome = TRUE;
 			}
-
 // dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
-			$this->template->set_var("PAGE$i", $k);
-			$this->template->set_var("LABEL$i", $gotSome ? $v : '&nbsp;');		// hacky, there's still a little live spot
-			$this->template->set_var("TYPE$i", 'id');
-			$this->template->set_var("KEY$i", $id);		
-				
+
+			if ($gotSome) 
+			{			
+				// dumpVar($v, "WhuLink($k, 'id', $id, v");
+				$triplink = new WhuLink($k, 'id', $id, $v);			
+				$this->template->set_var("LINK$i", $triplink->url());
+			}
+			else
+				$this->template->set_var("LINK$i", '-');
+
 			$this->template->set_var("BACK$i", self::pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
 	}
 	function dayLinkBar($page, $date)
 	{
+		dumpVar('xx', "dayLinkBar($page, $date)");
 		$allfour = array(
 			"map" => "map",
 			"day" => "day",
@@ -151,17 +156,18 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			switch ($k) {
 				case 'pics':	$gotSome = $day->hasPics();	$paltag = 'pic'; break;
 				case 'txt':		$gotSome = $day->hasStory();	break;
-				case 'day':		$paltag = 'log'; 	break;
-				default:			$gotSome = TRUE;
+				case 'day':		$gotSome = true; $paltag = 'log'; 	break;
+				default:			$gotSome = true;
 			}
-			$this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "style='visibility:hidden;'");
-			// $this->template->set_var("VIS_CLASS$i", $gotSome ? '' : "class='hidden'");
+			if ($gotSome) 
+			{			
+				dumpVar($v, "WhuLink($k, 'date', $date, v");	
+				$daylink = new WhuLink($k, 'date', $date, $v);			
+				$this->template->set_var("LINK$i", $daylink->url());
+			}
+			else
+				$this->template->set_var("LINK$i", '-');
 
-// dumpVar(boolStr($gotSome), "linkBar($page, $date) $k, $v");
-			$this->template->set_var("PAGE$i", $k);
-			$this->template->set_var("LABEL$i", $v);
-			$this->template->set_var("TYPE$i", 'date');
-			$this->template->set_var("KEY$i", $date);			
 			$this->template->set_var("BACK$i", self::pals[$paltag]['bbackcolor']);			
 			$i++;
 		}		
@@ -379,16 +385,13 @@ class TripLooper extends MultiLooper
 		for ($i = 0, $rows = array(); $i < $trips->size(); $i++) 
 		{
 			$trip = $trips->one($i);
-			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id(), 'PICS_ICON' => 'glyphicons-12-camera');
-			$row["TRIP_NAME"] = $trip->name();
-			$row["MAP_CLASS"] = $trip->hasMap() ? '' : "class='hidden'";
-			$row["VID_CLASS"] = $trip->hasVideos() ? '' : "class='hidden'";
-			$row["STORY_CLASS"] = $trip->hasStories() ? '' : "class='hidden'";
+			$row = array("TRIP_DATE" => $trip->startDate(), "TRIP_ID" => $trip->id(), "TRIP_NAME" => $trip->name());
+			$row['TXTS_LINK'] = (new WhutxtsidLink($trip))->url();
+			$row['MAP_LINK' ] = (new WhumapidLink ($trip))->url();
+			$row['PICS_LINK'] = (new WhupicsidLink($trip))->url();
+			$row['VIDS_LINK'] = (new WhuvidsidLink($trip))->url();
 
-			$row["PIC_CLASS"] = ($trip->hasWhuPics() || $trip->hasFlicks()) ? '' : "class='hidden'";
-			if ($trip->hasFlicks())
-				$row["PICS_ICON"] = 'social-36-flickr';
-
+			// dumpVar($row, "row"); exit;
 			$rows[] = $row;
 		}
 		return $rows;
@@ -404,19 +407,22 @@ class OneTripLog extends ViewWhu
  	 	$trip = $this->build('DbTrip', $tripid);	
 		$days = $this->build('DbDays', $tripid);	
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
-
+		$picu = new WhuLink('pics', 'date');
+		$picu->preLoadPics($trip);
+		
+		// whiffle the days for this trip 
 		for ($i = $iPost = $prevPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
 		{
 			// $day = new WhuDayInfo($days->one($i));
 			$day = $this->build('DayInfo', $days->one($i));
 
+			// easy stuff - date mileage name ...
 			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => number_format($day->cumulative()), 'map_marker' => $i+1);
 			$row['nice_date'] = Properties::prettyDate($row['day_date'] = $day->date(), "M"); 
 			$row['short_date'] = Properties::prettyShortest($row['day_date']); 
 			$row['trip_year'] = substr($row['day_date'], 0, 4); 
 
-			// dumpVar($row, "row");exit;
-
+			// Stop or Spot?
 			$parms = array('day', 'date', $day->date());
 			if ($day->hasSpot())
 				$parms = array('spot', 'id', $day->spotId());
@@ -429,18 +435,11 @@ class OneTripLog extends ViewWhu
 			$row['stop_name'] = $day->nightName();				
 			$row['stop_desc'] = $day->baseExcerpt($day->nightDesc(), 30);
 
-			$row['day_pics'] = $npics = $day->pics()->size();
-			$row['pics_msg'] = $npics;
-			$row['PIC_CLASS'] = $npics > 0 ? '' : "class='hidden'";
+			$picu->setKey($day->date());
+			$row['PIC_LINK'] = $picu->url();			// pic link - old style/flick album/flik pic
 			
-			// $picu = new WhuUrl('page', 'id', $day->date());
-			// $picu->addParam("extras", $npics);
-			// $picu->addClass($npics > 0 ? '' : "class='hidden'");
-			// $row['PIC_CLASS'] = $picu->url();
-			
+			// which post?
 			$row['wp_id'] = $day->postId();
-// $day->postCatId();
-			
 			if ($row['wp_id'] > 0) 
 			{
 				if ($prevPostId != $row['wp_id']) {
@@ -448,15 +447,15 @@ class OneTripLog extends ViewWhu
 					$post = $this->build('Post', array('quickid' => $prevPostId));
 					$pName = $post->baseExcerpt($post->title(), 15);
 					$iPost++;
-				}
-				// $row['day_post'] = $iPost;
+				}			
 				$row['day_post'] = $pName;
 				$row['story_link'] = $this->makeWpPostLink($prevPostId, $row['day_date']);
 				$row['POST_CLASS'] = '';
 			}
 			else
 				$row['POST_CLASS'] = "class='hidden'";
-				
+			// if ($i > 5)			exit;
+			
 			$nodeList[] = $row;		
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
@@ -1299,12 +1298,27 @@ class TripStories extends ViewWhu
 		// collect unique Post ids
 		$days = $this->build('DbDays', $tripid);
 		
-		// whiffle thru the days, 
+		
+		// test
+		// $posts = $this->build('Posts', array('wpcat' => 76)); // 62 71 76
+		// dumpVar($posts->data[0], "posts->data[0]");exit;
+		for ($i = 0; $i < $posts->size(); $i++)
+		{
+			echo "<hr>";
+			// $post = $posts->one($i);
+			echo sprintf("%s. %s %s %s", $posts->data[$i]['wpid'], $posts->data[$i]['date'], $posts->data[$i]['title'], $posts->data[$i]['excerpt']);
+		}
+		
+		// $posts->dump("Hickey");
+		exit;
+		
+		
+		// whiffle thru the days, create $wpid - the posts, and $wpdates[] - start/end dates per post
 		for ($i = 0, $wpids = $wpdates = $wpdate = $pics = array(); $i < $days->size(); $i++)
 		{
 			$day = $days->one($i);			
 			$wpdate[1] = $day->date();
-			
+
 			if (in_array($wpid = $day->postId(), $wpids))
 				continue;
 			
@@ -1327,21 +1341,23 @@ class TripStories extends ViewWhu
 			$pics[] = $fpic;
 		}
 		$wpdates[] = $wpdate;
-
+		dumpVar(sizeof($wpdates), "first loop");
+		dumpVar($pics, "pics");
 		$this->template->set_var('REL_PICPATH', iPhotoURL);
 
 		// now fill the loop
 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
 		{ 
-			$post = $this->build('Post', $wpids[$i]);
-						
+			// $post = $this->build('Post', $wpids[$i]);
+			$post = $this->build('Post', array('quickid' => $wpids[$i]));
+			
 			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
 			
 			$str = sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][0], Properties::prettyDate($wpdates[$i][0]));
 			$str .= " - ";
 			$str .= sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][1], Properties::prettyDate($wpdates[$i][1]));
 			$row['story_dates'] = $str;
-			$row['story_excerpt'] = $post->excerpt();
+			$row['story_excerpt'] = '';//$post->excerpt();
 			// $row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
 
 			$row['use_flick']  = 'hideme';
@@ -1355,9 +1371,13 @@ class TripStories extends ViewWhu
 			}
 			else
 			{
-				$row['pic_name'] = $pics[$i]->filename();
-		 		$row['wf_images_path'] = $pics[$i]->folder();
+			$row['use_image']  = 'hideme';
+		 		$row['wf_images_path'] = 
+				$row['pic_name'] = 'fixme';
 				$row['use_image']  = '';
+				// $row['pic_name'] = $pics[$i]->filename();
+				// 		 		$row['wf_images_path'] = $pics[$i]->folder();
+				// $row['use_image']  = '';
 			}
 			$rows[] = $row;
 		}      

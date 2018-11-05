@@ -63,6 +63,7 @@
 		function isCategoryRecord($key)		{	return (is_array($key) && isset($key['wf_categories_parent']));	}		// spots also have a cat id
 		function isDayRecord($key)				{	return (is_array($key) && isset($key['wf_days_date']));	}
 		function isTextSearch($key)				{	return (is_array($key) && isset($key['searchterm']));	}
+		function isWpCatSearch($key)			{	return (is_array($key) && isset($key['wpcat']));	}
 		function isVidRecord($key)				{	return (is_array($key) && isset($key['wf_resources_id']));	}
 		// function isVidCollection($key)		{	return (is_array($key) && is_array($key[0]) && isset($key[0]['wf_resources_id']));	}
 
@@ -805,7 +806,7 @@
 			{
 				$wpdb = new DbWpNewBlog();
 				$item = $wpdb->getOne($q = sprintf("select * from %sposts where ID=%s", $wpdb->tablepref, $wpid = $parm['quickid']));
-				// dumpVar($q, "q-DbWpNewBlog");
+				dumpVar($q, "q-DbWpNewBlog");
 				return array(array(
 					'wpid'		=> $wpid,
 					'title' 	=> $item['post_title'],	
@@ -877,11 +878,15 @@
 	{
 		var $isCollection = true;
 		function getRecord($parm)
-		{
-			if ($this->isTextSearch($parm))						// for text search
+		{			if ($this->isTextSearch($parm))						// for text search
 			{
 				return $this->doWPQuery("s={$parm['searchterm']}");
 			}
+			// if ($this->isWpCatSearch($parm))						// for text search
+			// {
+			// 	dumpVar($parm, "isWpCatSearch parm");
+			// 	return $this->doWPQuery("cat={$parm['wpcat']}");
+			// }
 			WhuThing::getRecord($key);		// FAIL
 		}
 	}

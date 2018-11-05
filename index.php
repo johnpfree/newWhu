@@ -113,36 +113,9 @@ $curpage = $props->get('page');
 $curtype = $props->get('type');
 $curkey  = $props->get('key');
 
-// do some redirecting for Ajax and for going to Wordpress or Flickr, early before anything is written to page
+// do some redirecting for Ajax early before anything is written to page
 //
-if ("$curpage$curtype" == 'picsid')			
-{
-	$trip= new WhuDbTrip($props, $curkey);				// straight to the flic collection for new trips
-	if (($flik = $trip->flickToken()) != '') {
-		$link = "https://www.flickr.com/photos/142792707@N04/collections/$flik/";	
-		header("Location: $link");
-	}
-}
-else if ("$curpage$curtype" == 'picsdate')		// redirect FLiclr trips pics
-{
-	// $day = new WhuDbDay($props, $curkey);
-	// dumpVar($day->data, "day->data");
-	if (substr($curkey, 0, 4) == '2018') {
-	// if ($day->hasFlick()) {
-		exit;
-		$link = (new Flickr)->makeDateUrl($curkey);	
-		header("Location: $link");
-	}
-}
-else if ("$curpage$curtype" == 'txtdate')								// easiest way to handle these links
-{
-	$day = new WhuDbDay($props, $curkey);
-	$link = ViewWhu::makeWpPostLink($day->postId());
-	header("Location: $link");
-}
-else if ($curpage == 'txt')
-	jfdie("this page - $curpage$curtype - should go to wordpress");
-else if ($curpage == 'ajax') {
+if ($curpage == 'ajax') {
 	$page = new HomeHome($props);							// need a simple page object to run build()
 	switch ("$curtype$curkey") 
 	{
@@ -152,7 +125,7 @@ else if ($curpage == 'ajax') {
 		case 'searchPicPlace':	$ajax = new PicPlace();			echo $ajax->result($page);	exit;
 		case 'searchPicCat':		$ajax = new PicCat();				echo $ajax->result($page);	exit;
 	}
-	jfDie("unknown key-$key");
+	jfDie("unknown ajax key-$key");
 }
 
 $props->dump('props');

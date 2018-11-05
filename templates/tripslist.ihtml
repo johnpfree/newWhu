@@ -11,17 +11,10 @@
 	<!-- BEGIN trip_rows -->
 	<tr class="collapse {SHOWTAG} {GROUPTAG}">
 		<td align="right"><a href="?page=log&type=id&key={TRIP_ID}" title="Trip Log">{TRIP_NAME}</a></td>
-		<td> &nbsp; </td>
-		<td><a {STORY_CLASS} href="?page=txts&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-331-blog.png" width="21" height="23" title="Stories"></a></td>
-		<td><a {MAP_CLASS} href="?page=map&type=id&key={TRIP_ID}"><img src="./resources/icons/glyphicons-503-map.png" width="23" height="23" title="Map"></a></td>
-		<td>
-			<a href="?page=pics&type=id&key={TRIP_ID}">
-				<img {PIC_CLASS} src="./resources/icons/{PICS_ICON}.png" width="26" height="20" title="Pictures">
-			</a>
-			<a href="?page=vids&type=id&key={TRIP_ID}">
-				<img {VID_CLASS} src="./resources/icons/glyphicons-181-facetime-video.png" width="24" height="16" title="Videos">
-			</a>
-		</td>
+		<td> &nbsp; </td>		
+		<td>{TXTS_LINK}</td>
+		<td>{MAP_LINK}</td>
+		<td>{PICS_LINK} {VIDS_LINK}</td>
 	</tr>
 	<!-- END trip_rows -->
 <!-- END triptype_rows -->	

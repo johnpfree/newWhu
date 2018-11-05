@@ -14,63 +14,165 @@ class DbWpNewBlog extends DbBase
 }
 
 // ---------------------------------------------------------------------------------------  
-class WhuUrl
+class WhuLink
 {
 	var $classes = '';
 	var $params = '';
-	function __construct($p, $t, $k, $msg, $ex = array())
+	var $albumList = false;
+	// Can really overload param 3 with whatever you want based on the first two
+	function __construct($p, $t, $kparm = '', $txt = '-')
 	{
-		$this->page = $p;
-		$this->type = $t;
-		$this->key  = $k;
-		$this->extras = $ex;
+		$defaults = array('classes' => '', 'params' => '', 'txt' => $txt, 'page' => $p, 'type' => $t, 'key' => $kparm);
+		$this->props = new WhuProps($defaults);		// default settings
+		$this->pagetype = "$p$t";
 	}
+	function setKey($val)	{	$this->props->set('key', $val);	}
 	function url()
 	{
-		$curpage = $props->get('page');
-		$curtype = $props->get('type');
-		$curkey  = $props->get('key');
-		$curmsg  = $props->get('msg');
+		$curkey  = $this->props->get('key');
+		// dumpVar($this->pagetype, "curkey=$curkey this->pagetype");
+		// $this->props->dump("Whulink $curkey");
 
-		if ("$this->page$this->type" == 'picsid')			
-		{
-			$trip= new WhuDbTrip($props, $this->key);				// straight to the flic collection for new trips
-			if (($flik = $trip->flickToken()) != '') {
-				return "https://www.flickr.com/photos/142792707@N04/collections/$flik/";	
-			}
+		switch ($this->pagetype) {
+			case 'picsdate':
+				if (substr($curkey, 0, 4) == '2018')			// Flickr
+				{
+					$this->flik = new Flickr();
+					$this->lazyLoadAlbums();								// get all albums just once
+					if (isset($this->albumList[$curkey]))		// there is an albom for this date
+					{
+						$album = $this->albumList[$curkey];
+						$url = $this->flik->makeAlbumUrl($album['album_id']);	
+						// dumpVar($album['title'], "got an album for $curkey");
+						return sprintf("<a target='_blank' title='Flickr Album' %s href='%s'>(%s)</a>", $this->classes, $url, $album['npics']);
+					}
+					else                    			    		 	// no album, link to first pic of the day
+					{
+						// dumpVar($curkey, "no album");
+						if (empty($this->picsbyday[$curkey]))
+							return "-";
+						$npic = sizeof($this->picsbyday[$curkey]);
+						$pic1 = array_shift($this->picsbyday[$curkey]);
+						$url = $this->flik->makePicUrl($pic1['id']);
+						return sprintf("<a target='_blank' title='First Flickr Pic for the Day' %s href='%s'>[%s]</a>", $this->classes, $url, $npic);
+					}				
+				}
+				break;
+				
+			case 'txtdate':
+				$day = new WhuDbDay($this->props, $curkey);
+				$link = ViewWhu::makeWpPostLink($day->postId(), $this->props->get('key'));
+				return sprintf("<a target='_blank' href='%s'>%s</a>", $link, $this->props->get('txt'));				
 		}
-		else if ("$this->page$this->type" == 'picsdate' && substr($curkey, 0, 4) == '2018')		//flickr day pics?
-		{
-			if (substr($curkey, 0, 4) == '2018') {
-				return (new Flickr)->makeDateUrl($curkey);	
-			}
-			$flik = new Flickr();
-			if ($flik->hasAlbum($curkey)) 
-			{
-				$url = $flik->makeDateUrl($curkey);	
-			}
-			else
-			{
-				$url = $flik->makeFirstPicUrl($curkey);
-			}
-			$img = "<img src='./resources/icons/social-36-flickr.png' width='26' height='20' title='Pictures'>";
-			return sprintf("<a> %s href='%s'>%s</a>", $this->classes, $url, $mg);
-			/*
-			old:
-			<td><a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a></td>
-			flik first of the day
-			http://jfmac.local/~jf/dev/flickr.php?act=getfordayraw&s=2018-09-05&e=2018-09-06
-			flik album
-		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
-			*/
-		}
-		return sprintf("<a> %s href='?page=%s&type=%s&key=%s%s'>%s</a>", $this->classes, $curpage, $curtype, $curkey, $this->params, $this->msg);
-		// <a {PIC_CLASS} href="?page=pics&type=date&key={DAY_DATE}&extra={DAY_PICS}">{PICS_MSG}</a>
+		return $this->canonicalWhu();
 	}
+	function lazyLoadAlbums() {
+		if (is_array($this->albumList))
+			return;
+		// dumpVar(gettype($this->albumList), "GET0 ALBUMLIST");
+		$this->albumList = $this->flik->getAlbums();
+		// dumpVar(gettype($this->albumList), "GET1 ALBUMLIST");
+	}
+	function preLoadPics($trip) {
+		$flik = new Flickr();
+		$start = $trip->startDate();
+		$end = date("Y-m-d", strtotime($trip->endDate()) + 86400);
+		$pics = $flik->getPhotosForIntervalRaw($start, $end);
+		dumpVar($pics[0], "pics[0] N=" . sizeof($pics));
+		for ($i = 0, $this->picsbyday = array(); $i < sizeof($pics); $i++) // whiffle the pics
+		{
+			$pic = $pics[$i];
+			$date = substr($pic['datetaken'], 0, 10);
+			if (empty($this->picsbyday[$date]))											// the key of the array is the date
+				$this->picsbyday[$date] = array();
+			$this->picsbyday[$date][$pic['datetaken']] = $pic;		// add the pic to that array, keyed on it's date/time so they are sorted
+			// $this->picsbyday[$date][] = $pic;										// add the pic to that array
+		}
+		ksort($this->picsbyday);
+		foreach ($this->picsbyday as $k => $v) 
+		{
+			// dumpVar(sizeof($v), "$k, N=");
+			ksort($v);
+			// foreach ($v as $d => $a) echo sprintf("<br>d=%s t=%s||%s", $k, $d, $a['title']);
+		}
+		return $this->picsbyday;
+	}
+	
 	function addClass($str)	{	if ($this->classes != '') $this->classes .= ' '; $this->classes .= $str;	}
 	function addParam($k,$v)	{	$this->params .= "&$k=$v";	}
+	function canonicalWhu()
+	{
+		return sprintf("<a %s href='?page=%s&type=%s&key=%s%s'>%s</a>", 
+				$this->props->get('classes'), 
+				$this->props->get('page'), 
+				$this->props->get('type'), 
+				$this->props->get('key'), 
+				$this->props->get('params'), 
+				$this->props->get('txt')
+			);
+	}
 }
-
+class WhuSimpleLink extends WhuLink
+{
+	var $type = 'id';
+	function __construct($parm = '')
+	{
+		$defaults = array('classes' => '', 'params' => '', 'txt' => '', 'page' => $this->page, 'type' => $this->type, 'key' => '');
+		$this->props = new WhuProps($defaults);		// default settings
+		$this->trip = $parm;
+	}
+	function url() 
+	{
+		$this->props->set('key', $this->trip->id());			// overload param 3
+		if ($this->hasStuff()) {
+			$this->props->set('txt', $this->myIcon);
+			return $this->canonicalWhu();
+		}
+		else
+			return '';			
+	}
+	function hasStuff() { return false; }
+}
+class WhumapidLink extends WhuSimpleLink
+{
+	var $page = 'map';
+	var $myIcon = "<img src='./resources/icons/glyphicons-503-map.png' width='26' height='20' title='Map'>";
+	function hasStuff() { return $this->trip->hasMap(); }
+}
+class WhutxtsidLink extends WhuSimpleLink
+{
+	var $page = 'txts';
+	var $myIcon = "<img src='./resources/icons/glyphicons-331-blog.png' width='26' height='20' title='Map'>";
+	function hasStuff() { return $this->trip->hasStories(); }
+}
+class WhuvidsidLink extends WhuSimpleLink
+{
+	var $page = 'vids';
+	var $myIcon = "<img src='./resources/icons/glyphicons-181-facetime-video.png' width='26' height='20' title='Videos'>";
+	function hasStuff() { return $this->trip->hasVideos(); }
+}
+class WhupicsidLink extends WhuSimpleLink
+{
+	var $page = 'pics';
+	var $cameraimg = "<img src='./resources/icons/glyphicons-12-camera.png' width='26' height='20' title='Pictures'>";
+	var $flickrimg = "<img src='./resources/icons/social-36-flickr.png' width='26' height='20' title='Flick Pics'>";
+	function url()
+	{
+		$this->props->set('key', $this->trip->id());			// overload param 3
+		if ($this->trip->hasFlicks())
+		{
+			$this->props->set('txt', $this->flickrimg);
+			return sprintf("<a target='_blank' href='https://www.flickr.com/photos/142792707@N04/albums/%s'>%s</a>", $this->trip->flickToken(), $this->flickrimg);
+		}
+		else if ($this->trip->hasWhuPics()) 
+		{
+			$this->props->set('txt', $this->cameraimg);
+			return $this->canonicalWhu();
+		}
+		else
+			return '';
+	}
+}
 
 /* 
 Orphans that don't fit into the class structure. Mostly because I don't need to instantiate a WhuThing to use them
@@ -215,10 +317,72 @@ class Flickr
 	{
 		return $this->flickr->loadPhotoInfo($id);
 	}
-	
-	function makeDateUrl($id)
+	function getPhotosForDate($date)
 	{
-		return sprintf("https://www.flickr.com/photos/%s/sets/%s/", $this->userid, $id);
+		$tomorrow = date("Y-m-d", strtotime($date) + 86400);
+		return $this->getPhotosForIntervalRaw($date, $tomorrow);
+	}
+	function getPhotosForIntervalRaw($start, $end)
+	{
+		dumpVar('xx', "getPhotosForIntervalRaw($start, $end)");
+		$params = array(
+        'api_key'   => $this->apiKey,
+        'method'    => 'flickr.photos.search',
+        'user_id'   => $this->userid,
+        'per_page'  => '500',
+        'extras'    => 'date_taken',
+        'min_taken_date'	=> $start,
+        'max_taken_date'	=> $end,
+        'format'    => 'php_serial',
+        );
+    $rsp_obj = $this->flickr->query($params);
+		if (sizeof($rsp_obj) == 0)								// offline, call fail
+			return array();
+
+		$nphoto = sizeof($photos = $rsp_obj['photos']['photo']);
+		// dumpVar($photos[0], "rsp_obj 0, n=$nphoto");
+
+		$iPage = 1;
+		while ($nphoto == $params['per_page']) {
+			$params['page'] = ++$iPage;
+			dumpVar($iPage, "iPage");
+	    $rsp_obj = $this->flickr->query($params);
+			$nphoto = sizeof($rsp_obj['photos']['photo']);			
+			
+			dumpVar(sizeof($rsp_obj['photos']['photo']), "page $iPage");
+			$photos = array_merge($photos, $rsp_obj['photos']['photo']);
+		}
+		dumpVar(sizeof($photos), "final size");
+    return $photos;  
+	}
+	function getAlbums($gdate = '')		// return all albums unless one matches $gdate, then return just that one
+	{
+	  $photosets = $this->flickr->getUserSetList($this->userid);
+		
+		for ($i = 0, $albums = array(); $i < sizeof($photosets); $i++) 
+		{
+			$photoset = $photosets[$i];
+			// dumpVar($photoset, "photoset");exit;
+			
+			$album = array(
+				'album_id' => $photoset['id'], 
+				'title' => $photoset['title']['_content'], 
+				'desc' => $photoset['description']['_content'], 
+				'npics' => $photoset['photos'], 
+			);
+			$album['whu_date'] = $adate = substr($album['title'], 0, 10);
+			if ($album['whu_date'] == $gdate)
+				return $album;										// Just want this one. fall thru to return 'em all
+
+			$albums[$adate] = $album;
+		}
+		return (sizeof($albums) > 0) ? $albums : false;
+	}
+	
+	function makePicUrl($id)
+	{
+		dumpVar($id, "makePicUrl");
+		return sprintf("https://www.flickr.com/photos/%s/%s/", $this->userid, $id);	
 	}
 	function makeAlbumUrl($id)
 	{
@@ -235,8 +399,7 @@ class Flickr
 		// dumpVar($url, "url");
 		return $this->modifyUrl($url, $mod);			
 	}
-	
-	
+		
 	function modifyUrl($url, $size = 'sq150') {
 		$sizes = array(
 				'sq75'  =>	's',	// small square 75x75
