@@ -418,7 +418,7 @@ class OneTripLog extends ViewWhu
 
 			// easy stuff - date mileage name ...
 			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => number_format($day->cumulative()), 'map_marker' => $i+1);
-			$row['nice_date'] = Properties::prettyDate($row['day_date'] = $day->date(), "M"); 
+			$row['nice_date'] = Properties::prettyShort($row['day_date'] = $day->date(), "M"); 
 			$row['short_date'] = Properties::prettyShortest($row['day_date']); 
 			$row['trip_year'] = substr($row['day_date'], 0, 4); 
 
@@ -444,6 +444,7 @@ class OneTripLog extends ViewWhu
 			{
 				if ($prevPostId != $row['wp_id']) {
 					$prevPostId = $row['wp_id'];
+			// dumpVar($row, "$i row, pp=$prevPostId");
 					$post = $this->build('Post', array('quickid' => $prevPostId));
 					$pName = $post->baseExcerpt($post->title(), 15);
 					$iPost++;
@@ -455,7 +456,6 @@ class OneTripLog extends ViewWhu
 			else
 				$row['POST_CLASS'] = "class='hidden'";
 			// if ($i > 5)			exit;
-			
 			$nodeList[] = $row;		
 		}
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
@@ -874,7 +874,7 @@ dumpVar($fullpath, "Mapbox fullpath");
 		{
 			$day = $this->build('DayInfo', $days->one($i));
 
-			$row = array('marker_val' => $i+1, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
+			$row = array('marker_val' => ($i+1) % 100, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
 										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 
 										'link_text' => Properties::prettyDate($day->date()));
 										

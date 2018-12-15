@@ -72,13 +72,14 @@ class WhuLink
 		// dumpVar(gettype($this->albumList), "GET0 ALBUMLIST");
 		$this->albumList = $this->flik->getAlbums();
 		// dumpVar(gettype($this->albumList), "GET1 ALBUMLIST");
+		// dumpVar($this->albumList, "this->albumList");
 	}
 	function preLoadPics($trip) {
 		$flik = new Flickr();
 		$start = $trip->startDate();
 		$end = date("Y-m-d", strtotime($trip->endDate()) + 86400);
 		$pics = $flik->getPhotosForIntervalRaw($start, $end);
-		dumpVar($pics[0], "pics[0] N=" . sizeof($pics));
+		// dumpVar($pics[0], "pics[0] N=" . sizeof($pics));
 		for ($i = 0, $this->picsbyday = array(); $i < sizeof($pics); $i++) // whiffle the pics
 		{
 			$pic = $pics[$i];
@@ -358,10 +359,13 @@ class Flickr
 	function getAlbums($gdate = '')		// return all albums unless one matches $gdate, then return just that one
 	{
 	  $photosets = $this->flickr->getUserSetList($this->userid);
+		// dumpVar($photosets['photoset'][0], "photosets0");
+		// dumpVar($photosets, "photosets");
+		// exit;
 		
 		for ($i = 0, $albums = array(); $i < sizeof($photosets); $i++) 
 		{
-			$photoset = $photosets[$i];
+			$photoset = $photosets['photoset'][$i];
 			// dumpVar($photoset, "photoset");exit;
 			
 			$album = array(
@@ -381,7 +385,7 @@ class Flickr
 	
 	function makePicUrl($id)
 	{
-		dumpVar($id, "makePicUrl");
+		// dumpVar($id, "makePicUrl");
 		return sprintf("https://www.flickr.com/photos/%s/%s/", $this->userid, $id);	
 	}
 	function makeAlbumUrl($id)

@@ -806,7 +806,7 @@
 			{
 				$wpdb = new DbWpNewBlog();
 				$item = $wpdb->getOne($q = sprintf("select * from %sposts where ID=%s", $wpdb->tablepref, $wpid = $parm['quickid']));
-				dumpVar($q, "q-DbWpNewBlog");
+				// dumpVar($q, "q-DbWpNewBlog");
 				return array(array(
 					'wpid'		=> $wpid,
 					'title' 	=> $item['post_title'],	

@@ -1,5 +1,5 @@
 # newWhu
-September 2016 - July 2017 - New WHUFU
+September 2016 - Now: New WHUFU
 
 The new responsive version of WHUFU. It's my vacation blog, but it's and extra-fancy vacation blog!
 
