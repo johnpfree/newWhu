@@ -1,5 +1,9 @@
+<link rel="stylesheet" href="./css/justifiedGallery.min.css" />
+<script src="./libraries/jquery.justifiedGallery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js"></script>
+
 <div class="jumbotron jumbotron-fluid" id="main_item">
-	
 	<div class="row" id="pichead">
 		<div class="{DATE_GAL_VIS} col-lg-12">
 			<h1><a href="?page=pics&type=id&key={TRIP_ID}">{TRIP_NAME}</a></h1>
@@ -7,109 +11,54 @@
 		<div class="{CAT_GAL_VIS} col-lg-12">
 			<h1>{TRIP_NAME}</h1>
 		</div>
-	</div>	      	
+	</div>
 	
 	<div>{PAGER_BAR}</div>
-
-	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/demo.css" />
-	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/style.css" />
-	<link rel="stylesheet" type="text/css" href="./libraries/ResponsiveImageGallery/css/elastislide.css" />
-
-	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.tmpl.min.js"></script>
-	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.easing.1.3.js"></script>
-	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/jquery.elastislide.js"></script>
-	<script type="text/javascript" src="./libraries/ResponsiveImageGallery/js/gallery.js"></script>
-
-	<script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">	
-	<div class="rg-image-wrapper">
-		{{if itemsCount > 1}}
-			<div class="rg-image-nav">
-				<a href="#" class="rg-image-nav-prev">Previous Image</a>
-				<a href="#" class="rg-image-nav-next">Next Image</a>
-			</div>
-		{{/if}}
-		<div class="rg-image"></div>
-		<div class="rg-loading"></div>
-		<div class="rg-caption-wrapper">
-			<div class="rg-caption" style="display:none;">
-				<p></p>
-			</div>
-			<div class="rg-deets" style="display:none;">
-				<p></p>
-			</div>
-		</div>
-	</div>
-	</script>
 	
-	<script type="text/javascript">
-		var startingIndex = {IPIC}, 
-		 rgViewMessage = '{RGMSG}';
-	</script>	
+	<div class="clearfix" id="thegal">
+		<div class="content">
+		  <div id="thegallery">
+<!-- BEGIN rows -->
+		      <a href="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" data-title="{PIC_DESC}" data-footer="(detail)"s data-toggle="lightbox" data-gallery="pic_set"><img src="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" title="{PIC_DESC}" /></a>
+<!-- END rows -->
+		  </div>
 
-<style type="text/css" media="screen">
-	body {
-		background-color: #FFFFE7;
-		color: #684F22;
-	}
-	.es-carousel-wrapper, .es-carousel {
-		background-color: transparent;
-	}
-	#rg-gallery {}	
-	.rg-caption p {
-		font-size: 140%;
-		line-height: 1.3;
-		color: #4E3508;
-		text-transform: none;
-	}
-	.rg-deets {
-		text-align:center;
-		position:relative;
-	}
-	.jumbotron p {
-     margin-bottom: 0;
-	}
-</style>
+		</div><!-- content -->
+	</div><!-- thegal -->
 
-		<div class="clearfix" id="thegal">
-			<div class="content">
-				<div id="rg-gallery" class="rg-gallery">
-					<div class="rg-thumbs">
-						<!-- Elastislide Carousel Thumbnail Viewer -->
-						<div class="es-carousel-wrapper">
-							<div class="es-nav">
-								<span class="es-nav-prev">Previous</span>
-								<span class="es-nav-next">Next</span>
-							</div>
-							<div class="es-carousel">
-								<ul>
-	<!-- BEGIN rows -->
-    <li><a href="#"><img src="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" data-large="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}"  data-id="{PIC_ID}" data-description="{PIC_DESC}"></a></li>
-	<!-- END rows -->
-								</ul>
-							</div>
-						</div>
-						<!-- End Elastislide Carousel Thumbnail Viewer -->
-					</div><!-- rg-thumbs -->
-				</div><!-- rg-gallery -->
-			</div><!-- content -->
-		</div><!-- thegal -->
+  <script>
+		console.log('jQuery.fn.jquery=', jQuery.fn.jquery);
+	  $("#thegallery").justifiedGallery({
+			margins: 6,
+			border: 6,
+	  });
+		$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+			// console.log('e', event);
+	    event.preventDefault();
+	    $(this).ekkoLightbox({
+				alwaysShowClose: true,
+				footer: "(details)", 
+	      onShown: function() {
+	     		console.log('Checking our the events huh?', this);
+	      }
+	    });
+		});
+  </script>
 
 {LINK_BAR}
 </div>
 
 <style type="text/css" media="screen">
-	
+	.modal-content {  }
+	.modal-footer {  }
+	.justified-gallery > a > .caption {
+		line-height: 1.3em;
+	}
 	#middle { 
 		font-size: 22px;
-		font-family: "Pacifico", Georgia, "Times New Roman", serif;
-	}
-	
+	}	
 	#main_item h1 a 			{ color: {BOLDCOLOR}; }
 	#main_item h1 a:hover { color: {LINKCOLOR}; }
-
-	.es-carousel ul li { height: inherit; 	}
-	.es-carousel ul li.selected a { border: none; }
-
 </style>
 
 
