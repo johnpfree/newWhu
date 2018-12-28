@@ -747,14 +747,17 @@ class Gallery extends ViewWhu
 			
 			$row = array('PIC_ID' => $pic->id(), 'WF_IMAGES_PATH' => $pic->folder(), 'PIC_NAME' => $pic->filename(), 'PIC_DESC' => $pic->caption());
 
-			$row['binpic'] = $pic->thumbImage();
-			if (strlen($row['binpic']) > 100) {			// hack to just downsize the full image if the thumbnail fails on server
-				$row['use_binpic'] = '';
-				$row['use_image']  = 'hideme';
-			} else {
+			$row['img_full'] = sprintf("%spix/iPhoto/%s/%s", iPhotoURL, $row['WF_IMAGES_PATH'], $row['PIC_NAME']);
+			$thumb = $pic->thumbImage();
+			$row['img_thumb'] = "data:image/jpg;base64,$thumb";
+			if (strlen($row['img_thumb']) < 100) {																	// hack to use the full image if the thumbnail fails on server
 				dumpVar($row['PIC_NAME'], "binpic fail");
-				$row['use_binpic'] = 'hideme';
-				$row['use_image']  = '';
+				$row['img_thumb'] = $row['img_full'];
+			}
+			else if (($ratio = ($pic->thumbSize[0] / $pic->thumbSize[1])) > 2.) {		// also use the full image for panoramas 'cuz thumb looks terrible
+				dumpVar($ratio, "ratio");
+				// dumpVar($pic->thumbSize, "$i pic->thumbSize");
+				$row['img_thumb'] = $row['img_full'];
 			}
 			$rows[] = $row;
 		}

@@ -1048,6 +1048,7 @@
 		function thumbImage()
 		{
 			$xb = @exif_thumbnail($this->fullpath(), $xw, $xh, $xm);
+			$this->thumbSize = array($xw, $xh);
 			return base64_encode($xb);
 		}
 	}
