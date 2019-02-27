@@ -19,14 +19,11 @@
 		<div class="content">
 		  <div id="thegallery">
 <!-- BEGIN rows -->
-		      <a href="{IMG_FULL}" data-title="{PIC_DESC}" 
-					data-footer="<a href='?page=pic&type=id&key={PIC_ID}' title='{PIC_DESC}'>
-					(details)</a>" data-toggle="lightbox" data-gallery="pic_set"><img src="{IMG_THUMB}" title="{PIC_DESC}" /></a>
+		      <a href="{IMG_FULL}" data-title="{PIC_DESC}"  data-max-width="540"
+					data-footer="<a href='?page=pic&type=id&key={PIC_ID}' title='{PIC_DESC}'> (details)</a>" 
+					data-toggle="lightbox" data-gallery="pic_set"><img src="{IMG_THUMB}" title="{PIC_DESC}" /></a>
 <!-- END rows -->
 		  </div>
-<!-- (details)</a>" data-toggle="lightbox" data-gallery="pic_set"><img src="{REL_PICPATH}pix/iPhoto/{WF_IMAGES_PATH}/{PIC_NAME}" title="{PIC_DESC}" /></a>
-<a href="#" title="{PIC_DESC}"><img class="thumbnail" src="data:image/jpg;base64,{BINPIC}"  data-file="{PIC_NAME}" /></a> -->
-
 		</div><!-- content -->
 	</div><!-- thegal -->
 
@@ -37,11 +34,10 @@
 			border: 6,
 	  });
 		$(document).on('click', '[data-toggle="lightbox"]', function(event) {
-			// console.log('e', event);
+			console.log('e', event);
 	    event.preventDefault();
 	    $(this).ekkoLightbox({
 				alwaysShowClose: true,
-				footer: "(details)", 
 	      onShown: function() {
 	     		console.log('Checking our the events huh?', this);
 	      }

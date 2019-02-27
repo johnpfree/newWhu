@@ -197,8 +197,7 @@
 		function hasFlicks() { return ($this->flickToken() != ''); }
 	}
 	class WhuTrip extends WhuDbTrip 
-	{
-		
+	{	
 		var $multiMaps = array(
 			"johnpfree.02do91ob" => array('name' => "Eureka"		, 'file' => "multiEureka.js"), 
 			"johnpfree.pl58eik5" => array('name' => "395" 	  	, 'file' => "multi395.js"), 
@@ -221,6 +220,30 @@
 		function hasStories()	{
 			$count = $this->getOne("select COUNT(wp_id) nposts from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());		
 			return $count['nposts'] > 0;
+		}
+		function wpReferenceId() //	get the wp category id for this trip, UNLESS there's pnly one post, then return the post id
+		{
+			$posts = $this->getAll("select * from wf_days where wp_id>0 AND wf_trips_id=" . $this->id());
+			if (sizeof($posts) == 0)
+				return 0;
+			// dumpVar($posts, "posts");
+			$wpid = $posts[0]['wp_id'];
+			// dumpVar($wpid, "wpid");
+			
+			define('WP_USE_THEMES', false);
+			require(WP_PATH . '/wp-load.php');											// Include WordPress			
+			$cats = get_the_category($wpid);
+			// dumpVar($cats, "cats");
+
+			if ($cats[0]->name == 'Nor Cal' || $cats[0]->name == '395')
+				return array('post', $wpid);
+
+			if (sizeof($posts) == 1) {
+				dumpVar($posts, "SINGLE POST SLIPS THRU! posts");
+				exit;
+			}
+
+			return array('cat', $cats[0]->cat_ID);
 		}
 		
 		function hasMap()				{	return ($this->hasMapboxMap() || $this->hasGoogleMap()); }

@@ -112,14 +112,16 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			if ($k == $page)	continue;
 			switch ($k) {
 				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasWhuPics() || $trip->hasFlicks();	break;
-				case 'txts':	$paltag = 'txt'; $gotSome = $trip->hasStories();	break;
-				default:			$gotSome = TRUE;
+				case 'txts':	
+					 $url = (new WhutxtsidLink($trip))->url($v);
+					 $this->template->set_var("LINK$i", ($url == '') ? '-' : $url);
+					 return;
+			 default:			$gotSome = TRUE;
 			}
 // dumpVar(boolStr($gotSome), "linkBar($page, $id) $k, $v");
 
 			if ($gotSome) 
-			{			
-				// dumpVar($v, "WhuLink($k, 'id', $id, v");
+			{
 				$triplink = new WhuLink($k, 'id', $id, $v);			
 				$this->template->set_var("LINK$i", $triplink->url());
 			}
@@ -244,6 +246,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$namelink = "#$namelink";
 		return sprintf("%s/?p=%s%s", WP_PATH, $wpid, $namelink);	
 	}
+	static function makeWpCatLink($catid)	{ return sprintf("%s/?cat=%s", WP_PATH, $catid); }
 	
 	function build ($type = '', $key = '') 
 	{
@@ -779,7 +782,6 @@ class DateGallery extends Gallery
 		$this->dayLinkBar('pics', $this->key);
 		parent::showPage();
 	}
-	// function getPictures($key)	{ return $this->build('Visuals', (array('date' => $key))); }	// not just Pics, maybe Videos!
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }
 	function getCaption()				{	return "Pictures for " . $this->key;	}
 	function galleryTitle($key)	{	return Properties::prettyDate($key); }
@@ -1288,110 +1290,110 @@ class OneSpot extends ViewWhu
 	}
 }
 
-class TripStories extends ViewWhu
-{
-	var $file = "storylist.ihtml";   
-	function showPage()	
-	{
-		$tripid = $this->props->get('key');
- 	 	$trip = $this->build('DbTrip', $tripid);	
-		$this->template->set_var('TRIP_NAME', $trip->name());
-		$this->caption = "Stories for " . $trip->name();
-		
-		// collect unique Post ids
-		$days = $this->build('DbDays', $tripid);
-		
-		
-		// test
-		// $posts = $this->build('Posts', array('wpcat' => 76)); // 62 71 76
-		// dumpVar($posts->data[0], "posts->data[0]");exit;
-		for ($i = 0; $i < $posts->size(); $i++)
-		{
-			echo "<hr>";
-			// $post = $posts->one($i);
-			echo sprintf("%s. %s %s %s", $posts->data[$i]['wpid'], $posts->data[$i]['date'], $posts->data[$i]['title'], $posts->data[$i]['excerpt']);
-		}
-		
-		// $posts->dump("Hickey");
-		exit;
-		
-		
-		// whiffle thru the days, create $wpid - the posts, and $wpdates[] - start/end dates per post
-		for ($i = 0, $wpids = $wpdates = $wpdate = $pics = array(); $i < $days->size(); $i++)
-		{
-			$day = $days->one($i);			
-			$wpdate[1] = $day->date();
-
-			if (in_array($wpid = $day->postId(), $wpids))
-				continue;
-			
-			// fall through => this is first date for this post. NOTE ALWAYS happens for first day
-			$wpids[] = $wpid;
-			if (isset($wpdate[0]))
-				$wpdates[] = $wpdate;
-			$wpdate[0] = $day->date();
-			
-			$fpic = NULL;
-			if ($day->hasFlick() && ($day->flickFavorite() != ''))
-				$fpic = $day->flickFavorite();
-			else 
-			{
-				$dpics = $day->pics();
-				if ($dpics->size() > 0)
-					$fpic = $dpics->favored()->flickToken();				
-			}
-			// dumpVar($fpic, "$i fpic n=". sizeof($pics));
-			$pics[] = $fpic;
-		}
-		$wpdates[] = $wpdate;
-		dumpVar(sizeof($wpdates), "first loop");
-		dumpVar($pics, "pics");
-		$this->template->set_var('REL_PICPATH', iPhotoURL);
-
-		// now fill the loop
-		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++) 
-		{ 
-			// $post = $this->build('Post', $wpids[$i]);
-			$post = $this->build('Post', array('quickid' => $wpids[$i]));
-			
-			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
-			
-			$str = sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][0], Properties::prettyDate($wpdates[$i][0]));
-			$str .= " - ";
-			$str .= sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][1], Properties::prettyDate($wpdates[$i][1]));
-			$row['story_dates'] = $str;
-			$row['story_excerpt'] = '';//$post->excerpt();
-			// $row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
-
-			$row['use_flick']  = 'hideme';
-			$row['use_image']  = 'hideme';
-			if ($trip->hasFlicks())
-			{
-				$flick = new Flickr();
-				// dumpVar($pics[$i], "pics[$i]");
-				$row['flick_url'] = $flick->makeSmallSquareUrl($pics[$i]);    // ['fl_images_id']
-				$row['use_flick']  = '';
-			}
-			else
-			{
-			$row['use_image']  = 'hideme';
-		 		$row['wf_images_path'] = 
-				$row['pic_name'] = 'fixme';
-				$row['use_image']  = '';
-				// $row['pic_name'] = $pics[$i]->filename();
-				// 		 		$row['wf_images_path'] = $pics[$i]->folder();
-				// $row['use_image']  = '';
-			}
-			$rows[] = $row;
-		}      
-		    
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
-		$loop->do_loop($rows);
-		$this->tripLinkBar('txts', $tripid);		
-
-		parent::showPage();
-	}
-}
+// class TripStories extends ViewWhu
+// {
+// 	var $file = "storylist.ihtml";
+// 	function showPage()
+// 	{
+// 		$tripid = $this->props->get('key');
+//  	 	$trip = $this->build('DbTrip', $tripid);
+// 		$this->template->set_var('TRIP_NAME', $trip->name());
+// 		$this->caption = "Stories for " . $trip->name();
+//
+// 		// collect unique Post ids
+// 		$days = $this->build('DbDays', $tripid);
+//
+//
+// 		// test
+// 		$posts = $this->build('Posts', array('wpcat' => 76)); // 62 71 76
+// 		dumpVar($posts->data[0], "posts->data[0]");exit;
+// 		exit;
+// 		for ($i = 0; $i < $posts->size(); $i++)
+// 		{
+// 			echo "<hr>";
+// 			// $post = $posts->one($i);
+// 			echo sprintf("%s. %s %s %s", $posts->data[$i]['wpid'], $posts->data[$i]['date'], $posts->data[$i]['title'], $posts->data[$i]['excerpt']);
+// 		}
+//
+// 		// $posts->dump("Hickey");
+// 		exit;
+//
+// 		// whiffle thru the days, create $wpid - the posts, and $wpdates[] - start/end dates per post
+// 		for ($i = 0, $wpids = $wpdates = $wpdate = $pics = array(); $i < $days->size(); $i++)
+// 		{
+// 			$day = $days->one($i);
+// 			$wpdate[1] = $day->date();
+//
+// 			if (in_array($wpid = $day->postId(), $wpids))
+// 				continue;
+//
+// 			// fall through => this is first date for this post. NOTE ALWAYS happens for first day
+// 			$wpids[] = $wpid;
+// 			if (isset($wpdate[0]))
+// 				$wpdates[] = $wpdate;
+// 			$wpdate[0] = $day->date();
+//
+// 			$fpic = NULL;
+// 			if ($day->hasFlick() && ($day->flickFavorite() != ''))
+// 				$fpic = $day->flickFavorite();
+// 			else
+// 			{
+// 				$dpics = $day->pics();
+// 				if ($dpics->size() > 0)
+// 					$fpic = $dpics->favored()->flickToken();
+// 			}
+// 			// dumpVar($fpic, "$i fpic n=". sizeof($pics));
+// 			$pics[] = $fpic;
+// 		}
+// 		$wpdates[] = $wpdate;
+// 		dumpVar(sizeof($wpdates), "first loop");
+// 		dumpVar($pics, "pics");
+// 		$this->template->set_var('REL_PICPATH', iPhotoURL);
+//
+// 		// now fill the loop
+// 		for ($i = 0, $rows = array(); $i < sizeof($wpids); $i++)
+// 		{
+// 			// $post = $this->build('Post', $wpids[$i]);
+// 			$post = $this->build('Post', array('quickid' => $wpids[$i]));
+//
+// 			$row = array('story_title' => $post->title(), 'story_link' => $this->makeWpPostLink($wpids[$i]));
+//
+// 			$str = sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][0], Properties::prettyDate($wpdates[$i][0]));
+// 			$str .= " - ";
+// 			$str .= sprintf("<a href='?page=day&type=date&key=%s'>%s</a>", $wpdates[$i][1], Properties::prettyDate($wpdates[$i][1]));
+// 			$row['story_dates'] = $str;
+// 			$row['story_excerpt'] = '';//$post->excerpt();
+// 			// $row['story_excerpt'] = $post->baseExcerpt($post->content(), 400);
+//
+// 			$row['use_flick']  = 'hideme';
+// 			$row['use_image']  = 'hideme';
+// 			if ($trip->hasFlicks())
+// 			{
+// 				$flick = new Flickr();
+// 				// dumpVar($pics[$i], "pics[$i]");
+// 				$row['flick_url'] = $flick->makeSmallSquareUrl($pics[$i]);    // ['fl_images_id']
+// 				$row['use_flick']  = '';
+// 			}
+// 			else
+// 			{
+// 			$row['use_image']  = 'hideme';
+// 		 		$row['wf_images_path'] =
+// 				$row['pic_name'] = 'fixme';
+// 				$row['use_image']  = '';
+// 				// $row['pic_name'] = $pics[$i]->filename();
+// 				// 		 		$row['wf_images_path'] = $pics[$i]->folder();
+// 				// $row['use_image']  = '';
+// 			}
+// 			$rows[] = $row;
+// 		}
+//
+// 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+// 		$loop->do_loop($rows);
+// 		$this->tripLinkBar('txts', $tripid);
+//
+// 		parent::showPage();
+// 	}
+// }
 class TripStory extends ViewWhu
 {
 	var $file = "onestory.ihtml";   

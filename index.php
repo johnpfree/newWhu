@@ -176,7 +176,8 @@ switch ("$curpage$curtype")
 	case 'daydate':			$page = new OneDay($props);			break;	
 
 	case 'picsid':				
-		$page = ((new WhuTrip($props, $props->get('key')))->hasFlicks()) ? new TripFlickrs($props) : new TripPictures($props);		break;	
+		// $page = ((new WhuTrip($props, $props->get('key')))->hasFlicks()) ? new TripFlickrs($props) : new TripPictures($props);		break;
+		$page = new TripPictures($props);		break;	
 
 	case 'picsdate':		$page = new DateGallery($props);		break;		// flickr picdate should have been captured above
 	case 'picscat':			$page = new CatGallery($props);		break;	
@@ -197,7 +198,7 @@ switch ("$curpage$curtype")
 	case 'mapnear':			$page = new NearMap($props);			break;	
 	case 'mapplace':		$page = new PlaceMap($props);			break;	
 	
-	case 'txtsid':			$page = new TripStories($props);			break;	
+	// case 'txtsid':			$page = new TripStories($props);			break;
 	case 'txtwpid':			$page = new TripStory($props);				break;
 	case 'txtdate':			$page = new TripStoryByDate($props);	break;
 	

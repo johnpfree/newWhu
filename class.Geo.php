@@ -30,9 +30,8 @@ class WhuLink
 	function url()
 	{
 		$curkey  = $this->props->get('key');
-		// dumpVar($this->pagetype, "curkey=$curkey this->pagetype");
-		// $this->props->dump("Whulink $curkey");
-
+		dumpVar($this->pagetype, "curkey=$curkey this->pagetype");
+		// $this->props->dump("Whulink $curkey");		exit;
 		switch ($this->pagetype) {
 			case 'picsdate':
 				if (substr($curkey, 0, 4) == '2018')			// Flickr
@@ -140,12 +139,6 @@ class WhumapidLink extends WhuSimpleLink
 	var $myIcon = "<img src='./resources/icons/glyphicons-503-map.png' width='26' height='20' title='Map'>";
 	function hasStuff() { return $this->trip->hasMap(); }
 }
-class WhutxtsidLink extends WhuSimpleLink
-{
-	var $page = 'txts';
-	var $myIcon = "<img src='./resources/icons/glyphicons-331-blog.png' width='26' height='20' title='Map'>";
-	function hasStuff() { return $this->trip->hasStories(); }
-}
 class WhuvidsidLink extends WhuSimpleLink
 {
 	var $page = 'vids';
@@ -172,6 +165,23 @@ class WhupicsidLink extends WhuSimpleLink
 		}
 		else
 			return '';
+	}
+}
+class WhutxtsidLink extends WhuLink
+{
+	function __construct($t)	{ $this->trip = $t; }
+	function url($txt = '')
+	{
+		$myIcon = "<img src='./resources/icons/glyphicons-331-blog.png' width='26' height='20' title='Map'>";
+		if (($wp_ref = $this->trip->wpReferenceId()) == 0)
+			return '';
+		// $this->trip->dump('WhutxtsidLink');
+		switch ($wp_ref[0]) {
+			case 'cat':			$link = ViewWhu::makeWpCatLink($wp_ref[1]);		break;
+			case 'post':		$link = ViewWhu::makeWpPostLink($wp_ref[1]);	break;			
+			default:				dumpVar($wp_ref, "BAD RETURN! wp_ref");		exit;
+		}
+		return sprintf("<a href='%s'>%s</a>", $link, ($txt == '') ? $myIcon : $txt);				//  target='_blank'
 	}
 }
 
@@ -336,7 +346,9 @@ class Flickr
         'max_taken_date'	=> $end,
         'format'    => 'php_serial',
         );
+		// dumpVar($params, "params");
     $rsp_obj = $this->flickr->query($params);
+		// dumpVar($rsp_obj, "rsp_obj");
 		if (sizeof($rsp_obj) == 0)								// offline, call fail
 			return array();
 
