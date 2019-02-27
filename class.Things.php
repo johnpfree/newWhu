@@ -316,9 +316,9 @@
 		function nightDesc()	{ return $this->dbValue('wf_stop_desc'); }
 		function postId()			{ return $this->dbValue('wp_id'); }
 		function hasStory()		{ return $this->postId() > 0; }
-		function flickAlbum()			{ return $this->dbValue('fl_album_id'); }
-		function hasFlick()				{ return $this->flickAlbum() != ''; }
-		function flickFavorite()	{ return $this->dbValue('fl_image_id'); }
+		function flickAlbum()			{ jfdie("flickAlbum()"); }
+		function hasFlick()				{ jfdie("hasFlick()"); }
+		function flickFavorite()	{ jfdie("flickFavorit"); }
 
 		function day()
 		{

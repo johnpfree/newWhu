@@ -153,18 +153,12 @@ class WhupicsidLink extends WhuSimpleLink
 	function url()
 	{
 		$this->props->set('key', $this->trip->id());			// overload param 3
-		if ($this->trip->hasFlicks())
-		{
-			$this->props->set('txt', $this->flickrimg);
-			return sprintf("<a target='_blank' href='https://www.flickr.com/photos/142792707@N04/albums/%s'>%s</a>", $this->trip->flickToken(), $this->flickrimg);
-		}
-		else if ($this->trip->hasWhuPics()) 
+		if ($this->trip->hasWhuPics()) 
 		{
 			$this->props->set('txt', $this->cameraimg);
 			return $this->canonicalWhu();
 		}
-		else
-			return '';
+		return '';
 	}
 }
 class WhutxtsidLink extends WhuLink
