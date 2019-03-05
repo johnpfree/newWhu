@@ -192,8 +192,8 @@
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		// function isNewMap()		{ return (strlen($this->fid()) > 1); }
 		
+		// function flickToken() { jfdie("flickToken"); return $this->dbValue('wf_trips_flickr'); }
 		function flickToken() { return $this->dbValue('wf_trips_flickr'); }
-		// function flickToken() { return $this->dbValue('wf_trips_flickr'); }
 		function hasFlicks() { return ($this->flickToken() != ''); }
 	}
 	class WhuTrip extends WhuDbTrip 
@@ -1158,7 +1158,7 @@
 				$idlist .= $pic->id() . ',';
 			}
 			$idlist = substr($idlist, 0, -1);
-			// dumpVar($idlist, "idlist");
+			dumpVar($idlist, "idlist");
 			
 			$items = $this->getAll("select * from wf_favepics where wf_images_id IN($idlist)");
 			for ($i = 0, $faves = array(); $i < sizeof($items); $i++) 

@@ -439,7 +439,7 @@ class OneTripLog extends ViewWhu
 			$row['stop_desc'] = $day->baseExcerpt($day->nightDesc(), 30);
 
 			$picu->setKey($day->date());
-			$row['PIC_LINK'] = $picu->url();			// pic link - old style/flick album/flik pic
+			$row['PIC_LINK'] = $picu->url();			// pic link
 			
 			// which post?
 			$row['wp_id'] = $day->postId();
@@ -1206,13 +1206,6 @@ class OneSpot extends ViewWhu
 					// dumpVar($vid->token(), "vid->token()");
 					$row = array_merge(array('vis_page' => 'vid', 'pic_id' => $vid->id(), 'vid_token' => $vid->token(), 'bin_pic' => ''), $row);
 				}
-				else if ($pic->isFlick())
-				{
-					$use_flick = '';
-					if (empty($flick))
-						$flick = new Flickr();
-					$row['FLICPIC'] = $flick->makeSmallSquareUrl($pic->flickToken());
-				} 
 				else
 				{
 					$row['binpic'] = $pic->thumbImage();
