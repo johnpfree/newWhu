@@ -229,6 +229,6 @@ if (!is_object($page))
 	$page = $savepage;
 	dumpVar("NOTICE that \$page got f---d up by calling Wordpress.");
 }
-$page->setCaption();
+$page->setCaption();				// set the <title> and other bookkeeping chores
 $page->endPage();
 ?>

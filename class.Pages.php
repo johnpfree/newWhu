@@ -20,6 +20,7 @@ class ViewWhu extends ViewBase  // ViewDbBase
 	var $sansFont = "font-family: Roboto, Arial, sans-serif";
 	
 	var $caption = '';		// if $caption is non-blank, use it in setCaption(). Otherwise call getCaption()
+	var $meta_desc = 'Pictures, Stories, Custom Maps';		// if $meta_desc is non-blank, use it in setCaption(). Otherwise call getMetaDesc()
 
 	function __construct($p)
 	{
@@ -34,7 +35,9 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	
 	function setCaption()		// also handy place for bookkeeping shared for all pages
 	{
-		$this->template->set_var('CAPTION', ($this->caption != '') ? $this->caption : $this->getCaption());
+		$this->template->set_var('CAPTION'  , ($this->caption != '') ? $this->caption   : $this->getCaption());		
+		$this->template->set_var('META_DESC', $this->getMetaDesc());
+		dumpVar($this->getMetaDesc(), "this->getMetaDesc()");
 
 		// set active menu
 		$page = $this->props->get('page');
@@ -65,6 +68,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	{
 		return sprintf("%s | %s | %s", $this->props->get('page'), $this->props->get('type'), $this->props->get('key'));	
 	}
+	function getMetaDesc()	{	return $this->meta_desc;	}
 	function setStyle($page)
 	{
 		$pagemap = array('day' => 'log', 'vis' => 'pic');
@@ -134,7 +138,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 	}
 	function dayLinkBar($page, $date)
 	{
-		dumpVar('xx', "dayLinkBar($page, $date)");
+		// dumpVar('xx', "dayLinkBar($page, $date)");
 		$allfour = array(
 			"map" => "map",
 			"day" => "day",
@@ -163,7 +167,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			}
 			if ($gotSome) 
 			{			
-				dumpVar($v, "WhuLink($k, 'date', $date, v");	
+				// dumpVar($v, "WhuLink($k, 'date', $date, v");
 				$daylink = new WhuLink($k, 'date', $date, $v);			
 				$this->template->set_var("LINK$i", $daylink->url());
 			}
@@ -408,10 +412,8 @@ class OneTripLog extends ViewWhu
 	{
 		$tripid = $this->key;
  	 	$trip = $this->build('DbTrip', $tripid);	
-		$days = $this->build('DbDays', $tripid);	
+		$days = $this->build('DbDays', $tripid);
 		$this->template->set_var('TRIP_NAME', $this->caption = $trip->name());
-		$picu = new WhuLink('pics', 'date');
-		$picu->preLoadPics($trip);
 		
 		// whiffle the days for this trip 
 		for ($i = $iPost = $prevPostId = 0, $nodeList = array(); $i < $days->size(); $i++) 
@@ -420,9 +422,10 @@ class OneTripLog extends ViewWhu
 			$day = $this->build('DayInfo', $days->one($i));
 
 			// easy stuff - date mileage name ...
-			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => number_format($day->cumulative()), 'map_marker' => $i+1);
+			$row = array('day_name' => $day->dayName(), 'miles' => $day->miles(), 'cum_miles' => number_format($day->cumulative()), 'day_number' => $i+1);
 			$row['nice_date'] = Properties::prettyShort($row['day_date'] = $day->date(), "M"); 
 			$row['short_date'] = Properties::prettyShortest($row['day_date']); 
+			$row['title_date'] = Properties::prettyDate($row['day_date']); 
 			$row['trip_year'] = substr($row['day_date'], 0, 4); 
 
 			// Stop or Spot?
@@ -438,8 +441,13 @@ class OneTripLog extends ViewWhu
 			$row['stop_name'] = $day->nightName();				
 			$row['stop_desc'] = $day->baseExcerpt($day->nightDesc(), 30);
 
-			$picu->setKey($day->date());
-			$row['PIC_LINK'] = $picu->url();			// pic link
+			if (($npic = $day->pics()->size()) > 0) 
+			{
+				$picu = new WhuLink('pics', 'date', $day->date(), "[$npic]", "today's images");
+				$row['PIC_LINK'] = $picu->url();			// pic link
+			}
+			else
+				$row['PIC_LINK'] = '';
 			
 			// which post?
 			$row['wp_id'] = $day->postId();
@@ -449,7 +457,7 @@ class OneTripLog extends ViewWhu
 					$prevPostId = $row['wp_id'];
 			// dumpVar($row, "$i row, pp=$prevPostId");
 					$post = $this->build('Post', array('quickid' => $prevPostId));
-					$pName = $post->baseExcerpt($post->title(), 15);
+					$pName = $post->baseExcerpt($post->title(), 25);
 					$iPost++;
 				}			
 				$row['day_post'] = $pName;
@@ -464,7 +472,8 @@ class OneTripLog extends ViewWhu
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
 		$loop->do_loop($nodeList);
 
-		$this->tripLinkBar('log', $tripid);		
+		$this->tripLinkBar('log', $tripid);	
+		$this->meta_desc = sprintf("Mileage log for the WHUFU trip: '%s &ndash; %s'", $this->caption, $trip->desc());		
 		parent::showPage();
 	}
 }
@@ -477,7 +486,7 @@ class TripPictures extends ViewWhu
 		parent::showPage();
 		
 		$trip = $this->build('Trip', $this->key);
-		$this->template->set_var('GAL_TITLE', $trip->name());
+		$this->template->set_var('GAL_TITLE', $this->caption = $trip->name());
 		
 		// $tripvids = $this->build('Vids', array('tripid' => $this->key));
 		if (($nvid = $trip->hasVideos()) == 0)		// hack: hasVideos returns the number
@@ -536,6 +545,7 @@ class TripPictures extends ViewWhu
 		$this->template->set_var('NUM_PICS', $count);
 		
  		$this->tripLinkBar('pics', $this->props->get('key'));
+		$this->meta_desc = "Image galleries for the WHUFU trip called '$this->caption'";		
 	}
 }
 class VideoGallery extends ViewWhu
@@ -696,9 +706,10 @@ class Gallery extends ViewWhu
 		for ($i = 0, $rows = array(); $i < $pics->size(); $i++) 
 		{
 			$pic = $pics->one($i);
-			// dumpVar(sprintf("id %s: %s", $pic->id(), $pic->caption()), "$i Gallery");
+			// dumpVar(sprintf("id %s, %s: %s", $pic->id(), $pic->filename(), $pic->caption()), "$i Gallery");
 			
-			$row = array('PIC_ID' => $pic->id(), 'WF_IMAGES_PATH' => $pic->folder(), 'PIC_NAME' => $pic->filename(), 'PIC_DESC' => $pic->caption());
+			$row = array('PIC_ID' => $pic->id(), 'WF_IMAGES_PATH' => $pic->folder(), 'PIC_NAME' => $pic->filename());
+			$row['PIC_DESC'] = htmlspecialchars($pic->caption());
 
 			$row['img_full'] = sprintf("%spix/iPhoto/%s/%s", iPhotoURL, $row['WF_IMAGES_PATH'], $row['PIC_NAME']);
 			$thumb = $pic->thumbImage();
@@ -730,6 +741,7 @@ class DateGallery extends Gallery
 		$this->template->set_var("CAT_GAL_VIS" , 'hideme');
 
 		$this->dayLinkBar('pics', $this->key);
+		$this->meta_desc = sprintf("WHUFU Picture Gallery for %s", $this->galleryTitle($this->key));
 		parent::showPage();
 	}
 	function getPictures($key)	{ return $this->build('Pics', (array('date' => $key))); }
@@ -798,8 +810,8 @@ class OneMap extends ViewWhu
 
 		$tripid = $this->trip();		// local function		
  	 	$trip = $this->build('Trip', $tripid);		
-		$this->template->set_var('MAP_NAME', $name = $trip->name());
-		$this->caption = "Map for $name";
+		$this->template->set_var('MAP_NAME', $this->name = $trip->name());
+		$this->caption = "Map for $this->name";
 		
 		if ($trip->hasMapboxMap())
 		{
@@ -857,6 +869,7 @@ dumpVar($fullpath, "Mapbox fullpath");
 		// 	dumpVar($eventLog, "Event Log");
 		parent::showPage();
 	}
+	function getMetaDesc()	{	return "Map for the WHUFU trip called '$this->name'";	}
 	function trip()		{ 
 		return $this->key; 
 	}
@@ -877,6 +890,7 @@ class DateMap extends OneMap
 
 		return $day->tripId();
 	}
+	function getMetaDesc()	{	return sprintf("Local WHUFU Map for the day %s", Properties::prettyDate($this->key));	}
 }
 class SpotMap extends OneMap
 {
@@ -1082,6 +1096,7 @@ class OneDay extends ViewWhu
 		$this->pagerBar('day', 'date', $pageprops);		
 
 		$this->dayLinkBar('day', $dayid);		
+		$this->meta_desc = sprintf("WHUFU log for %s &ndash; slept at %s", $this->caption, $day->nightName());		
 		parent::showPage();
 	}
 }
@@ -1115,7 +1130,7 @@ class OneSpot extends ViewWhu
 		{
 			$str .= $v . ', ';
 		}		
-		$this->template->set_var('SPOT_TYPES', substr($str, 0, -2));
+		$this->template->set_var('SPOT_TYPES', $types = substr($str, 0, -2));
 		
 		//----------------------------- weather tab ---------------
 		$info = getWeatherInfo(($this->props->get("weather") != 1), $spot->lat(), $spot->lon());
@@ -1131,10 +1146,11 @@ class OneSpot extends ViewWhu
 			$this->template->set_var('DAYS_INFO', '');											// yes, there are days
 
 			$keys = $spot->keywords();																			// ---------- keywords
-			for ($i = 0, $rows = array(); $i < sizeof($keys); $i++) 
+			for ($i = 0, $rows = array(), $keylist = ''; $i < sizeof($keys); $i++) 
 			{
 				// dumpVar($keys[$i], "keys[$i]");
 				$rows[] = array('spot_key' => $keys[$i]);
+				$keylist .= $keys[$i] . ', ';
 			}
 			// dumpVar($rows, "rows");
 			$loop = new Looper($this->template, array('parent' => 'the_content', 'one' => 'keyrow', 'none_msg' => "no keywords", 'noFields' => true));
@@ -1229,6 +1245,7 @@ class OneSpot extends ViewWhu
 		}
 
 		$this->setLittleMap(array('lat' => $spot->lat(), 'lon' => $spot->lon(), 'name' => $spot->name(), 'desc' => $spot->town()));
+		$this->meta_desc = sprintf("Description of the WHUFU Spot %s: %s &ndash; %s &ndash; %s &ndash; %s", $this->caption, $spot->town(), $spot->partof(), $types, substr($keylist, 0, -2));		
 		parent::showPage();
 	}
 }
@@ -1290,7 +1307,8 @@ class HomeHome extends ViewWhu
 class About extends ViewWhu
 {
 	var $file = "about.ihtml";   
-	var $caption = "What is this?";   
+	var $caption   = "All about WHUFU";		
+	var $meta_desc = "All about WHUFU";		
 	function showPage()	
 	{
 		$this->template->set_var('WP_PATH', WP_PATH);
@@ -1300,7 +1318,9 @@ class About extends ViewWhu
 class Search extends ViewWhu
 {
 	var $file = "search.ihtml";   
-	var $caption = "Find Spots. Browse Pictures";   
+	var $caption = "Find Spots. Browse Pictures"; 
+	var $meta_desc = "Searching for WHUFU Campgrounds, Hot Springs, Image Tags";		
+	 
 	function showPage()	
 	{
 		$this->template->set_var('SPOTS_BACK', self::pals['spot']['linkcolor' ]);

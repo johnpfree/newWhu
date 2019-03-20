@@ -1,32 +1,40 @@
 <table class="table table-hover" id="triptable">
+	<col style="width:2%">
+	<col style="width:8%">
+	<col style="width:25%">
+	<col style="width:5%">
+	<col style="width:7%">
+	<col style="width:28%">
+	<col style="width:5%">
+	<col style="width:20%">
 	<thead>
 		<tr>
 			<td class="table-caption" colspan="11"><h1>{TRIP_NAME}</h1></td>
 		</tr>
 		<tr id=triptablehead>
-			<td class="smalldev">{TRIP_YEAR}<br />day</td>
+			<td class="smalldev">{TRIP_YEAR}</td>
 			<td class="largedev">day</td>
 			<td class="largedev" align=right>date</td>
 			<td>stop</td>
 			<td class="dropout">miles</td>
 			<td>total</td>
-			<td class="dropout">day</td>
+			<td class="dropout">summary of the day</td>
 			<td><img src="./resources/icons/glyphicons-12-camera.png" width="26" height="20" title="Pictures"></td>
-			<td style='padding-left: 1.6em;'><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Story"></td>
+			<td style='padding-left: 3em;'><img src="./resources/icons/glyphicons-331-blog.png"  width="21" height="23" title="Story"></td>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- BEGIN rows -->
 		<tr>
-			<td class="smalldev"><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{SHORT_DATE}</a><br />{MAP_MARKER}</td>
-			<td class="largedev">{MAP_MARKER}</td>
-			<td class="largedev" align=right><a href="?page=day&type=date&key={DAY_DATE}" title="Day page">{NICE_DATE}</a></td>
-			<td><a href="?page={SDPAGE}&type={SDTYPE}&key={SDKEY}" title="Spot or Day page">{STOP_NAME}</a></td>
+			<td class="smalldev"><a href="?page=day&type=date&key={DAY_DATE}" title="date">{SHORT_DATE}</a></td>
+			<td class="largedev">{DAY_NUMBER}</td>
+			<td class="largedev" align=right><a href="?page=day&type=date&key={DAY_DATE}" title="{TITLE_DATE}">{NICE_DATE}</a></td>
+			<td><a href="?page={SDPAGE}&type={SDTYPE}&key={SDKEY}" title="today's stop">{STOP_NAME}</a></td>
 			<td class="dropout">{MILES}</td>
 			<td>{CUM_MILES}</td>
 			<td class="dropout">{DAY_NAME}</td>
 			<td>{PIC_LINK}</td>
-			<td><a {POST_CLASS} href="{STORY_LINK}">{DAY_POST}</a></td>
+			<td><a {POST_CLASS} href="{STORY_LINK}" title="today's story">{DAY_POST}</a></td>
 		</tr>
 		<!-- END rows -->
 	</tbody>
@@ -48,7 +56,8 @@
 		width: auto;
 	}
 	#triptable td {
-		padding: 4px 6px;
+		padding: 4px 5px;
+/*		border: 1px solid #999;*/
 	}
 	#triptable td:nth-child(2) {	text-align: center;	white-space: nowrap;	}
 	#triptable td:nth-child(5) {	text-align: center;	}

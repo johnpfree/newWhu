@@ -100,10 +100,10 @@
 								<dl>
 									<dt>picture galleries:</dt>
 									<dd>
-										I am finally learning to trust others. I am finally using a gallery plugin: <a href="https://tympanus.net/Tutorials/ResponsiveImageGallery/">Responsive Image Gallery</a>, which uses the <a href="https://tympanus.net/Development/Elastislide/">Elastislide</a> carousel. I like it. I threw consistency to the wind by keeping the <a href="?page=pics&type=date&key=2017-10-24">silly font</a> they use for titles.
+										I am finally learning to trust others. I use <a href="http://miromannino.github.io/Justified-Gallery/" title="Justified Gallery">Justified Gallery</a> for a very cool, Flickr-like gallery layout, and I use the <a href="http://ashleydw.github.io/lightbox/" title="Bootstrap Lightbox">Bootstrap Lightbox</a> for the images.
 									</dd>                                             
 									<dd>
-										My new thing (all trips in 2018) is managing my photos thropugh Flickr. It's working real well so far.
+										In 2018 I got very excited about using Flickr for all my images, but then they started charging money, so I'm over them. 
 									</dd>                                             
 								</dl>
 							</li>

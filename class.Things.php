@@ -192,8 +192,8 @@
 		function mapboxId()		{ return $this->dbValue('wf_trips_extra'); }
 		// function isNewMap()		{ return (strlen($this->fid()) > 1); }
 		
-		// function flickToken() { jfdie("flickToken"); return $this->dbValue('wf_trips_flickr'); }
-		function flickToken() { return $this->dbValue('wf_trips_flickr'); }
+		function flickToken() { jfdie("WhuDbTrip-flickToken"); return $this->dbValue('wf_trips_flickr'); }
+		// function flickToken() { return $this->dbValue('wf_trips_flickr'); }
 		function hasFlicks() { return ($this->flickToken() != ''); }
 	}
 	class WhuTrip extends WhuDbTrip 
@@ -445,7 +445,6 @@
 		function nightNameUrl()			// No Spot => no URL
 		{	
 			$name = $this->nightName();
-
 			if ($this->hasSpot())
 				return sprintf("<a href='?page=spot&type=id&key=%s'>%s</a>", $this->spotId(), $name);
 			return $name;
@@ -923,7 +922,6 @@
 			if ($this->isPicRecord($key))
 				return $key;
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
-			// return $this->getOne("select * from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id where w.wf_images_id=$key");
 		}
 		function kind()			{ return "UNKNONM"; }
 		function filename()	{ return $this->dbValue('wf_images_filename'); }
@@ -1025,12 +1023,13 @@
 			return $this->getOne("select * from wf_images where wf_images_id=$key");	
 		}
 
-		function flickToken()	{ return $this->dbValue('fl_images_id'); }
+		function flickToken()	{ jfdie("WhuPic-flickToken"); return $this->dbValue('fl_images_id'); }
+		// function flickToken()	{ return $this->dbValue('fl_images_id'); }
 		function isFlick()		{ return $this->flickToken() != ''; }
 		function kind()				{ return "picture"; }
 		function isPano()
 		{
-			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=155", $this->id());
+			$q = sprintf("select * from wf_idmap where wf_type_1='pic' AND wf_type_2='cat' AND wf_id_1=%s and wf_id_2=%s", $this->id(), WhuCategory::panoCat);
 			return is_array($this->getOne($q));
 		}
 		function picPanoSym()	{ return $this->isPano() ? '<strong>&hArr;</strong>' : ''; }
@@ -1078,6 +1077,7 @@
 	class WhuPics extends WhuPic 
 	{
 		var $isCollection = true;
+		var $picsDate = '';
 		function getRecord($parm)	//  tripid. folder, date
 		{
 			// dumpVar($parm, "WhuPics parm");
@@ -1089,10 +1089,14 @@
 				return $this->getAll($q);
 			}
 
+			if (isset($parm['clone'])) 
+				return $parm['clone'];
+
 			if (isset($parm['date'])) 
 			{														// note videos are excluded (wf_resources_id=0)
-				// $q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' AND wf_resources_id=0 order by wf_images_localtime", $parm['date']);
-				$q = sprintf("select f.*,w.* from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id where date(w.wf_images_localtime)='%s' AND w.wf_resources_id=0 order by w.wf_images_localtime", $parm['date']);
+				$this->picsDate = $parm['date'];			// little hack for grabbing a favorite
+				
+				$q = sprintf("select * from wf_images where date(wf_images_localtime)='%s' AND wf_resources_id=0 order by wf_images_localtime", $parm['date']);
 			// dumpVar($parm, "parm $q");
 				return $this->getAll($q);
 			}
@@ -1104,7 +1108,7 @@
 				if (!$day->hasData)						// I sometimes make spot_day entries for times I'm not on a trip, so handle it
 					return array();
 
-				$timeQuery = "SELECT f.*,w.* from wf_images w LEFT OUTER JOIN fl_images f ON w.wf_images_id=f.wf_images_id WHERE DATE(w.wf_images_localtime)='%s' and TIME(w.wf_images_localtime) %s SEC_TO_TIME(3600 * %s)";
+				$timeQuery = "SELECT * from wf_images  WHERE DATE(wf_images_localtime)='%s' and TIME(wf_images_localtime) %s SEC_TO_TIME(3600 * %s)";
 			 	$q = sprintf($timeQuery, $tonight, ">", $day->dayend());
 				// dumpVar($q, "q pm");
 				$pmpics = $this->getAll($q);
@@ -1138,35 +1142,29 @@
 			WhuThing::getRecord($parm);		// FAIL
 		}
 		
-		function favored()					// returns a picture object for a favored picture
+		function favored()					// returns a picture object for a favored picture - a favorite if possible, a non-pano if not
 		{	
-			// dumpVar($this->size(), "this->size()");
-			$faves = $this->favorites();			
-			if (sizeof($faves) > 0)
-				$one = $faves[array_rand($faves)];
-			else
-				$one = $this->data[array_rand($this->data)];
-
-			return $this->build('Pic', $one);
-		}
-		private function favorites()					// returns an array, NOT an object, of ids of favorites in this collection
-		{
-			for ($i = 0, $idlist = ''; $i < sizeof($this->data); $i++) {
-				$pic = $this->build('WhuPic', $this->data[$i]);
-				if ($pic->isPano())
-					continue;
-				$idlist .= $pic->id() . ',';
+			if ($this->picsDate == '') {		// only ask for favorite for a day's pic
+ 				jfDie("only ask for favorite for a day's pic");
 			}
-			$idlist = substr($idlist, 0, -1);
-			dumpVar($idlist, "idlist");
-			
-			$items = $this->getAll("select * from wf_favepics where wf_images_id IN($idlist)");
-			for ($i = 0, $faves = array(); $i < sizeof($items); $i++) 
-			{
-				$faves[] = $items[$i]['wf_images_id'];
+			$q = "SELECT * FROM wf_favepics f JOIN wf_images i ON f.wf_images_id=i.wf_images_id WHERE DATE(i.wf_images_localtime)='$this->picsDate'";
+			$faves = $this->getAll($q);
+			if ($num = sizeof($faves)) {							// any favorites?
+				$one = $faves[mt_rand(0, $num-1)];			// select a random one
+				return $this->build('Pic', $one);
 			}
-			// dumpVar($faves, "faves");
-			return $faves;
+			else {																		// no favorites!
+				$pics = $this->build('WhuPics', array('clone' => $this->data));		// local copy
+				shuffle($pics->data);										// randomize the array right here
+				for ($i = 0; $i < $pics->size(); $i++)	// return the first non-pano you find
+				{
+					$one = $pics->one($i);
+					// dumpVar($one->id(), "$this->picsDate $i one->id()");
+					if (!$one->isPano())
+						break;
+				}
+				return $one;
+			}
 		}
 	}
 	class WhuVisuals extends WhuVisual 				// slightly hacky, but this is a collection of images AND videos
@@ -1194,7 +1192,8 @@
 	{
 		var $rootRoot 	= 7;
 		var $placesRoot = 40;
-		var $catsRoot 	= 176;
+		var $catsRoot  	= 176;
+		const panoCat   = 155;
 		function getRecord($key)		// key = cat id
 		{
 			if ($this->isCategoryRecord($key))

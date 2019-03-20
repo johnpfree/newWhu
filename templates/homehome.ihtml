@@ -61,7 +61,8 @@
 
 #main_item h1 {	
 	color: {BOLDCOLOR};	
-	padding-bottom: .4em;
+	padding-bottom: .4em;	
+	letter-spacing: 1.2em;
 }
 .first-let::first-letter {
   font-size: 160%;

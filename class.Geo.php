@@ -20,44 +20,18 @@ class WhuLink
 	var $params = '';
 	var $albumList = false;
 	// Can really overload param 3 with whatever you want based on the first two
-	function __construct($p, $t, $kparm = '', $txt = '-')
+	function __construct($p, $t, $kparm = '', $txt = '-', $title = '')
 	{
-		$defaults = array('classes' => '', 'params' => '', 'txt' => $txt, 'page' => $p, 'type' => $t, 'key' => $kparm);
+		$defaults = array('classes' => '', 'params' => '', 'txt' => $txt, 'page' => $p, 'type' => $t, 'key' => $kparm, 'title' => $title);
 		$this->props = new WhuProps($defaults);		// default settings
 		$this->pagetype = "$p$t";
 	}
-	function setKey($val)	{	$this->props->set('key', $val);	}
+
 	function url()
 	{
 		$curkey  = $this->props->get('key');
-		dumpVar($this->pagetype, "curkey=$curkey this->pagetype");
-		// $this->props->dump("Whulink $curkey");		exit;
+		// dumpVar($this->pagetype, "curkey=$curkey this->pagetype");
 		switch ($this->pagetype) {
-			case 'picsdate':
-				if (substr($curkey, 0, 4) == '2018')			// Flickr
-				{
-					$this->flik = new Flickr();
-					$this->lazyLoadAlbums();								// get all albums just once
-					if (isset($this->albumList[$curkey]))		// there is an albom for this date
-					{
-						$album = $this->albumList[$curkey];
-						$url = $this->flik->makeAlbumUrl($album['album_id']);	
-						// dumpVar($album['title'], "got an album for $curkey");
-						return sprintf("<a target='_blank' title='Flickr Album' %s href='%s'>(%s)</a>", $this->classes, $url, $album['npics']);
-					}
-					else                    			    		 	// no album, link to first pic of the day
-					{
-						// dumpVar($curkey, "no album");
-						if (empty($this->picsbyday[$curkey]))
-							return "-";
-						$npic = sizeof($this->picsbyday[$curkey]);
-						$pic1 = array_shift($this->picsbyday[$curkey]);
-						$url = $this->flik->makePicUrl($pic1['id']);
-						return sprintf("<a target='_blank' title='First Flickr Pic for the Day' %s href='%s'>[%s]</a>", $this->classes, $url, $npic);
-					}				
-				}
-				break;
-				
 			case 'txtdate':
 				$day = new WhuDbDay($this->props, $curkey);
 				$link = ViewWhu::makeWpPostLink($day->postId(), $this->props->get('key'));
@@ -65,49 +39,18 @@ class WhuLink
 		}
 		return $this->canonicalWhu();
 	}
-	function lazyLoadAlbums() {
-		if (is_array($this->albumList))
-			return;
-		// dumpVar(gettype($this->albumList), "GET0 ALBUMLIST");
-		$this->albumList = $this->flik->getAlbums();
-		// dumpVar(gettype($this->albumList), "GET1 ALBUMLIST");
-		// dumpVar($this->albumList, "this->albumList");
-	}
-	function preLoadPics($trip) {
-		$flik = new Flickr();
-		$start = $trip->startDate();
-		$end = date("Y-m-d", strtotime($trip->endDate()) + 86400);
-		$pics = $flik->getPhotosForIntervalRaw($start, $end);
-		// dumpVar($pics[0], "pics[0] N=" . sizeof($pics));
-		for ($i = 0, $this->picsbyday = array(); $i < sizeof($pics); $i++) // whiffle the pics
-		{
-			$pic = $pics[$i];
-			$date = substr($pic['datetaken'], 0, 10);
-			if (empty($this->picsbyday[$date]))											// the key of the array is the date
-				$this->picsbyday[$date] = array();
-			$this->picsbyday[$date][$pic['datetaken']] = $pic;		// add the pic to that array, keyed on it's date/time so they are sorted
-			// $this->picsbyday[$date][] = $pic;										// add the pic to that array
-		}
-		ksort($this->picsbyday);
-		foreach ($this->picsbyday as $k => $v) 
-		{
-			// dumpVar(sizeof($v), "$k, N=");
-			ksort($v);
-			// foreach ($v as $d => $a) echo sprintf("<br>d=%s t=%s||%s", $k, $d, $a['title']);
-		}
-		return $this->picsbyday;
-	}
-	
+		
 	function addClass($str)	{	if ($this->classes != '') $this->classes .= ' '; $this->classes .= $str;	}
 	function addParam($k,$v)	{	$this->params .= "&$k=$v";	}
 	function canonicalWhu()
 	{
-		return sprintf("<a %s href='?page=%s&type=%s&key=%s%s'>%s</a>", 
+		return sprintf('<a %s href="?page=%s&type=%s&key=%s%s" title="%s">%s</a>', 
 				$this->props->get('classes'), 
 				$this->props->get('page'), 
 				$this->props->get('type'), 
 				$this->props->get('key'), 
 				$this->props->get('params'), 
+				$this->props->get('title'), 
 				$this->props->get('txt')
 			);
 	}
