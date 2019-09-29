@@ -463,14 +463,15 @@
 				'lon' => 'wf_days_lon',
 			);
 			assert(isset($keys[$key]), "getSpotandDaysArranged() cannot handle $key.");
-		                           
+		                       
+			// dumpVar(boolStr($this->hasSpot()), "$key spot");
 			if (!$this->hasSpot()) { //dumpVar($key, "key"); dumpVar($this->dbValue($keys[$key]), "this->dbValue($keys[$key])");
 				return $this->dbValue($keys[$key]);		// no spot, return the day value
 			}
 		
 			if (!isset($this->spot))								// first request, remember the Spot
 				$this->spot = $this->build('DbSpot', $this->spotId());	// create the spot
-			
+	
 			switch ($key) {
 				case 'nightName':	return $this->massageDbText($this->spot->name());
 				case 'lat':				return $this->spot->lat();
@@ -585,6 +586,7 @@
 			return $ret;
 		}
 		
+		function place() { return $this->build('WhuCategory', $this->dbValue('wf_categories_id'))->name(); }
 		function visits()		{ 
 			$vfld = $this->dbValue('wf_spots_visits');
 			if ($vfld == 'many')
@@ -621,7 +623,7 @@
 				// dumpVar($spotDay->keywords(), "spotDay->keywords()");
 				// dumpVar($allkeys, "$i keys");
 			}
-			unset($allkeys['']);		// a SpotDay with no keywords shows up as a blank, remove that one
+			unset($allkeys['']);		// a SpotDay with no keywords shows up as a blank, remove that one			
 			return array_merge(array_flip($allkeys));			// flipped there may be holes in the array, merge reorders it with no holes
 		}
 
@@ -941,10 +943,14 @@
 			return (isset($names[$this->camera()])) ? $names[$this->camera()] : "unknown";
 		}
 		function cameraDoesGeo() { 	return (strpos('iPhone', $this->camera()) !== false); }		// only iPhones do geolocation
-
-		function vidId()			{ return $this->dbValue('wf_resources_id'); }
-		function isImage() 		{ return ($this->vidId() == 0); }
-		function isVideo() 		{ return ($this->vidId() > 0); }
+		function place() 		{ 
+			if (($pid = $this->dbValue('wf_place_id')) == 0)
+				return '';
+			return $this->build('WhuCategory', $pid)->name(); 
+		}
+		function vidId()		{ return $this->dbValue('wf_resources_id'); }
+		function isImage() 	{ return ($this->vidId() == 0); }
+		function isVideo() 	{ return ($this->vidId() > 0); }
 		
 		function prev() 				// set of functions for day gallery navigation - some days don't have pictures and must be skipped
 		{
@@ -1035,16 +1041,16 @@
 		function picPanoSym()	{ return $this->isPano() ? '<strong>&hArr;</strong>' : ''; }
 					
 		// image FILE stuff - extract GPS, extract thumbnail
-		function latlon()
+		function latlon($precision = 5)
 		{
 			$fullpath = $this->fullpath();		
 			$exif = @exif_read_data($fullpath);
-		
+
 			if (isset($exif["GPSLongitude"]))
 			{
 				return array(
-					'lon'  => $this->getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']), 
-					'lat'  => $this->getGps($exif["GPSLatitude"], $exif['GPSLatitudeRef']),
+					'lon'  => round($this->getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']), $precision), 
+					'lat'  => round($this->getGps($exif["GPSLatitude"],  $exif['GPSLatitudeRef']), $precision),
 				);
 			}
 			return array();		// empty array == no latlon in the exif data

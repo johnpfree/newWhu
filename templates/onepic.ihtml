@@ -33,10 +33,11 @@ $(document).ready(function() {
 		<div class="col-sm-9">
 			<ul id="picdetails">
 				<li>Taken on: <a href="?page=day&type=date&key={DATE}"><b>{PRETTIEST_DATE}</b></a> at <b>{PIC_TIME}</b>,</li>
-				<li>with my: <b>{PIC_CAMERA}</b></li>
+				<li>Whu place: <b>{PIC_PLACE}</b></li>
+				<li>With my: <b>{PIC_CAMERA}</b></li>
 				<li class="{GPS_VIS}">geolocation: <b>{GPS_LAT}, {GPS_LON}</b></li>
 				<li>
-					keywords:<br />
+					Keywords:<br />
 					&bull; 
 		<!-- BEGIN rows -->
 					<a href="?page=pics&type=cat&key={WF_CATEGORIES_ID}">{WF_CATEGORIES_TEXT}</a> &bull; 

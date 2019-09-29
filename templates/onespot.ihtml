@@ -38,12 +38,12 @@
 		<div class="col-sm-8">
 			<div class="row">
 				<div class="col-sm-12">
-					<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES}</p>
+					<p>{SPOT_TOWN} &bull; {SPOT_PARTOF} &bull; {SPOT_TYPES} &bull; {SPOT_PLACE}</p>
 				</div>
 			</div>
 			<p><i>Number of visits</i>: {SPOT_NUM}<br />
-				<i>gps</i>: {SPLAT},{SPLON}<br />
-				<i>bathroom</i>: {SPBATH} &bull; <i> water: </i>{SPWATER}
+				<i>GPS</i>: {SPLAT},{SPLON}<br />
+				<i>Bathroom</i>: {SPBATH} &bull; <i> Water: </i>{SPWATER}
 			</p>
 			
 			<div id="descr">

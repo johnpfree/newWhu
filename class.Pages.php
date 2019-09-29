@@ -115,7 +115,7 @@ dumpVar(get_class($this), "View class, <b>$pagetype</b> --> <b>{$this->file}</b>
 			$paltag = $k;
 			if ($k == $page)	continue;
 			switch ($k) {
-				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasWhuPics() || $trip->hasFlicks();	break;
+				case 'pics':	$paltag = 'pic'; $gotSome = $trip->hasWhuPics();	break; // || $trip->hasFlicks();	break;
 				case 'txts':	
 					 $url = (new WhutxtsidLink($trip))->url($v);
 					 $this->template->set_var("LINK$i", ($url == '') ? '-' : $url);
@@ -844,14 +844,15 @@ dumpVar($fullpath, "Mapbox fullpath");
 			$row = array('marker_val' => ($i+1) % 100, 'point_lon' => $day->lon(), 'point_lat' => $day->lat(), //'point_loc' => $day->town(), 
 										'point_name' => addslashes($day->nightName()), 'key_val' => $day->date(), 
 										'link_text' => Properties::prettyDate($day->date()));
-										
+						
+						// dumpVar($row, "row $i");
 			if ($row['point_lat'] * $row['point_lon'] == 0) {						// skip if no position
 				$eventLog[] = "NO POSITION! $i row";
 				$eventLog[] = $row;
 				continue;
 			}
 			if ($row['point_name'] == $prevname) {											// skip if I'm at the same place as yesterday
-				$eventLog[] = "skipping same $i: {$row['point_name']}";
+				// $eventLog[] = "skipping same $i: {$row['point_name']}";
 				continue;                       
 			}
 			$prevname = $row['point_name'];
@@ -860,13 +861,13 @@ dumpVar($fullpath, "Mapbox fullpath");
 			$rows[] = $row;
 		}
 		// dumpVar($rows, "rows");
-		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));
+		$loop = new Looper($this->template, array('parent' => 'the_content', 'none_msg' => "", 'noFields' => true));
 		$loop->do_loop($rows);
 		
 		$this->tripLinkBar('map', $tripid);	
 		
-		// if (sizeof($eventLog))
-		// 	dumpVar($eventLog, "Event Log");
+		if (sizeof($eventLog))
+			dumpVar($eventLog, "Event Log");
 		parent::showPage();
 	}
 	function getMetaDesc()	{	return "Map for the WHUFU trip called '$this->name'";	}
@@ -994,6 +995,7 @@ class OnePhoto extends ViewWhu
 		$this->template->set_var('PRETTIEST_DATE', WhuProps::verboseDate($date));
 		$this->template->set_var('PIC_TIME', Properties::prettyTime($vis->time()));
 		$this->template->set_var('PIC_CAMERA', $vis->cameraDesc());
+		$this->template->set_var('PIC_PLACE', $vis->place());
 		$this->template->set_var('PICFILE_NAME', $vis->filename());
 		$this->template->set_var('WF_IMAGES_PATH', $vis->folder());
 		$this->template->set_var('WF_IMAGES_FILENAME', $vis->filename());
@@ -1113,6 +1115,7 @@ class OneSpot extends ViewWhu
 		$this->template->set_var('SPOT_ID', 		$spot->id());
 		$this->template->set_var('SPOT_TOWN', 	$spot->town());
 		$this->template->set_var('SPOT_PARTOF', $spot->partof());
+		$this->template->set_var('SPOT_PLACE',  $spot->place());
 		$this->template->set_var('SPOT_NUM',  	$visits = $spot->visits());
 		
 		$this->template->set_var('SPLAT',  	$spot->lat());
