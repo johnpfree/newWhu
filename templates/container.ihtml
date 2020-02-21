@@ -26,6 +26,7 @@
 		
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow&v1' rel='stylesheet' type='text/css' />
 		<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css' />
+		<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 		
 		<style type="text/css" media="screen">
 		/* ================================= 
@@ -35,7 +36,8 @@
 		    margin: 0;
 				color: {BODYCOLOR};
 				background-color: {BBACKCOLOR};
-			  font: 16px/26px Roboto, Arial, sans-serif;
+			  font: 16px/26px 'Montserrat', sans-serif;
+/*			  font: 16px/26px Roboto, Arial, sans-serif;*/
 /*			  font: 16px/26px skolar-1, skolar-2, Georgia, "Times New Roman", serif;*/
 /*				font: 16px/26px 'PT Sans Narrow', Arial, sans-serif;*/
 			}

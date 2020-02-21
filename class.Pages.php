@@ -17,7 +17,8 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#b30000', 'linkhover' => '#593A43', 'bbackcolor' => '#d7e5e1'), 
 			// "deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'),
 		);
-	var $sansFont = "font-family: Roboto, Arial, sans-serif";
+	// var $sansFont = "font-family: Roboto, Arial, sans-serif";
+	var $sansFont = "font-family: 'Montserrat', sans-serif";
 	
 	var $caption = '';		// if $caption is non-blank, use it in setCaption(). Otherwise call getCaption()
 	var $meta_desc = 'Pictures, Stories, Custom Maps';		// if $meta_desc is non-blank, use it in setCaption(). Otherwise call getMetaDesc()
@@ -907,8 +908,8 @@ class SpotMap extends OneMap
 		$this->template->set_var('WHU_URL', $t = sprintf("http://%s%s", $_SERVER['HTTP_HOST'], parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)));
 		// dumpVar($t, "WHU_URL");
 		
-		$this->setTitle($rad = $this->props->get('search_radius'));
-		$items = $this->getSpots($rad);
+		$this->setTitle($this->rad = $this->props->get('search_radius'));
+		$items = $this->getSpots($this->rad);
 		
 		$markers = array('CAMP' => 'campsite', 'LODGE' => 'lodging', 'HOTSPR' => 'swimming', 'PARK' => 'parking', 'NWR' => 'wetland');	// , 'veterinary', 
 		$hiPriority = array('CAMP', 'LODGE', 'PARK');		// this type wins
@@ -949,7 +950,7 @@ class SpotMap extends OneMap
 	function setTitle($rad) 
 	{ 
  	 	$this->spot = $this->build('DbSpot', $this->key);		
-		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of %s", $rad, $this->spot->name()));
+		$this->template->set_var('MAP_NAME', $t = sprintf("Spots in a %s mile radius of %s", $rad, $this->name = $this->spot->name()));
 		$this->caption = $t;
 	}
 	function getSpots($rad) 
@@ -958,6 +959,7 @@ class SpotMap extends OneMap
 	}
 	function initRows() { return array(); }
 	function markerColor($i) { return ($i <= 0) ? '#000' : $this->marker_color; }
+	function getMetaDesc()	{	return "Map of all WHUFU Spots in a {$this->rad} of {$this->name}";	}
 }
 class NearMap extends SpotMap
 {
