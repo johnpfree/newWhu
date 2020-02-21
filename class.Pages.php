@@ -17,8 +17,8 @@ class ViewWhu extends ViewBase  // ViewDbBase
 			"deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#b30000', 'linkhover' => '#593A43', 'bbackcolor' => '#d7e5e1'), 
 			// "deflt" => 	array('boldcolor' => '#3A5950', 'bordercolor' => '#e9f0ee', 'linkcolor' => '#593A43', 'linkhover' => '#a7c5bc', 'bbackcolor' => '#d7e5e1'),
 		);
-	// var $sansFont = "font-family: Roboto, Arial, sans-serif";
-	var $sansFont = "font-family: 'Montserrat', sans-serif";
+	var $sansFont = "font-family: Roboto, Arial, sans-serif";
+	// var $sansFont = "font-family: 'Montserrat', sans-serif";
 	
 	var $caption = '';		// if $caption is non-blank, use it in setCaption(). Otherwise call getCaption()
 	var $meta_desc = 'Pictures, Stories, Custom Maps';		// if $meta_desc is non-blank, use it in setCaption(). Otherwise call getMetaDesc()
