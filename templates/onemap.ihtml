@@ -29,21 +29,28 @@ h2 {
 </style>
 <script>
 L.mapbox.accessToken = '{MAPBOX_TOKEN}';
-var map = L.mapbox.map('map', '');
+/*var map = L.mapbox.map('map', '');*/
+
+var map = L.mapbox.map('map')
+.addLayer(L.mapbox.styleLayer('mapbox://styles/johnpfree/ckapev8jm05g41jlnxn69u2pt')); /* my outdoors style */
+/*.addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));*/
+
 /*
+June 2020, upgraded classic styles (I hope)
+
+old comment:
 these eliminate annoying two-finger zoom on laptop, BUT also eliminate desired pinch zoom on mobile ... SIGH ...
   touchZoom: false,
   scrollWheelZoom: false
 */
+
+/* pre 6/2020 code
 L.mapbox.tileLayer('mapbox.high-contrast').addTo(map);
 L.mapbox.styleLayer('mapbox://styles/johnpfree/cj7vzbf0y3pi52rqzqrij9dhn', {
 	attributionControl: false,
 }).addTo(map);
-/*
-mapbox://styles/johnpfree/
-using whu-outdoors
-cj4zx6kjh14xb2smcu2bh9hho ??
-cj7sz84p50wkd2so6c49xh2ml tutorial style
+
+mapbox://styles/johnpfree/ckapev8jm05g41jlnxn69u2pt   outdoors
 */
 
 console.log('map', map);

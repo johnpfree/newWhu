@@ -469,7 +469,7 @@ class OneTripLog extends ViewWhu
 				$row['POST_CLASS'] = "class='hidden'";
 			// if ($i > 5)			exit;
 			$nodeList[] = $row;		
-		}
+		}		
 		$loop = new Looper($this->template, array('parent' => 'the_content', 'noFields' => true));                                
 		$loop->do_loop($nodeList);
 

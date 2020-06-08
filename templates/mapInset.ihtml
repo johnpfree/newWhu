@@ -10,9 +10,20 @@ L.mapbox.accessToken = '{MAPBOX_TOKEN}';
 
 console.log('type0', (typeof map == 'object'));
 if (typeof map != 'object') {
+	
+	var map = L.mapbox.map('mapinsert')
+			.setView([{PT_lat}, {PT_lon}], 12)
+			.addLayer(L.mapbox.styleLayer('mapbox://styles/johnpfree/ckapev8jm05g41jlnxn69u2pt')); /* my outdoors style */
+	}
+
+/*
+June 2020, upgraded classic styles (I hope)
+	this is old code:
 	var map = L.mapbox.map('mapinsert', 'mapbox.streets')
 			.setView([{PT_lat}, {PT_lon}], 12);
 	}
+*/
+		
 map._onResize();			// force window to completely render
 
 console.log('mapbox.map', map);
